@@ -1,0 +1,11 @@
+{
+  "name": "vicpol-tool-v7",
+  "version": "7.0.0",
+  "description": "VicPol Tool v7 — Recruit-focused reports, warrants, traffic paperwork & handbook reference",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve ."
+  },
+  "license": "UNLICENSED",
+  "private": true
+}
