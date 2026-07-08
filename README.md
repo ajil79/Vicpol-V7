@@ -6,7 +6,7 @@ No build step, no framework, no bundler — vanilla HTML/CSS/JS. Everything runs
 
 ## What's in v7
 
-- **🧭 Day-to-Day Guide** — scenario walkthroughs (start of shift, traffic stops, a driver who fled, making an arrest, searches, impounds, welfare checks, Code 15s) with copy-and-paste radio calls and buttons that jump straight into the right report type.
+- **🧭 Day-to-Day Guide** — scenario walkthroughs (start of shift, traffic stops, a driver who fled, making an arrest, searches, impounds, welfare checks, Code 15s) with read-aloud radio calls and buttons that jump straight into the right report type.
 - **🎓 Recruit Mode** — a toggle in the header that overlays plain-English hints on the report form and shows a live required-fields checklist so recruits don't miss anything before copying.
 - **Recruit Helper** — the searchable handbook reference, expanded with conduct, procedure and career topics from the 2024/2025 handbooks.
 - Everything from v6: Report Tool (arrest, warrants, traffic, field contact, search & seizure, vehicle inspection), Traffic History analyser, and OCR Intake.

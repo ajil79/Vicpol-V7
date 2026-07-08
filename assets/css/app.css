@@ -833,7 +833,6 @@
       background:rgba(0,0,0,0.18);color:var(--text);
       -webkit-user-select:text;user-select:text;
     }
-    .guide-radio-actions{display:flex;justify-content:flex-end;margin-top:10px}
     @media (max-width:600px){
       .guide-radio-toggle{font-size:12.5px;padding:11px 12px}
       .guide-radio-text{font-size:16px;padding:12px 13px}

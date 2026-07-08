@@ -393,7 +393,7 @@ const RECRUIT_HANDBOOK = [
       '<div class="rh-note"><em>"[POI NAME], my name is [RANK &amp; NAME] from Melbourne Police General Duties Division. You are currently under arrest for [CHARGES &amp; FINES].</em></p>' +
       '<p><em>You do not have to say or do anything you don\'t want to. Anything you say or do may be given in evidence. You have the right to communicate with a friend or family member to make known your whereabouts, and you have the right to communicate with legal representation, which will be financially covered by the State of Victoria. Do you understand the caution I have given you today?</em></p>' +
       '<p><em>You have the right to have your case heard by a magistrate if one is available. Do you wish to accept your charges, or fight them in court?"</em></div>' +
-      '<p class="rh-note">You\'ll find a copy-and-paste version of this on the <button class="rh-jump-link" data-rh-page="guide" type="button">🧭 Day-to-Day Guide</button> (Making an arrest).</p>' +
+      '<p class="rh-note">You\'ll find a read-aloud version of this on the <button class="rh-jump-link" data-rh-page="guide" type="button">🧭 Day-to-Day Guide</button> (Radio calls).</p>' +
       '<div class="rh-links"><span class="rh-links-label">Write it up:</span>' +
       '<button class="rh-tool-link" data-rh-report="arrest" type="button">📝 Arrest Report</button>' +
       '</div>'

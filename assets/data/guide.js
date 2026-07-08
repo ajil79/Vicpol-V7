@@ -2,12 +2,12 @@
    Plain-English patrol walkthroughs for recruits, summarised from the BBRP 2024
    Police Handbook, the GD Handbook (2025) and the Melbourne Police Help Guide (2025).
    Static reference only — the renderer (assets/js/guide.js) turns this into the
-   scenario picker, copy-and-paste radio calls and "jump into the right report"
+   scenario picker, read-aloud radio calls and "jump into the right report"
    buttons. Nothing here writes report state on its own.
 
    Shapes:
    - GUIDE_GOLDEN_RULES : string[]  (HTML list items)
-   - GUIDE_COPY         : { id, label, icon, text }[]  (copy-to-clipboard snippets)
+   - GUIDE_COPY         : { id, label, icon, text }[]  (radio-call scripts shown in the read-aloud accordion)
    - GUIDE_QUICKREF_HTML: string    (radio codes + priority mini-tables)
    - GUIDE_SCENARIOS    : { id, icon, label, html }[]
 
@@ -15,7 +15,7 @@
      data-guide-jump="report"  data-report-type="<type>"  [data-id-status="CONFIRMED|UNCONFIRMED"]
      data-guide-jump="traffic" | "ocr"
      data-guide-topic="<recruit-helper-id>"   (opens the deeper handbook topic)
-     data-guide-copy="<GUIDE_COPY id>"        (copies that snippet)
+     data-guide-read="<GUIDE_COPY id>"        (opens that script's read-aloud accordion row)
 */
 
 /* ── The golden rules — read these first ───────────────────────────── */
@@ -30,7 +30,7 @@ const GUIDE_GOLDEN_RULES = [
   '<strong>If you\'re unsure, ask.</strong> Grab your FTO or a senior officer before you commit to something you can\'t take back.'
 ];
 
-/* ── Copy-and-paste snippets (radio calls + the caution) ───────────── */
+/* ── Radio-call scripts (read aloud in the guide accordion) ────────── */
 const GUIDE_COPY = [
   {
     id: "caution", icon: "⚖️", label: "The Caution (read on arrest)",
@@ -188,14 +188,13 @@ const GUIDE_SCENARIOS = [
       '<h3>Pulling someone over</h3>' +
       '<div class="muted" style="margin-bottom:6px">The minimum reason for a stop is an RBT/RDT — you don\'t need more than that.</div>' +
       '<ol class="guide-steps">' +
-        '<li><strong>Call it up</strong> — use the Code 4 radio call (copy it below) with the vehicle description and location.</li>' +
+        '<li><strong>Call it up</strong> — use the Code 4 radio call (read it from <strong>Radio calls</strong> above) with the vehicle description and location.</li>' +
         '<li><strong>Approach and introduce yourself</strong> — rank, name, and why you\'ve stopped them.</li>' +
         '<li><strong>Mandatory RBT &amp; RDT</strong> — if you\'re going to charge <em>any</em> traffic offence, you must run a roadside breath test and drug test first. No exceptions.</li>' +
         '<li><strong>Decide the outcome:</strong> a <strong>PIN</strong> is a fine only (speeding, minor stuff); a <strong>charge</strong> is a criminal offence (dangerous/reckless driving, evade). Serious offences → arrest.</li>' +
         '<li><strong>Write it up</strong> — a fine/traffic matter goes in a Traffic Warrant; an arrest goes in an Arrest Report.</li>' +
       '</ol>' +
       '<div class="guide-jump">' +
-        '<button class="btn" type="button" data-guide-copy="code4">🚓 Copy Code 4 call</button>' +
         '<button class="btn" type="button" data-guide-jump="report" data-report-type="traffic_warrant" style="background:var(--vp-accent-btn);border-color:var(--accent)">→ Start Traffic Warrant</button>' +
         '<button class="btn" type="button" data-guide-jump="report" data-report-type="arrest">→ Start Arrest Report</button>' +
         '<button class="btn" type="button" data-guide-topic="rbt-rdt">📖 RBT/RDT rules</button>' +
@@ -207,7 +206,7 @@ const GUIDE_SCENARIOS = [
       '<h3>They failed to stop</h3>' +
       '<ol class="guide-steps">' +
         '<li><strong>Only pursue if your licence class allows it.</strong> Bronze — do not pursue. Note the rego, description and direction of travel.</li>' +
-        '<li><strong>If you pursue</strong>, give clear pursuit comms (copy the format below) and keep them updated.</li>' +
+        '<li><strong>If you pursue</strong>, give clear pursuit comms (read the format from <strong>Radio calls</strong> above) and keep them updated.</li>' +
         '<li><strong>Run the plate</strong> to find the registered owner and check stolen status.</li>' +
       '</ol>' +
       '<div class="guide-q">Which warrant do I write? Ask yourself one question:</div>' +
@@ -226,7 +225,6 @@ const GUIDE_SCENARIOS = [
         '</div>' +
       '</div>' +
       '<div class="guide-jump">' +
-        '<button class="btn" type="button" data-guide-copy="pursuit">🏁 Copy pursuit comms</button>' +
         '<button class="btn" type="button" data-guide-topic="code4-flee">📖 Fled stop — which warrant?</button>' +
       '</div>'
   },
@@ -237,13 +235,12 @@ const GUIDE_SCENARIOS = [
       '<ol class="guide-steps">' +
         '<li><strong>State the threat before the force.</strong> Only use force that\'s proportionate — always able to be justified in the report.</li>' +
         '<li><strong>Cuff and search.</strong> A full search is lawful because you\'re arresting them. Note everything found.</li>' +
-        '<li><strong>Read the caution</strong> word-for-word (copy it below) and note whether they understood and accepted.</li>' +
+        '<li><strong>Read the caution</strong> word-for-word (read it from <strong>Radio calls</strong> above) and note whether they understood and accepted.</li>' +
         '<li><strong>Identify properly</strong> — licence, MDT profile, or fingerprints. State the method in the report.</li>' +
         '<li><strong>Process</strong> at the station: record charges vs PINs, sentence within the caps, and where they were processed/sentenced.</li>' +
         '<li><strong>Write the Arrest Report</strong> — court-ready, stands alone without your testimony.</li>' +
       '</ol>' +
       '<div class="guide-jump">' +
-        '<button class="btn" type="button" data-guide-copy="caution">⚖️ Copy the caution</button>' +
         '<button class="btn" type="button" data-guide-jump="report" data-report-type="arrest" style="background:var(--vp-accent-btn);border-color:var(--accent)">→ Start Arrest Report</button>' +
         '<button class="btn" type="button" data-guide-topic="arrest-caution">📖 Arrest &amp; caution</button>' +
         '<button class="btn" type="button" data-guide-topic="sentencing">📖 Sentencing caps</button>' +
@@ -253,7 +250,7 @@ const GUIDE_SCENARIOS = [
     id: "search", icon: "🔎", label: "Search: frisk vs full",
     html:
       '<h3>When can I search?</h3>' +
-      '<div class="guide-warn"><strong>Get this right.</strong> A frisk and a full search have different legal thresholds. Always give the pre-search declaration first (copy below).</div>' +
+      '<div class="guide-warn"><strong>Get this right.</strong> A frisk and a full search have different legal thresholds. Always give the pre-search declaration first (read it from <strong>Radio calls</strong> above).</div>' +
       '<div class="guide-decision">' +
         '<div class="guide-branch no">' +
           '<h4>🖐 Frisk (non-invasive pat down)</h4>' +
@@ -265,7 +262,6 @@ const GUIDE_SCENARIOS = [
         '</div>' +
       '</div>' +
       '<div class="guide-jump">' +
-        '<button class="btn" type="button" data-guide-copy="search">🔎 Copy pre-search declaration</button>' +
         '<button class="btn" type="button" data-guide-jump="report" data-report-type="search_seizure" style="background:var(--vp-accent-btn);border-color:var(--accent)">→ Start Search &amp; Seizure</button>' +
         '<button class="btn" type="button" data-guide-topic="search-seizure">📖 Search &amp; seizure</button>' +
       '</div>'
@@ -315,12 +311,11 @@ const GUIDE_SCENARIOS = [
       '</div>' +
       '<ol class="guide-steps">' +
         '<li><strong>Gather intel</strong> — number of hostages/takers, weapons, demands, direction of travel &amp; ETA.</li>' +
-        '<li><strong>Give the breach warnings</strong> (copy below) before any entry.</li>' +
+        '<li><strong>Give the breach warnings</strong> (read them from <strong>Radio calls</strong> above) before any entry.</li>' +
         '<li><strong>Breach ratio</strong> — non-lethal to lethal must be <strong>2:1</strong>. Order of stack: Non-Lethal, Lethal, Non-Lethal.</li>' +
         '<li><strong>Once clear</strong>, detain everyone, render first aid, and write it up as an Arrest Report.</li>' +
       '</ol>' +
       '<div class="guide-jump">' +
-        '<button class="btn" type="button" data-guide-copy="breach">🚨 Copy breach warnings</button>' +
         '<button class="btn" type="button" data-guide-topic="critical-incidents">📖 Critical incidents</button>' +
         '<button class="btn" type="button" data-guide-topic="use-of-force">📖 Use of force</button>' +
       '</div>'
