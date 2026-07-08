@@ -53,10 +53,23 @@
     var rules = (typeof GUIDE_GOLDEN_RULES !== "undefined" ? GUIDE_GOLDEN_RULES : [])
       .map(function (r) { return "<li>" + r + "</li>"; }).join("");
 
-    var copyBtns = (typeof GUIDE_COPY !== "undefined" ? GUIDE_COPY : [])
+    var radioRows = (typeof GUIDE_COPY !== "undefined" ? GUIDE_COPY : [])
       .map(function (c) {
-        return '<button class="btn guide-copy-btn" type="button" data-guide-read="' + c.id + '">' +
-          (c.icon ? c.icon + " " : "") + c.label + "</button>";
+        return '<div class="guide-radio-item" data-radio-item="' + c.id + '">' +
+          '<button class="guide-radio-toggle" type="button" data-guide-read="' + c.id + '" ' +
+            'aria-expanded="false" aria-controls="radioBody-' + c.id + '">' +
+            '<span class="guide-radio-label">' + (c.icon ? c.icon + " " : "") + c.label + "</span>" +
+            '<span class="guide-radio-chev" aria-hidden="true">▼</span>' +
+          "</button>" +
+          '<div class="guide-radio-body" id="radioBody-' + c.id + '" role="region">' +
+            '<div class="guide-radio-body-inner">' +
+              '<div class="guide-radio-text"></div>' +
+              '<div class="guide-radio-actions">' +
+                '<button class="btn" type="button" data-guide-read-copy="' + c.id + '">📋 Copy</button>' +
+              "</div>" +
+            "</div>" +
+          "</div>" +
+        "</div>";
       }).join("");
 
     var pickerBtns = GUIDE_SCENARIOS.map(function (s, i) {
@@ -78,8 +91,8 @@
       // Copy snippets
       '<div class="card">' +
         '<h2 style="margin:0 0 4px">Radio calls &amp; the caution</h2>' +
-        '<div class="muted" style="margin-bottom:10px">Tap one to open it big for reading out loud — there\'s a Copy button inside if you want to paste it. Fill in the [BRACKETS].</div>' +
-        '<div class="guide-jump" style="margin-top:0">' + copyBtns + "</div>" +
+        '<div class="muted" style="margin-bottom:10px">Tap one to open the script here for reading out loud — tap again to close. Copy button inside each. Fill in the [BRACKETS].</div>' +
+        '<div class="guide-radio-list">' + radioRows + "</div>" +
       "</div>" +
       // Radio comms explainer
       '<div class="card">' +
@@ -101,6 +114,13 @@
         '<h2 style="margin:0 0 10px">Quick reference</h2>' +
         (typeof GUIDE_QUICKREF_HTML !== "undefined" ? GUIDE_QUICKREF_HTML : "") +
       "</div>";
+
+    // Fill each accordion body with the raw script via textContent so the \n
+    // line breaks are preserved (CSS white-space:pre-wrap) without HTML escaping.
+    (typeof GUIDE_COPY !== "undefined" ? GUIDE_COPY : []).forEach(function (c) {
+      var el = host.querySelector('[data-radio-item="' + c.id + '"] .guide-radio-text');
+      if (el) el.textContent = c.text;
+    });
   }
 
   // Switch to the Report Tool with a report type (and optional warrant ID status)
@@ -149,70 +169,33 @@
     copyToClipboard(entry.text).then(function (ok) { if (ok) flashCopied(btn); });
   }
 
-  // ── Read-aloud popup for radio calls ──────────────────────────────────
-  // Tapping a radio-call button opens the script big and readable so it can be
-  // read out loud on the spot; a Copy button inside keeps the old paste flow.
-  var readModalEl = null, readModalTitle = null, readModalText = null, readModalCurrentId = null;
+  // ── Inline accordion for radio calls ──────────────────────────────────
+  // Tapping a radio-call button expands its script inline right underneath it
+  // (big + readable for reading aloud); tap again to collapse. Single-open.
+  function setRadioOpen(item, open) {
+    item.classList.toggle("open", open);
+    var tog = item.querySelector(".guide-radio-toggle");
+    if (tog) tog.setAttribute("aria-expanded", open ? "true" : "false");
+  }
 
-  function buildReadModal() {
-    if (readModalEl) return;
-    var overlay = document.createElement("div");
-    overlay.className = "guide-modal-overlay";
-    overlay.id = "guideReadModalOverlay";
-    overlay.setAttribute("role", "dialog");
-    overlay.setAttribute("aria-modal", "true");
-    overlay.setAttribute("aria-labelledby", "guideReadModalTitle");
-    overlay.innerHTML =
-      '<div class="guide-modal" role="document">' +
-        '<h3 class="guide-modal-title" id="guideReadModalTitle"></h3>' +
-        '<div class="guide-modal-hint">Read it out loud — fill in anything in [BRACKETS].</div>' +
-        '<div class="guide-modal-text" tabindex="0"></div>' +
-        '<div class="guide-modal-actions">' +
-          '<button class="btn" type="button" data-read-copy>📋 Copy</button>' +
-          '<button class="btn guide-modal-close" type="button" data-read-close>Close</button>' +
-        "</div>" +
-      "</div>";
-    document.body.appendChild(overlay);
-    readModalEl = overlay;
-    readModalTitle = overlay.querySelector(".guide-modal-title");
-    readModalText = overlay.querySelector(".guide-modal-text");
-
-    overlay.addEventListener("click", function (e) {
-      if (e.target === overlay) { closeReadModal(); return; }          // backdrop click
-      var t = e.target;
-      if (t.closest && t.closest("[data-read-close]")) { closeReadModal(); return; }
-      var copyBtn = t.closest ? t.closest("[data-read-copy]") : null;
-      if (copyBtn) {
-        var entry = getCopyEntry(readModalCurrentId);
-        if (entry) copyToClipboard(entry.text).then(function (ok) { if (ok) flashCopied(copyBtn); });
-      }
+  function toggleRadioItem(id, forceOpen) {
+    var host = root();
+    if (!host) return null;
+    var target = host.querySelector('[data-radio-item="' + id + '"]');
+    if (!target) return null;
+    var willOpen = (typeof forceOpen === "boolean") ? forceOpen : !target.classList.contains("open");
+    // Single-open: close any other expanded row first.
+    host.querySelectorAll(".guide-radio-item.open").forEach(function (it) {
+      if (it !== target) setRadioOpen(it, false);
     });
+    setRadioOpen(target, willOpen);
+    return target;
   }
 
-  function onReadModalKeydown(e) {
-    if (e.key === "Escape" || e.key === "Esc") { e.stopPropagation(); closeReadModal(); }
-  }
-
-  function openReadModal(id) {
-    var entry = getCopyEntry(id);
-    if (!entry) return;
-    buildReadModal();
-    readModalCurrentId = id;
-    readModalTitle.innerHTML = (entry.icon ? entry.icon + " " : "") + entry.label;
-    readModalText.textContent = entry.text; // pre-wrap keeps the \n line breaks
-    document.body.style.overflow = "hidden";
-    readModalEl.classList.add("open");
-    document.addEventListener("keydown", onReadModalKeydown, true);
-    if (typeof trapFocus === "function") trapFocus(readModalEl.querySelector(".guide-modal") || readModalEl);
-  }
-
-  function closeReadModal() {
-    if (!readModalEl || !readModalEl.classList.contains("open")) return;
-    readModalEl.classList.remove("open");
-    document.body.style.overflow = "";
-    document.removeEventListener("keydown", onReadModalKeydown, true);
-    if (typeof releaseFocusTrap === "function") releaseFocusTrap();
-    readModalCurrentId = null;
+  // Used by the explainer card's jump buttons: open the matching row and scroll to it.
+  function openRadioItem(id, scroll) {
+    var target = toggleRadioItem(id, true);
+    if (target && scroll) target.scrollIntoView({ behavior: "smooth", block: "center" });
   }
 
   function handleClick(e) {
@@ -220,9 +203,18 @@
     // Scenario picker
     var pick = t.closest ? t.closest("#guideScenarioBtns button[data-scenario]") : null;
     if (pick) { selectScenario(pick.dataset.scenario); return; }
-    // Read-aloud popup (radio-call buttons)
+    // Radio-call accordion: a row toggle expands/collapses in place; the same
+    // data attribute on an explainer jump button opens that row and scrolls to it.
     var read = t.closest ? t.closest("[data-guide-read]") : null;
-    if (read) { openReadModal(read.dataset.guideRead); return; }
+    if (read) {
+      var rid = read.dataset.guideRead;
+      if (read.classList.contains("guide-radio-toggle")) toggleRadioItem(rid);
+      else openRadioItem(rid, true);
+      return;
+    }
+    // Copy the script from inside an open accordion row
+    var readCopy = t.closest ? t.closest("[data-guide-read-copy]") : null;
+    if (readCopy) { copyById(readCopy.dataset.guideReadCopy, readCopy); return; }
     // Copy snippet (inline scenario buttons)
     var copy = t.closest ? t.closest("[data-guide-copy]") : null;
     if (copy) { copyById(copy.dataset.guideCopy, copy); return; }
