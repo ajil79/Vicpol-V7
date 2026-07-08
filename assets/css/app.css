@@ -439,6 +439,7 @@
     @media (prefers-reduced-motion: reduce) {
       .card { animation: none; }
       .persons-modal { transition: none; }
+      .guide-modal { transition: none; }
       .toast { transition: none; }
       * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
     }
@@ -808,6 +809,53 @@
     body.light-mode .guide-warn strong{color:#c01818}
     body.light-mode .guide-branch.yes .guide-id-flag{color:#1c7c3d}
     body.light-mode .guide-branch.no .guide-id-flag{color:#0077b6}
+
+    /* ── Read-aloud popup for radio calls ───────────── */
+    .guide-modal-overlay{
+      position:fixed;top:0;right:0;bottom:0;left:0;background:rgba(0,0,0,0.72);z-index:99999;
+      display:flex;align-items:center;justify-content:center;padding:20px;
+      backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);
+      opacity:0;pointer-events:none;transition:opacity 0.18s ease;
+    }
+    .guide-modal-overlay.open{opacity:1;pointer-events:auto}
+    .guide-modal{
+      background:var(--vp-navy);border:1px solid var(--vp-accent-btn);border-radius:8px;
+      padding:22px 24px 18px;width:min(640px,96vw);max-height:85vh;display:flex;flex-direction:column;
+      box-shadow:0 24px 64px rgba(0,0,0,0.6);
+      transform:translateY(12px);transition:transform 0.18s ease;
+    }
+    .guide-modal-overlay.open .guide-modal{transform:translateY(0)}
+    .guide-modal-title{margin:0;font-size:19px;font-weight:900;display:flex;align-items:center;gap:10px}
+    .guide-modal-hint{color:var(--muted);font-size:12px;margin:4px 0 14px}
+    .guide-modal-text{
+      flex:1 1 auto;overflow-y:auto;white-space:pre-wrap;
+      font-size:19px;line-height:1.62;font-weight:500;
+      padding:16px 18px;border-radius:8px;border:1px solid var(--border);
+      background:rgba(255,255,255,0.04);color:var(--text);
+      -webkit-user-select:text;user-select:text;
+    }
+    .guide-modal-actions{display:flex;gap:8px;margin-top:16px;justify-content:flex-end;flex-shrink:0}
+    .guide-modal-actions .btn{min-width:96px;justify-content:center}
+    .guide-modal-close{background:var(--vp-accent-btn);border-color:var(--accent);color:#fff}
+    @media (max-width:600px){
+      .guide-modal{padding:18px 16px 14px;width:100%}
+      .guide-modal-title{font-size:17px}
+      .guide-modal-text{font-size:18px;padding:13px 14px}
+    }
+    body.light-mode .guide-modal{background:var(--surface)}
+    body.light-mode .guide-modal-text{background:rgba(0,0,0,0.03)}
+
+    /* ── Radio comms explainer card ─────────────────── */
+    .guide-info h4{margin:14px 0 4px;font-size:13.5px;font-weight:900;color:var(--accent)}
+    .guide-info > h4:first-child{margin-top:2px}
+    .guide-info p{margin:0 0 6px;font-size:12.5px;line-height:1.65}
+    .guide-info ul{margin:2px 0 8px;padding-left:20px;font-size:12.5px;line-height:1.6}
+    .guide-info li{margin-bottom:4px}
+    .guide-break{display:inline-block;font-weight:900;letter-spacing:1px;color:#ffd166;background:rgba(255,170,0,0.14);border:1px solid rgba(255,170,0,0.4);border-radius:5px;padding:1px 8px}
+    .guide-verify{padding:9px 12px;border-radius:8px;border:1px solid rgba(255,180,40,0.45);background:rgba(255,180,40,0.10);font-size:11.5px;line-height:1.55;margin:6px 0 4px;color:var(--muted)}
+    .guide-verify strong{color:#e0a020}
+    body.light-mode .guide-verify strong{color:#b06f00}
+    body.light-mode .guide-break{color:#8a5a00}
 
     /* ── Recruit Mode (v7) ──────────────────────────── */
     .recruit-hint{display:none;margin:6px 0 2px;padding:8px 11px;border-left:3px solid var(--accent);background:rgba(0,191,255,0.07);border-radius:0 6px 6px 0;font-size:12px;line-height:1.55;color:var(--muted)}

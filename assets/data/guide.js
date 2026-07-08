@@ -107,6 +107,62 @@ const GUIDE_QUICKREF_HTML =
     '</div>' +
   '</div>';
 
+/* ── "What radio comms are" explainer (guide page card) ────────────── */
+const GUIDE_RADIO_HTML =
+  '<h4>What the radio is for</h4>' +
+  '<p>The radio is your <strong>in-character</strong> link to dispatch and every other unit. Everyone shares one channel, so treat it like a busy road — keep it clear, keep it short, and only key up when you actually have something to say.</p>' +
+
+  '<h4>Stay professional — what does NOT go over radio</h4>' +
+  '<ul>' +
+    '<li><strong>No out-of-character / meta chatter.</strong> Jokes, arguments and OOC talk clog the channel.</li>' +
+    '<li><strong>No powergaming intel</strong> — don\'t transmit things your character couldn\'t actually know.</li>' +
+    '<li><strong>No personal abuse.</strong> You\'re the face of Melbourne Police on the radio too.</li>' +
+    '<li><strong>Be clear:</strong> one thought per transmission, use radio <em>codes</em> and the phonetic alphabet, and say your callsign first.</li>' +
+  '</ul>' +
+
+  '<h4>When NOT to transmit</h4>' +
+  '<p>During an <strong>active pursuit</strong>, a <strong>Code 15</strong> (robbery / hostage) or a <strong>Code 9</strong> (duress), stay <strong>off the primary channel</strong> unless you\'re adding something that genuinely helps. The officer running the job owns the channel — never talk over urgent traffic.</p>' +
+
+  '<h4>Cutting in for something urgent — <span class="guide-break">BREAK BREAK BREAK</span></h4>' +
+  '<p>If you have urgent/priority traffic while others are talking, key up with <strong>"BREAK BREAK BREAK"</strong>, then your callsign and the message. Everyone else clears the channel for you. Use it for real priorities only — a Code 9, shots fired, a unit needing immediate help — not to jump the queue.</p>' +
+
+  '<h4>Getting to a job — the enroute call</h4>' +
+  '<p>Call up as you start moving so dispatch knows who\'s coming and how far out you are. Over <strong>3&nbsp;km</strong>, add <strong>"Delayed Response"</strong>.</p>' +
+  '<div class="guide-jump" style="margin-top:6px">' +
+    '<button class="btn" type="button" data-guide-read="enroute">📻 Open the enroute call</button>' +
+    '<button class="btn" type="button" data-guide-topic="radio-codes">📖 All radio codes</button>' +
+  '</div>' +
+
+  '<h4>Pursuits — opening line &amp; updates</h4>' +
+  '<p><strong>Open smoothly.</strong> Lead with the <em>major</em> components, then fill in the minor ones as you can:</p>' +
+  '<ul>' +
+    '<li><strong>Major:</strong> your callsign · vehicle colour/type · location &amp; direction · speed.</li>' +
+    '<li><strong>Minor:</strong> licence/vehicle class · weather · traffic.</li>' +
+  '</ul>' +
+  '<p><strong>Keep updates flowing.</strong> Call every change of road or direction — <em>"right-right onto [street]"</em>, <em>"left-left"</em> — plus speed and hazards, so backup and air support can slot in. Always pair a direction with the road name (e.g. <em>"westbound on [road]"</em>).</p>' +
+  '<div class="guide-jump" style="margin-top:6px">' +
+    '<button class="btn" type="button" data-guide-read="pursuit">🏁 Open pursuit comms</button>' +
+    '<button class="btn" type="button" data-guide-topic="license-classes">📖 Licence classes</button>' +
+    '<button class="btn" type="button" data-guide-topic="priority">📖 Priority levels</button>' +
+  '</div>' +
+
+  '<h4>Licence classes — the short version</h4>' +
+  '<p><strong>Gold</strong> — unrestricted; can pursue and terminate anyone\'s pursuit. <strong>Silver</strong> — 250&nbsp;km/h; can be primary in a pursuit and terminate its own. <strong>Bronze</strong> — 200&nbsp;km/h; <em>cannot</em> pursue. Stick to your class — abusing it gets it downgraded.</p>' +
+
+  '<h4>Terminating your OWN pursuit</h4>' +
+  '<p>You can call off your own pursuit at any time — and you <strong>should</strong> the moment it becomes <strong>too dangerous</strong> (speed, traffic, weather) or you <strong>lose visual</strong> of the suspect vehicle. Call <em>"[CALLSIGN] terminating pursuit"</em> and give your last known location and direction of travel.</p>' +
+
+  '<h4>Imperative pursuit</h4>' +
+  '<p>An <strong>imperative pursuit</strong> is one that\'s justified to continue <em>despite</em> the risk, because letting the offender get away is more dangerous than the pursuit itself — e.g. an active threat to life. It still has to withstand scrutiny (the S.E.L.F test).</p>' +
+
+  '<h4>Ping your location — the <span class="rh-pill">END</span> hotkey</h4>' +
+  '<p>Press <span class="rh-pill">END</span> to drop/ping your current location so other units and air support can find you fast. Use it in pursuits and whenever you call for backup.</p>' +
+
+  '<h4>Driving &amp; when you can break road rules</h4>' +
+  '<p>Your <strong>priority level</strong> sets what you\'re allowed to do: <strong>Priority 1</strong> (lights &amp; sirens) — you may exceed the limit and break road rules for critical jobs &amp; pursuits; <strong>Priority 2</strong> — the same, but only <em>as necessary</em>, using warning systems at crossings; <strong>Priority 3</strong> — normal road rules. Whatever the priority, drive to the conditions, <strong>clear every intersection</strong>, and be ready to justify it.</p>' +
+
+  '<div class="guide-verify"><strong>✎ Verify server rules:</strong> the exact wording/rules for <strong>imperative pursuit</strong>, the <span class="rh-pill">END</span> location ping, and when you <em>must</em> terminate a pursuit can differ between servers — double-check these three against your current BBRP / GD SOPs and tweak the wording.</div>';
+
 /* ── Scenario walkthroughs ─────────────────────────────────────────── */
 const GUIDE_SCENARIOS = [
   {
@@ -275,5 +331,6 @@ if (typeof window !== "undefined") {
   window.GUIDE_GOLDEN_RULES = GUIDE_GOLDEN_RULES;
   window.GUIDE_COPY = GUIDE_COPY;
   window.GUIDE_QUICKREF_HTML = GUIDE_QUICKREF_HTML;
+  window.GUIDE_RADIO_HTML = GUIDE_RADIO_HTML;
   window.GUIDE_SCENARIOS = GUIDE_SCENARIOS;
 }

@@ -55,7 +55,7 @@
 
     var copyBtns = (typeof GUIDE_COPY !== "undefined" ? GUIDE_COPY : [])
       .map(function (c) {
-        return '<button class="btn guide-copy-btn" type="button" data-guide-copy="' + c.id + '">' +
+        return '<button class="btn guide-copy-btn" type="button" data-guide-read="' + c.id + '">' +
           (c.icon ? c.icon + " " : "") + c.label + "</button>";
       }).join("");
 
@@ -78,8 +78,14 @@
       // Copy snippets
       '<div class="card">' +
         '<h2 style="margin:0 0 4px">Radio calls &amp; the caution</h2>' +
-        '<div class="muted" style="margin-bottom:10px">Tap to copy — fill in the [BRACKETS] and paste straight into your RP.</div>' +
+        '<div class="muted" style="margin-bottom:10px">Tap one to open it big for reading out loud — there\'s a Copy button inside if you want to paste it. Fill in the [BRACKETS].</div>' +
         '<div class="guide-jump" style="margin-top:0">' + copyBtns + "</div>" +
+      "</div>" +
+      // Radio comms explainer
+      '<div class="card">' +
+        '<h2 style="margin:0 0 4px">Radio comms — how they work</h2>' +
+        '<div class="muted" style="margin-bottom:12px">What the radio is for, staying professional, and running pursuit comms.</div>' +
+        '<div class="guide-info">' + (typeof GUIDE_RADIO_HTML !== "undefined" ? GUIDE_RADIO_HTML : "") + "</div>" +
       "</div>" +
       // Scenario picker
       '<div class="card">' +
@@ -132,11 +138,81 @@
     });
   }
 
+  function getCopyEntry(id) {
+    if (typeof GUIDE_COPY === "undefined") return null;
+    return GUIDE_COPY.filter(function (c) { return c.id === id; })[0] || null;
+  }
+
   function copyById(id, btn) {
-    if (typeof GUIDE_COPY === "undefined") return;
-    var entry = GUIDE_COPY.filter(function (c) { return c.id === id; })[0];
+    var entry = getCopyEntry(id);
     if (!entry) return;
     copyToClipboard(entry.text).then(function (ok) { if (ok) flashCopied(btn); });
+  }
+
+  // ── Read-aloud popup for radio calls ──────────────────────────────────
+  // Tapping a radio-call button opens the script big and readable so it can be
+  // read out loud on the spot; a Copy button inside keeps the old paste flow.
+  var readModalEl = null, readModalTitle = null, readModalText = null, readModalCurrentId = null;
+
+  function buildReadModal() {
+    if (readModalEl) return;
+    var overlay = document.createElement("div");
+    overlay.className = "guide-modal-overlay";
+    overlay.id = "guideReadModalOverlay";
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-modal", "true");
+    overlay.setAttribute("aria-labelledby", "guideReadModalTitle");
+    overlay.innerHTML =
+      '<div class="guide-modal" role="document">' +
+        '<h3 class="guide-modal-title" id="guideReadModalTitle"></h3>' +
+        '<div class="guide-modal-hint">Read it out loud — fill in anything in [BRACKETS].</div>' +
+        '<div class="guide-modal-text" tabindex="0"></div>' +
+        '<div class="guide-modal-actions">' +
+          '<button class="btn" type="button" data-read-copy>📋 Copy</button>' +
+          '<button class="btn guide-modal-close" type="button" data-read-close>Close</button>' +
+        "</div>" +
+      "</div>";
+    document.body.appendChild(overlay);
+    readModalEl = overlay;
+    readModalTitle = overlay.querySelector(".guide-modal-title");
+    readModalText = overlay.querySelector(".guide-modal-text");
+
+    overlay.addEventListener("click", function (e) {
+      if (e.target === overlay) { closeReadModal(); return; }          // backdrop click
+      var t = e.target;
+      if (t.closest && t.closest("[data-read-close]")) { closeReadModal(); return; }
+      var copyBtn = t.closest ? t.closest("[data-read-copy]") : null;
+      if (copyBtn) {
+        var entry = getCopyEntry(readModalCurrentId);
+        if (entry) copyToClipboard(entry.text).then(function (ok) { if (ok) flashCopied(copyBtn); });
+      }
+    });
+  }
+
+  function onReadModalKeydown(e) {
+    if (e.key === "Escape" || e.key === "Esc") { e.stopPropagation(); closeReadModal(); }
+  }
+
+  function openReadModal(id) {
+    var entry = getCopyEntry(id);
+    if (!entry) return;
+    buildReadModal();
+    readModalCurrentId = id;
+    readModalTitle.innerHTML = (entry.icon ? entry.icon + " " : "") + entry.label;
+    readModalText.textContent = entry.text; // pre-wrap keeps the \n line breaks
+    document.body.style.overflow = "hidden";
+    readModalEl.classList.add("open");
+    document.addEventListener("keydown", onReadModalKeydown, true);
+    if (typeof trapFocus === "function") trapFocus(readModalEl.querySelector(".guide-modal") || readModalEl);
+  }
+
+  function closeReadModal() {
+    if (!readModalEl || !readModalEl.classList.contains("open")) return;
+    readModalEl.classList.remove("open");
+    document.body.style.overflow = "";
+    document.removeEventListener("keydown", onReadModalKeydown, true);
+    if (typeof releaseFocusTrap === "function") releaseFocusTrap();
+    readModalCurrentId = null;
   }
 
   function handleClick(e) {
@@ -144,7 +220,10 @@
     // Scenario picker
     var pick = t.closest ? t.closest("#guideScenarioBtns button[data-scenario]") : null;
     if (pick) { selectScenario(pick.dataset.scenario); return; }
-    // Copy snippet
+    // Read-aloud popup (radio-call buttons)
+    var read = t.closest ? t.closest("[data-guide-read]") : null;
+    if (read) { openReadModal(read.dataset.guideRead); return; }
+    // Copy snippet (inline scenario buttons)
     var copy = t.closest ? t.closest("[data-guide-copy]") : null;
     if (copy) { copyById(copy.dataset.guideCopy, copy); return; }
     // Jump into a report / other tab
