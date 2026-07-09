@@ -319,6 +319,26 @@ const GUIDE_SCENARIOS = [
         '<button class="btn" type="button" data-guide-topic="critical-incidents">📖 Critical incidents</button>' +
         '<button class="btn" type="button" data-guide-topic="use-of-force">📖 Use of force</button>' +
       '</div>'
+  },
+  {
+    id: "gang-scene", icon: "🩹", label: "Gang violence / mass-casualty scene",
+    html:
+      '<h3>Multiple down after gang / crew violence</h3>' +
+      '<div class="guide-warn"><strong>Medical before weapons.</strong> Render aid first. Do not confiscate weapons before treating &amp; processing — only ID may be taken before treatment is done.</div>' +
+      '<div class="guide-q">Work it in this order:</div>' +
+      '<ol class="guide-steps">' +
+        '<li><strong>Render medical aid</strong> to the injured. Nothing taken except ID until they are stabilised.</li>' +
+        '<li><strong>Once stable</strong>, help them up and say what happens next — GSR, find ID, search — so they know your intentions.</li>' +
+        '<li><strong>Secure items</strong> — request CIRT to confiscate firearms / illegal items, or take them yourself.</li>' +
+        '<li><strong>No ID?</strong> Request a CSO to the scene, or wait until the station. No F6 prints unless at a station or deployed as CSO.</li>' +
+        '<li><strong>Process</strong> — cuff, read the caution, then standard custody.</li>' +
+      '</ol>' +
+      '<div class="guide-jump">' +
+        '<button class="btn" type="button" data-guide-topic="scene-processing">📖 Scene processing order</button>' +
+        '<button class="btn" type="button" data-guide-topic="use-of-force">📖 Use of force</button>' +
+        '<button class="btn" type="button" data-guide-jump="report" data-report-type="arrest">📝 Start Arrest Report</button>' +
+        '<button class="btn" type="button" data-guide-jump="report" data-report-type="search_seizure">📝 Search &amp; Seizure</button>' +
+      '</div>'
   }
 ];
 

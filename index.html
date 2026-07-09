@@ -65,6 +65,11 @@
 </select>
 <div id="reportTypeHint" class="hint" style="margin-top:6px;display:none"><span>💡</span><span id="reportTypeHintText"></span><button class="btn" data-guide-topic="" id="reportTypeGuideBtn" style="font-size:11px;padding:6px 10px;flex-shrink:0;margin-left:auto;display:none" type="button">📖 Guide</button></div>
 <div class="hint" style="margin-top:8px"><span>💡</span><span>Date/time, callsign and unit can still auto-fill from MDT paste or your saved template, but you can now edit them here as well.</span></div>
+<label class="autolink-toggle" style="display:flex;align-items:center;gap:8px;margin-top:8px;font-size:12px;cursor:pointer" title="Enter the subject, when/where and vehicle once — they auto-fill every section that uses them.">
+<input checked="" id="autoLinkSharedToggle" style="width:auto;transform:scale(1.15);flex-shrink:0" type="checkbox"/>
+<span>🔗 <strong>Auto-link shared details</strong> — enter subject, when/where &amp; vehicle once; they fill every section</span>
+</label>
+<div class="recruit-hint"><strong>Auto-link is on.</strong> Type the person, the date/time/location, or the vehicle in <em>any</em> section and it copies to the others automatically — no re-typing, and edits stay in sync both ways. Turn it off if a report is about a <em>different</em> person or vehicle than the one above.</div>
 <div class="recruit-hint"><strong>New here?</strong> Pick the report that matches what happened. Not sure which one? Open the <button class="guide-link" type="button" data-tool-page-jump="guide" style="background:none;border:none;padding:0;color:var(--accent);text-decoration:underline;cursor:pointer;font:inherit">🧭 Day-to-Day Guide</button> and let a scenario start the right report for you. Fields with a blue note are ones recruits often miss.</div>
 <details class="header-meta-details" id="reportHeaderMetaDetails">
 <summary>Report header details</summary>
@@ -985,14 +990,14 @@ Paramedic David Ace" rows="3"></textarea></label>
      browsers holding stale copies (especially mobile) fetch fresh files. -->
 <script src="assets/data/charges.js?v=20260707"></script>
 <script src="assets/data/pins.js?v=20260707"></script>
-<script src="assets/js/core.js?v=20260707"></script>
+<script src="assets/js/core.js?v=20260712"></script>
 <script src="assets/js/reports.js?v=20260707"></script>
 <script src="assets/data/items.js?v=20260707"></script>
 <script src="assets/js/ocr.js?v=20260707"></script>
-<script src="assets/js/ui-data.js?v=20260707"></script>
-<script src="assets/data/recruit.js?v=20260710"></script>
+<script src="assets/js/ui-data.js?v=20260712"></script>
+<script src="assets/data/recruit.js?v=20260712"></script>
 <script src="assets/js/recruit-helper.js?v=20260707"></script>
-<script src="assets/data/guide.js?v=20260710"></script>
+<script src="assets/data/guide.js?v=20260712"></script>
 <script src="assets/js/guide.js?v=20260710"></script>
-<script src="assets/js/interactions.js?v=20260711"></script></body>
+<script src="assets/js/interactions.js?v=20260712"></script></body>
 </html>

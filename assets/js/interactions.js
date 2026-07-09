@@ -383,6 +383,11 @@
     try { fn(); } catch (e) { console.error('[vicpol init] ' + label + ' failed:', e); }
   }
   safeInit('loadAutosave', () => loadAutosave());
+  // Auto-link preference must be known BEFORE renderAll (which reconciles linked
+  // fields) so a user who turned it off keeps their deliberately-different values.
+  safeInit('initAutoLinkPref', () => {
+    try { const s = localStorage.getItem('vicpol_autolink_shared'); if (s !== null) state.autoLinkShared = (s === '1'); } catch (e) {}
+  });
   safeInit('sanitizeVicPolState', () => sanitizeVicPolState(false));
   safeInit('renderAll', () => renderAll());
   safeInit('bindInputs', () => bindInputs());
@@ -546,6 +551,25 @@
         try { localStorage.setItem('vicpol_recruit_mode', on ? '1' : '0'); } catch (e) {}
         applyRecruitMode(on);
         if (typeof toast === 'function') toast(on ? 'Recruit Mode on — hints & checklist shown' : 'Recruit Mode off', 'ok');
+      });
+    }
+
+    // ── Auto-link shared details toggle (v7) ──
+    // Enter the subject / when-where / vehicle once; they fan out to every section
+    // that uses them. Preference is read early (initAutoLinkPref) into
+    // state.autoLinkShared; here we just reflect it and handle changes.
+    const autoLinkToggle = document.getElementById('autoLinkSharedToggle');
+    if (autoLinkToggle && autoLinkToggle.dataset.bound !== '1') {
+      autoLinkToggle.dataset.bound = '1';
+      autoLinkToggle.checked = state.autoLinkShared !== false;
+      autoLinkToggle.addEventListener('change', () => {
+        const on = autoLinkToggle.checked;
+        state.autoLinkShared = on;
+        try { localStorage.setItem('vicpol_autolink_shared', on ? '1' : '0'); } catch (e) {}
+        if (on && typeof reconcileSharedLinks === 'function') { try { reconcileSharedLinks(); } catch (e) {} }
+        if (typeof debouncedRenderPreview === 'function') debouncedRenderPreview();
+        if (typeof throttledAutosave === 'function') throttledAutosave();
+        if (typeof toast === 'function') toast(on ? 'Auto-link on — shared details flow across sections' : 'Auto-link off — sections are independent', 'ok');
       });
     }
 
@@ -1952,3 +1976,4 @@
   safeInit('expandCardsWithContentDefaults', () => expandCardsWithContentDefaults());
   safeInit('initUiBindings', () => initUiBindings());
   safeInit('initOcrLabBindings', () => initOcrLabBindings());
+  safeInit('initSharedFieldLinks', () => { if (typeof initSharedFieldLinks === 'function') initSharedFieldLinks(); });

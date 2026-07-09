@@ -366,6 +366,25 @@ const RECRUIT_HANDBOOK = [
       '</div>'
   },
   {
+    id: "scene-processing", group: "Procedures", icon: "🩹",
+    title: "Gang / Mass-Casualty Scene — Processing Order",
+    keywords: "gang crew violence triage mass casualty medical aid render first aid gsr gunshot residue fingerprint f6 cso crime scene officer cirt confiscate firearms weapons illegal items identification id search cuff caution custody stabilise stabilised processing order sequence",
+    html:
+      '<p>On gang / crew violence with multiple casualties, <strong>medical comes first</strong>. Work the scene in the right order — do not strip a wounded suspect before treating them.</p>' +
+      '<p class="rh-warn"><strong>Medical before weapons.</strong> Do not confiscate weapons immediately, and never confiscate if you are not going to render aid and process the person. Only <strong>identification</strong> may be taken before treatment is complete.</p>' +
+      '<ol>' +
+      '<li><strong>Render medical aid</strong> — provide adequate treatment first. Nothing is taken except ID until the patient is stabilised.</li>' +
+      '<li><strong>Once stabilised</strong>, help them to their feet and <strong>tell them your next steps</strong> (GSR test, locating ID, searches) so they know what you are doing.</li>' +
+      '<li><strong>Then secure items</strong> — request CIRT to confiscate firearms / illegal items, or take them yourself if required.</li>' +
+      '<li><strong>No ID?</strong> Request a Crime Scene Officer (CSO) to the scene, or wait until you are at a station. <strong>Do not use F6 fingerprints unless you are at a station or deployed as CSO.</strong></li>' +
+      '<li><strong>Bring to feet &amp; process</strong> — cuff, read the caution, then standard custody procedure.</li>' +
+      '</ol>' +
+      '<p style="font-size:11px;color:var(--muted)">Directive: Zoe Prime, Senior Sergeant &middot; MEL 262 &middot; General Duties.</p>' +
+      '<div class="rh-links"><span class="rh-links-label">Write it up:</span>' +
+      '<button class="rh-tool-link" data-rh-report="arrest" type="button">📝 Arrest Report — treatment, GSR, items &amp; timeline</button>' +
+      '</div>'
+  },
+  {
     id: "use-of-force", group: "Procedures", icon: "✊",
     title: "Use of Force",
     keywords: "use of force continuum tiers less than lethal lethal taze beanbag motorcycle excessive force physical presence securing scenes",

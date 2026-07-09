@@ -1076,7 +1076,17 @@ function enforceVicpolWarrantIdStatus(showToast = false) {
     sigDivision: "",
     officerCallsigns: {},
     savedCallsigns: [],
-    excludedSections: []
+    excludedSections: [],
+    // Auto-link shared details: canonical store for facts that recur across report
+    // sections (subject / when-where / vehicle). Fanned out to every linked field so a
+    // recruit can enter info once. `autoLinkShared` is the global on/off toggle.
+    autoLinkShared: true,
+    linkedShared: {
+      name: "", dob: "", phone: "",
+      time: "", date: "", location: "",
+      rego: "", model: "", colour: "", owner: "",
+      registered: "", regoExpires: "", stolen: "", suspended: ""
+    }
   };
 
   let state = deepClone(INITIAL_STATE);
@@ -1723,7 +1733,89 @@ function enforceVicpolWarrantIdStatus(showToast = false) {
     }
   }
 
-  
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Auto-link shared details — field groups
+// Each group is one canonical fact (key) shared across several report sections.
+// members = the DOM input id + the state path it maps to ("" path = DOM only,
+// e.g. the Traffic-tab suspect name which has no state slot).
+// Deliberately EXCLUDED: swWarrantName (warrant-name override — generator already
+// falls back to offender name) and vicDriver (driver ≠ registered owner). Those
+// stay independent on purpose.
+// ═══════════════════════════════════════════════════════════════════════════
+const LINK_GROUPS = [
+  { key: "name",       members: [
+    { id: "offenderName",    path: "offender.name" },
+    { id: "fcName",          path: "fieldContact.name" },
+    { id: "ssName",          path: "searchSeizure.name" },
+    { id: "ttName",          path: "" }
+  ]},
+  { key: "dob",        members: [
+    { id: "offenderDOB",     path: "offender.dob" },
+    { id: "fcDOB",           path: "fieldContact.dob" },
+    { id: "ssDOB",           path: "searchSeizure.dob" }
+  ]},
+  { key: "phone",      members: [
+    { id: "offenderPhone",   path: "offender.phone" },
+    { id: "fcPhone",         path: "fieldContact.phone" },
+    { id: "ssPhone",         path: "searchSeizure.phone" }
+  ]},
+  { key: "time",       members: [
+    { id: "prelimTime",      path: "prelimTime" },
+    { id: "fcTime",          path: "fieldContact.time" },
+    { id: "ssTime",          path: "searchSeizure.time" },
+    { id: "twTime",          path: "trafficWarrant.time" }
+  ]},
+  { key: "date",       members: [
+    { id: "prelimDate",      path: "prelimDate" },
+    { id: "fcDate",          path: "fieldContact.date" },
+    { id: "ssDate",          path: "searchSeizure.date" },
+    { id: "twDate",          path: "trafficWarrant.date" }
+  ]},
+  { key: "location",   members: [
+    { id: "prelimLocation",  path: "prelimLocation" },
+    { id: "fcLocation",      path: "fieldContact.location" },
+    { id: "ssLocation",      path: "searchSeizure.location" },
+    { id: "twLocation",      path: "trafficWarrant.location" },
+    { id: "vicLocation",     path: "vehicleInspection.location" }
+  ]},
+  { key: "rego",       members: [
+    { id: "twRego",          path: "trafficWarrant.rego" },
+    { id: "swRego",          path: "vicpolWarrant.rego" },
+    { id: "vicRego",         path: "vehicleInspection.rego" }
+  ]},
+  { key: "model",      members: [
+    { id: "twModel",         path: "trafficWarrant.model" },
+    { id: "swModel",         path: "vicpolWarrant.model" },
+    { id: "vicMake",         path: "vehicleInspection.make" }
+  ]},
+  { key: "colour",     members: [
+    { id: "twColour",        path: "trafficWarrant.colour" },
+    { id: "swColour",        path: "vicpolWarrant.colour" },
+    { id: "vicColour",       path: "vehicleInspection.colour" }
+  ]},
+  { key: "owner",      members: [
+    { id: "twOwner",         path: "trafficWarrant.owner" },
+    { id: "swOwner",         path: "vicpolWarrant.owner" }
+  ]},
+  { key: "registered", members: [
+    { id: "twRegistered",    path: "trafficWarrant.registered" },
+    { id: "swRegistered",    path: "vicpolWarrant.registered" }
+  ]},
+  { key: "regoExpires", members: [
+    { id: "twRegoExpires",   path: "trafficWarrant.regoExpires" },
+    { id: "swRegoExpires",   path: "vicpolWarrant.regoExpires" }
+  ]},
+  { key: "stolen",     members: [
+    { id: "twStolen",        path: "trafficWarrant.stolen" },
+    { id: "swStolen",        path: "vicpolWarrant.stolen" }
+  ]},
+  { key: "suspended",  members: [
+    { id: "twSuspended",     path: "trafficWarrant.suspended" },
+    { id: "swSuspended",     path: "vicpolWarrant.suspended" }
+  ]}
+];
+
 // Update UI based on report type
 const REPORT_CARD_VISIBILITY = {
   arrest: ["chargesCard", "pinsCard", "itemsCard", "officersCard", "narrativeCard", "sentenceCard", "interviewCard"],
@@ -1776,6 +1868,12 @@ function updateReportTypeUI() {
   visibleCards.forEach(key => {
     if (el[key]) el[key].style.display = "block";
   });
+
+  // Auto-link: push canonical shared facts into the freshly-shown cards so a
+  // recruit who entered the subject/vehicle once sees it pre-filled here too.
+  if (typeof reconcileSharedLinks === "function") {
+    try { reconcileSharedLinks(); } catch (e) {}
+  }
 }
 
 // Preview Generation (DEBOUNCED)

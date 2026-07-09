@@ -1609,6 +1609,114 @@
     debouncedRenderPreview();
   }
 
+  // ═══════════════════════════════════════════════════════════════════════════
+  // AUTO-LINK SHARED DETAILS (v7)
+  // Enter a shared fact once (subject / when-where / vehicle) and it flows to
+  // every report section that uses it, both directions. Field groups live in
+  // LINK_GROUPS (core.js). `state.autoLinkShared` is the global toggle. A
+  // re-entrancy guard stops a fan-out from re-triggering itself.
+  // ═══════════════════════════════════════════════════════════════════════════
+  let _linkSyncing = false;
+
+  function setStatePath(path, value) {
+    if (!path) return;
+    const parts = path.split(".");
+    let obj = state;
+    for (let i = 0; i < parts.length - 1; i++) {
+      if (obj[parts[i]] == null || typeof obj[parts[i]] !== "object") obj[parts[i]] = {};
+      obj = obj[parts[i]];
+    }
+    obj[parts[parts.length - 1]] = value;
+  }
+
+  function getStatePath(path) {
+    if (!path) return "";
+    const parts = path.split(".");
+    let obj = state;
+    for (const p of parts) {
+      if (obj == null) return "";
+      obj = obj[p];
+    }
+    return obj == null ? "" : obj;
+  }
+
+  // Write a value into one member (DOM input + its state slot). Direct writes,
+  // no event dispatch — the guard is set and we update state ourselves, so the
+  // sibling's own bindInputs listener doesn't need to (and shouldn't) run.
+  function writeLinkMember(m, value) {
+    const node = document.getElementById(m.id);
+    if (node && node.value !== value) node.value = value;
+    if (m.path) setStatePath(m.path, value);
+  }
+
+  // Fan a value out to every sibling in the group (skipping the source input).
+  function fanOutLink(group, value, sourceId) {
+    _linkSyncing = true;
+    try {
+      for (const m of group.members) {
+        if (m.id === sourceId) continue;
+        writeLinkMember(m, value);
+      }
+    } finally {
+      _linkSyncing = false;
+    }
+  }
+
+  // Handler for input/change on any linked field.
+  function onLinkedFieldInput(group, member, node) {
+    if (!state.autoLinkShared || _linkSyncing) return;
+    if (!state.linkedShared) state.linkedShared = {};
+    const value = node.value;
+    state.linkedShared[group.key] = value;
+    fanOutLink(group, value, member.id);
+    debouncedRenderPreview();
+    throttledAutosave();
+  }
+
+  // Push the canonical value for each group into all of its members. Canonical =
+  // stored linkedShared value, else the first non-empty member (self-heals drafts
+  // saved before this feature, and spreads OCR/paste fills that land in one slot).
+  // Never writes an empty value, so select defaults (e.g. "NO") aren't stomped.
+  function reconcileSharedLinks() {
+    if (!state.autoLinkShared) return;
+    if (!state.linkedShared) state.linkedShared = {};
+    if (typeof LINK_GROUPS === "undefined") return;
+    _linkSyncing = true;
+    try {
+      for (const group of LINK_GROUPS) {
+        let canonical = norm(state.linkedShared[group.key]);
+        if (!canonical) {
+          for (const m of group.members) {
+            const v = norm(m.path ? getStatePath(m.path) : (document.getElementById(m.id) || {}).value);
+            if (v) { canonical = v; break; }
+          }
+        }
+        if (!canonical) continue;
+        state.linkedShared[group.key] = canonical;
+        for (const m of group.members) writeLinkMember(m, canonical);
+      }
+    } finally {
+      _linkSyncing = false;
+    }
+  }
+
+  // Attach link listeners alongside the existing bindInputs listeners. Idempotent.
+  function initSharedFieldLinks() {
+    if (typeof LINK_GROUPS === "undefined") return;
+    for (const group of LINK_GROUPS) {
+      for (const member of group.members) {
+        const node = document.getElementById(member.id);
+        if (!node || node.dataset.linkBound === "1") continue;
+        node.dataset.linkBound = "1";
+        const handler = () => onLinkedFieldInput(group, member, node);
+        node.addEventListener("input", handler);
+        node.addEventListener("change", handler);
+      }
+    }
+    // Seed canonical values from whatever is already loaded, then fan out.
+    reconcileSharedLinks();
+  }
+
   // Expose functions for inline onclick
   window.loadDraft = loadDraft;
   window.deleteDraft = deleteDraft;
