@@ -366,10 +366,14 @@
   // dead (previously the tabs were only wired at the very end of this file,
   // so one uncaught error anywhere in init silently killed all of them).
   const toolNav = document.getElementById('toolNav');
-  if (toolNav) toolNav.addEventListener('click', (e) => {
-    const btn = e.target.closest('button[data-tool-page]');
-    if (btn) showToolPage(btn.dataset.toolPage);
-  });
+  if (toolNav) {
+    toolNav.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-tool-page]');
+      if (btn) showToolPage(btn.dataset.toolPage);
+    });
+    toolNav.addEventListener('scroll', updateNavFades, { passive: true });
+    window.addEventListener('resize', updateNavFades, { passive: true });
+  }
 
   // Each init step runs guarded so one failing step (corrupt autosave,
   // storage quirks, odd webview) degrades that feature instead of aborting
@@ -407,6 +411,8 @@
     const initial = pages.includes(hashPage) ? hashPage : (pages.includes(stored) ? stored : 'report');
     if (initial !== 'report') showToolPage(initial);
   } catch {}
+  // Center the active tab + set edge-fades for the current viewport on load.
+  safeInit('centerActiveTab', () => centerActiveTab(false));
 
   // Delegated remove buttons (avoids fragile inline onclick escaping)
   if (el.selectedCharges) {
@@ -435,6 +441,28 @@
   // ═══════════════════════════════════════════════════════════════════════════
 
   
+  // Keep the current tab visible in the horizontal scroll strip and toggle the
+  // left/right edge-fade hints so it's obvious more tabs exist off-screen.
+  function updateNavFades() {
+    const nav = document.getElementById('toolNav');
+    const wrap = document.getElementById('toolNavWrap');
+    if (!nav || !wrap) return;
+    const max = nav.scrollWidth - nav.clientWidth;
+    wrap.classList.toggle('can-scroll-left', nav.scrollLeft > 1);
+    wrap.classList.toggle('can-scroll-right', nav.scrollLeft < max - 1);
+  }
+  function centerActiveTab(smooth) {
+    const nav = document.getElementById('toolNav');
+    if (!nav) return;
+    const active = nav.querySelector('button.nav-active');
+    if (active) {
+      const target = active.offsetLeft - (nav.clientWidth - active.offsetWidth) / 2;
+      try { nav.scrollTo({ left: Math.max(0, target), behavior: smooth ? 'smooth' : 'auto' }); }
+      catch (e) { nav.scrollLeft = Math.max(0, target); }
+    }
+    updateNavFades();
+  }
+
   function showToolPage(page) {
     const allowedPages = new Set(['report', 'traffic', 'ocr', 'recruit', 'guide']);
     const target = allowedPages.has(page) ? page : 'report';
@@ -462,6 +490,7 @@
     if (tab) {
       tab.classList.add('nav-active');
       tab.setAttribute('aria-selected', 'true');
+      centerActiveTab(true);
     }
     updateToolChrome(target);
     try { localStorage.setItem('vicpol_active_tab', target); } catch {}

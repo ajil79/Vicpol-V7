@@ -29,6 +29,8 @@
       min-height:100vh;
       min-height:-webkit-fill-available;
     }
+    /* Never let a stray wide element scroll the whole page sideways on mobile */
+    html,body{max-width:100%;overflow-x:hidden}
     header{
       padding:22px 22px 14px;
       padding-left:max(22px, env(safe-area-inset-left));
@@ -86,7 +88,7 @@
       padding-right:max(22px, env(safe-area-inset-right));
       padding-bottom:max(18px, env(safe-area-inset-bottom));
     }
-    @media (max-width:1100px){ main{grid-template-columns:1fr} }
+    @media (max-width:1100px){ main{grid-template-columns:minmax(0,1fr)} }
     @media (max-width:600px){
       .copy-btn-full{display:none !important}
       .copy-btn-short{display:inline !important}
@@ -103,10 +105,13 @@
       pre{font-size:11px; padding:10px; min-height:400px}
       .preview-wrap{position:static !important; max-height:none !important}
       .kbd{display:none}
-      .tool-nav{padding:0 10px;overflow-x:auto;-webkit-overflow-scrolling:touch;gap:0}
-      .tool-nav button{padding:10px 14px;font-size:12px;white-space:nowrap;flex-shrink:0}
+      .tool-nav{padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right));gap:0}
+      .tool-nav button{padding:10px 14px;font-size:12px}
       .section-toggle-btn{padding:8px 12px}
       .card-collapse-btn{padding:8px 12px}
+      /* Let a card header's controls drop under the title instead of forcing the
+         card wider than the phone screen (was the main cause of sideways scroll). */
+      .section-header-row{flex-wrap:wrap;row-gap:6px}
       .quick-evidence{font-size:10px !important;padding:4px 8px !important}
       #itemSearchInput{font-size:12px}
       #itemCategoryFilter{width:100% !important}
@@ -132,6 +137,7 @@
       border-radius:4px;
       padding:14px;
       box-shadow:none;
+      min-width:0;
       transition: opacity 0.2s ease, transform 0.2s ease;
       animation: cardIn 0.25s ease both;
     }
@@ -193,7 +199,7 @@
     }
     .toast{
       position:fixed;
-      bottom:18px;
+      bottom:max(18px, env(safe-area-inset-bottom));
       left:50%;
       transform:translateX(-50%) translateY(20px);
       background:rgba(0,0,0,0.85);
@@ -445,7 +451,7 @@
     /* Print styles */
     @media print {
       body{background:#fff !important; color:#000 !important}
-      header,.btn,.actions,.toast,.hint,.now-btn,.kbd,.tool-nav,.header-meta-details{display:none !important}
+      header,.btn,.actions,.toast,.hint,.now-btn,.kbd,.tool-nav,.tool-nav-wrap,.header-meta-details{display:none !important}
       main{display:block !important; padding:0 !important}
       main > div:first-child{display:none !important}
       .preview-wrap{position:static !important; max-height:none !important}
@@ -557,15 +563,33 @@
     .add-person-row{display:grid;grid-template-columns:1fr auto;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
 
     /* ── Nav Bar ────────────────────────────────── */
-    .tool-nav{
-      display:flex;gap:0;padding:0 22px;background:var(--vp-navy);border-bottom:2px solid var(--vp-accent-btn);
+    /* Sticky wrapper carries the edge-fade affordance; the nav inside is a single
+       swipeable row at every width (fixes tablet 2-line wrap + hides tabs cleanly). */
+    .tool-nav-wrap{
       position:sticky;top:0;z-index:101;
+      background:var(--vp-navy);border-bottom:2px solid var(--vp-accent-btn);
     }
+    .tool-nav-wrap::before,.tool-nav-wrap::after{
+      content:"";position:absolute;top:0;bottom:2px;width:26px;pointer-events:none;z-index:2;
+      opacity:0;transition:opacity 0.15s ease;
+    }
+    .tool-nav-wrap::before{left:0;background:linear-gradient(to right,var(--vp-navy),rgba(0,31,63,0))}
+    .tool-nav-wrap::after{right:0;background:linear-gradient(to left,var(--vp-navy),rgba(0,31,63,0))}
+    .tool-nav-wrap.can-scroll-left::before{opacity:1}
+    .tool-nav-wrap.can-scroll-right::after{opacity:1}
+    .tool-nav{
+      display:flex;gap:0;
+      padding-left:max(22px, env(safe-area-inset-left));
+      padding-right:max(22px, env(safe-area-inset-right));
+      overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;
+      scrollbar-width:none;overscroll-behavior-x:contain;
+    }
+    .tool-nav::-webkit-scrollbar{display:none}
     .tool-nav button{
       background:transparent;border:none;border-bottom:2px solid transparent;
       color:var(--muted);padding:11px 20px;font-size:12px;font-weight:700;
-      cursor:pointer;letter-spacing:0.8px;transition:all 0.15s ease;font-family:'IBM Plex Sans',inherit;
-      text-transform:uppercase;
+      cursor:pointer;letter-spacing:0.8px;transition:color 0.15s ease,background 0.15s ease;font-family:'IBM Plex Sans',inherit;
+      text-transform:uppercase;white-space:nowrap;flex-shrink:0;
       position:relative;
     }
     .tool-nav button:hover{color:var(--text);background:rgba(255,255,255,0.04)}
@@ -577,7 +601,9 @@
       content:"";position:absolute;bottom:-2px;left:20%;right:20%;height:2px;
       background:var(--vp-cyan);border-radius:2px;
     }
-    body.light-mode .tool-nav{background:var(--vp-blue)}
+    body.light-mode .tool-nav-wrap{background:var(--vp-blue)}
+    body.light-mode .tool-nav-wrap::before{background:linear-gradient(to right,var(--vp-blue),rgba(0,43,92,0))}
+    body.light-mode .tool-nav-wrap::after{background:linear-gradient(to left,var(--vp-blue),rgba(0,43,92,0))}
     body.light-mode .tool-nav button{color:rgba(255,255,255,0.6)}
     body.light-mode .tool-nav button:hover{color:#fff;background:rgba(255,255,255,0.08)}
     body.light-mode .tool-nav button.nav-active{background:rgba(0,191,255,0.1);color:var(--vp-cyan);text-shadow:none}
