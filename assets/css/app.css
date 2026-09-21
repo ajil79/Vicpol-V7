@@ -1,4 +1,16 @@
 
+    /* ── Self-hosted fonts (v7.1) ──────────────────────
+       Replaces the Google Fonts CDN link so the app has no external network
+       dependency and works fully offline after first load. Latin-subset only
+       (this app is English-only) — see assets/vendor/fonts/. */
+    @font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:400;font-display:swap;src:url('../vendor/fonts/sans400.woff2') format('woff2')}
+    @font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:500;font-display:swap;src:url('../vendor/fonts/sans500.woff2') format('woff2')}
+    @font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:600;font-display:swap;src:url('../vendor/fonts/sans600.woff2') format('woff2')}
+    @font-face{font-family:'IBM Plex Sans';font-style:normal;font-weight:700;font-display:swap;src:url('../vendor/fonts/sans700.woff2') format('woff2')}
+    @font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:400;font-display:swap;src:url('../vendor/fonts/mono400.woff2') format('woff2')}
+    @font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:500;font-display:swap;src:url('../vendor/fonts/mono500.woff2') format('woff2')}
+    @font-face{font-family:'IBM Plex Mono';font-style:normal;font-weight:600;font-display:swap;src:url('../vendor/fonts/mono600.woff2') format('woff2')}
+
     :root{
       color-scheme: dark;
       --bg:#000A14;

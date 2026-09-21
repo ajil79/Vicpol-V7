@@ -4,6 +4,16 @@ Newest first. Dates are the commit dates on `main`.
 
 ## Unreleased
 
+- **Offline support (PWA).** Added a service worker (`sw.js`) that precaches the app shell
+  (HTML, CSS, JS, data, fonts) so the app works fully offline after the first load; the
+  Tesseract OCR engine (not precached, ~6.6 MB) caches itself the first time OCR is actually
+  used, so it too works offline afterwards. Added `manifest.webmanifest` (installable as a PWA)
+  and a proper favicon (`assets/icon.svg`) — the app previously had neither.
+- **Self-hosted fonts.** IBM Plex Sans/Mono are now bundled under `assets/vendor/fonts/`
+  (latin subset only, 7 files, ~140 KB) instead of loaded from Google Fonts, removing the app's
+  one remaining external network dependency. CSP (both the `<meta>` tag and, new, a real
+  `Content-Security-Policy` HTTP header in `vercel.json`) no longer needs to allow
+  `fonts.googleapis.com`/`fonts.gstatic.com`.
 - **Accessibility: keyboard-navigable tabs and focus management.** The tool nav now follows the
   WAI-ARIA tabs pattern: roving `tabindex` (only the active tab is Tab-reachable), Left/Right/
   Home/End arrow-key navigation, and the current tab is reflected in the URL hash (deep-linkable,

@@ -19,6 +19,8 @@ npm run dev        # serves at http://localhost:3000 via `npx serve`
 
 Or just open `index.html` directly in a browser — no server needed. (OCR needs the bundled assets under `assets/vendor/`, which are served fine either way.)
 
+The app installs as a PWA and works fully offline after the first load (a service worker precaches the app shell; OCR's Tesseract engine caches itself the first time OCR is used).
+
 ## Deploy
 
 Static site — import the repo into Vercel with **no build settings**. `vercel.json` sets the security headers. Every push to the default branch auto-deploys.
@@ -38,5 +40,7 @@ Static site — import the repo into Vercel with **no build settings**. `vercel.
 | `assets/js/guide.js` | Renders the Day-to-Day Guide (new in v7) |
 | `assets/data/*.js` | Static datasets — charges, pins, items, recruit handbook, guide scenarios |
 | `assets/vendor/` | Bundled Tesseract OCR engine + language data |
+| `assets/vendor/fonts/` | Self-hosted IBM Plex Sans/Mono (no Google Fonts dependency) |
+| `sw.js` / `manifest.webmanifest` | Offline service worker + PWA install manifest |
 
 See `CLAUDE.md` for a deeper map of the code for anyone (or any agent) editing it.

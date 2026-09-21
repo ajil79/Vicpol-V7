@@ -422,6 +422,15 @@
   // Center the active tab + set edge-fades for the current viewport on load.
   safeInit('centerActiveTab', () => centerActiveTab(false));
 
+  // Register the offline service worker (see sw.js). Registration failing —
+  // unsupported browser, blocked by a privacy setting, served over plain
+  // HTTP — must never block the app; it only means no offline support.
+  safeInit('registerServiceWorker', () => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js').catch((e) => console.warn('[vicpol] service worker registration failed:', e));
+    }
+  });
+
   // Delegated remove buttons (avoids fragile inline onclick escaping)
   if (el.selectedCharges) {
     el.selectedCharges.addEventListener('click', (e) => {

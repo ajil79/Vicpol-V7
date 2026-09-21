@@ -1,0 +1,14 @@
+{
+  "name": "VicPol Tool v7",
+  "short_name": "VicPol Tool",
+  "description": "Offline-capable BBRP Melbourne Police roleplay paperwork tool — reports, warrants, traffic history and a recruit handbook.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#000A14",
+  "theme_color": "#001F3F",
+  "icons": [
+    { "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "assets/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ]
+}

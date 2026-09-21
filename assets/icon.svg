@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="VicPol Tool">
+  <rect width="64" height="64" rx="12" fill="#001F3F"/>
+  <rect x="2" y="2" width="60" height="60" rx="10" fill="none" stroke="#00BFFF" stroke-width="2" opacity="0.35"/>
+  <text x="32" y="41" font-family="'IBM Plex Sans',Arial,sans-serif" font-size="26" font-weight="700"
+        text-anchor="middle" fill="#00BFFF">VP</text>
+</svg>

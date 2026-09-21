@@ -44,6 +44,6 @@ Config lives in `assets/js/core.js`: `VICPOL_ALLOWED_REPORT_TYPES`, `REPORT_TYPE
 `localStorage` only, key prefix `vicpol_`. **Do not rename the prefix** — it orphans existing users' saved drafts/templates. Keys include `vicpol_report_autosave`, `vicpol_report_drafts`, `vicpol_report_presets`, `vicpol_active_tab`, `vicpol_recruit_mode`.
 
 ## Editing tips
-- Bump the `?v=YYYYMMDD` cache-bust query on changed assets in `index.html` (mobile browsers cache aggressively).
+- Bump the `?v=YYYYMMDD` cache-bust query on changed assets in `index.html` (mobile browsers cache aggressively). `sw.js`'s own `CACHE_VERSION` should be bumped in step with any precached asset change — see its file header.
 - JS sections use `// ═══` banner comments; CSS uses `/* ── Name ── */`. Grep those to jump around.
 - App name/version is `APP_META` in `core.js`.

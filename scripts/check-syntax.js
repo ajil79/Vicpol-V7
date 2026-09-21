@@ -7,7 +7,8 @@ const { globSync } = require("./lib/glob");
 const files = [
   ...globSync("assets/js/*.js"),
   ...globSync("assets/data/*.js"),
-  ...globSync("scripts/*.js")
+  ...globSync("scripts/*.js"),
+  "sw.js"
 ];
 
 let failed = false;
