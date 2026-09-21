@@ -4,6 +4,30 @@ Newest first. Dates are the commit dates on `main`.
 
 ## Unreleased
 
+- **OCR overhaul, driven by real BlueBird RP screenshots the user supplied.** Found and fixed a
+  genuine pre-existing data-corruption bug: the regex that recognises "NO" values in
+  `normaliseBool` contained literal backspace control-character bytes instead of the text `NO|N0`
+  (likely mangled by a prior copy/paste), so it silently matched nothing — every YES/NO flag
+  field (wanted, bail, mental health, violence, weapon licences, vehicle registered/stolen/
+  suspended — 14 fields in total) has been failing to recognise "NO" for as long as this code
+  has existed. Also fixed: a field-label lookup could match a short label (`VIOLENCE`) *inside* a
+  longer one that starts the same way (`VIOLENCE POLICE`), stealing its value; a label match could
+  land inside a section-divider line (`--- OWNER DETAILS ---`) and capture the trailing dashes as
+  a "value"; the licence-card address heuristic only recognised addresses containing a digit or a
+  hardcoded GTA place name, missing this server's custom fictional locations; the `SEX` field
+  didn't recognise "Male"/"Female" spelled out (only `M`/`F`/`X`); and the "Identification"
+  name-confirmation hover-box (no "NAME:" label at all) wasn't read as a name source.
+- **Upgraded the OCR language model from Tesseract's "fast" to its official "best" quality
+  tier** (verified byte-identical to the previously-bundled file; new one downloaded fresh from
+  the official tessdata_best repo). Bundle size grows accordingly (still lazily cached on first
+  OCR use, never precached by the service worker).
+- **Added automatic deskew**: a small rotation (a photographed/angled licence card) is now
+  detected and corrected before any other preprocessing, using a row-projection-variance search
+  with a confidence guard so icon-only/photo crops are never spuriously rotated.
+- Verified end-to-end against the exact real CrimTrac/LEAP terminal, vehicle-search, licence-card
+  and citizen-interaction screen text the user provided: 30 field-extraction checks, all passing.
+  Deskew verified both geometrically (angle detection + visual correction) and via a full
+  preprocess-then-recognise run showing higher OCR confidence than without it.
 - **Offline support (PWA).** Added a service worker (`sw.js`) that precaches the app shell
   (HTML, CSS, JS, data, fonts) so the app works fully offline after the first load; the
   Tesseract OCR engine (not precached, ~6.6 MB) caches itself the first time OCR is actually

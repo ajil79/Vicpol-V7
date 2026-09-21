@@ -1351,8 +1351,8 @@
         URL.revokeObjectURL(img.src);
         const shortSide = Math.min(img.width, img.height);
         const scale = opts.scale || (shortSide < 1200 ? Math.min(3, Math.ceil(1200 / Math.max(1, shortSide))) : 1);
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
+        let canvas = document.createElement('canvas');
+        let ctx = canvas.getContext('2d');
         canvas.width = Math.max(1, Math.round(img.width * scale));
         canvas.height = Math.max(1, Math.round(img.height * scale));
         ctx.imageSmoothingEnabled = true;
@@ -1362,6 +1362,17 @@
         if (style === 'raw') {
           canvas.toBlob(resolve, 'image/png');
           return;
+        }
+
+        // Auto-deskew (see ocr.js) before any style-specific tone mapping, so
+        // a slightly rotated photo/screenshot still reads as upright text.
+        // Reassigning canvas/ctx (not a new variable) means every reference
+        // below — including the meanBlur/median3 helpers and the final
+        // putImageData/toBlob — automatically operates on the corrected
+        // buffer without needing to touch each one individually.
+        if (typeof deskewCanvas === 'function') {
+          canvas = deskewCanvas(canvas);
+          ctx = canvas.getContext('2d');
         }
 
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);

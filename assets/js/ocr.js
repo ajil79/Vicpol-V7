@@ -172,8 +172,17 @@
 
   function parseOCR(text) {
     const raw = String(text || '').replace(/\r/g, '');
+    // Section-divider lines (e.g. "===== LEAP DATABASE ENTRY =====",
+    // "--------------------- OWNER DETAILS ---------------------", both
+    // seen verbatim on the real CrimTrac/LEAP terminal) are pure visual
+    // noise for field extraction. Left in, a label match for a short field
+    // (e.g. "OWNER") can land INSIDE a divider's own title ("OWNER
+    // DETAILS") and capture the trailing dashes as its "value" — so they're
+    // dropped before any label matching happens.
+    const isDividerLine = (l) => /[=\-]{4,}/.test(l) && l.replace(/[=\-]/g, '').trim().length <= 30;
     const cleanedRaw = raw.split('\n').map(cleanOcrLine).filter(Boolean)
-      .filter(l => !/^(PENDING\s+PAPERWORK|NATIONAL\s+CRIME\s+CHECK|CRIMTRAC)$/i.test(l));
+      .filter(l => !/^(PENDING\s+PAPERWORK|NATIONAL\s+CRIME\s+CHECK|CRIMTRAC)$/i.test(l))
+      .filter(l => !isDividerLine(l));
     const upperLines = cleanedRaw.map(l => l.toUpperCase());
     const upper = upperLines.join('\n');
 
@@ -181,7 +190,7 @@
       const s = String(v || '').toUpperCase().replace(/[^A-Z0-9\- ]/g, '').trim();
       if (!s) return '';
       if (/YES/.test(s)) return /SHORT TERM/.test(s) ? 'YES - SHORT TERM' : 'YES';
-      if (/NO|N0/.test(s)) return 'NO';
+      if (/NO|N0/.test(s)) return 'NO';
       return '';
     };
     const normaliseDate = (v) => {
@@ -225,12 +234,20 @@
       return '';
     };
     const findInlineField = (label, stopLabels = []) => {
+      const escapedLabel = label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+');
+      // A plain indexOf would match 'VIOLENCE' inside the substring 'VIOLENCE
+      // POLICE', stealing that field's value. Require what follows (after
+      // optional whitespace) to be a separator — not another label word —
+      // so a shorter label never matches inside a longer one that starts
+      // with the same text.
+      const labelRe = new RegExp(`\\b${escapedLabel}\\b\\s*(?=[:;.,-]|$)`, 'i');
       for (let i = 0; i < cleanedRaw.length; i++) {
         const line = cleanedRaw[i];
         const upperLine = upperLines[i];
-        const idx = upperLine.indexOf(label.toUpperCase());
-        if (idx === -1) continue;
-        let tail = line.slice(idx + label.length).replace(/^[\s:;.,-]+/, '').trim();
+        const m = labelRe.exec(upperLine);
+        if (!m) continue;
+        const idx = m.index;
+        let tail = line.slice(idx + m[0].length).replace(/^[\s:;.,-]+/, '').trim();
         for (const stop of stopLabels) {
           const stopPattern = String(stop || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/\s+/g, '\\s+');
           const re = new RegExp(`\\s+${stopPattern}\\b`, 'i');
@@ -255,9 +272,16 @@
     const weaponCard = parseWeaponCardText(raw);
     const drugResult = parseDrugResultText(raw);
 
-    let leapName = findLabelValue(['NAME'], { valuePattern: /([A-Z][A-Z ,'.\-]{2,})/, clean: v => String(v || '').replace(/[^A-Z ,'.\-]/gi, '').trim() });
+    // 'IDENTIFICATION' covers the small name-confirmation box the citizen ID
+    // check / hover-card UI shows (just the label "Identification" then the
+    // name on the next line, no "NAME:" anywhere) — a clean, reliable name
+    // source that was previously invisible to this lookup.
+    let leapName = findLabelValue(['NAME', 'IDENTIFICATION'], { valuePattern: /([A-Z][A-Z ,'.\-]{2,})/, clean: v => String(v || '').replace(/[^A-Z ,'.\-]/gi, '').trim() });
     let leapDob = normaliseDate(findLabelValue(['DOB', 'D O B'], { valuePattern: /([0-9]{1,4}[\-\/][0-9]{1,2}[\-\/][0-9]{1,4})/ }));
-    let leapSex = findLabelValue(['SEX', 'S E X'], { valuePattern: /([MFX])/i }).toUpperCase();
+    // Some screens spell this out ("Sex: Male") instead of a single letter.
+    let leapSex = findLabelValue(['SEX', 'S E X'], { valuePattern: /(MALE|FEMALE|[MFX])/i }).toUpperCase();
+    if (leapSex === 'MALE') leapSex = 'M';
+    else if (leapSex === 'FEMALE') leapSex = 'F';
     let leapAddress = findLabelValue(['HOME ADDR', 'HOME ADDRESS', 'HOMEADDR', 'ADDRESS'], { valuePattern: /([A-Z0-9 ,'.\-]{3,})/, clean: v => String(v || '').trim() });
     let leapPhone = findLabelValue(['PHONE NO', 'PHONENO', 'PHONE NUMBER', 'PHONE'], { valuePattern: /([0-9][0-9 ]*)/, clean: v => String(v || '').replace(/\s+/g, '') });
 
@@ -267,8 +291,17 @@
     if (licenceHeaderIndex >= 0) {
       const body = cleanedRaw.slice(licenceHeaderIndex, licenceHeaderIndex + 12);
       const useful = body.filter(line => !/^(DRIVER\s*LICEN[CS]E|VICTORIA\s+AUSTRALIA|LICEN[CS]E\s*NO\.?|VICROADS|NO PHOTO)$/i.test(line));
-      const nameLine = useful.find(line => /[A-Z]/i.test(line) && !/\d/.test(line) && !/LICEN[CS]E TYPE|DATE OF BIRTH|EXPIRY/i.test(line));
-      const addrLine = useful.find(line => /\d/.test(line) || /LOS SANTOS|VINEWOOD|DESERT|LAP|WAY|LANE|ROAD|HILLS|HOUSE|GUY/i.test(line));
+      const nameIdx = useful.findIndex(line => /[A-Z]/i.test(line) && !/\d/.test(line) && !/LICEN[CS]E TYPE|DATE OF BIRTH|EXPIRY/i.test(line));
+      const nameLine = nameIdx >= 0 ? useful[nameIdx] : undefined;
+      // The card layout is fixed (name line, then address line, then the
+      // expiry/DOB row) — a roleplay server's street names/suburbs are
+      // arbitrary fiction, so don't require digits or a hardcoded place-name
+      // list to recognise one. Take the next plain-text line after the name
+      // instead; fall back to the old digit/keyword match only if that
+      // fails (e.g. the name line wasn't found at all).
+      const addrLine = (nameIdx >= 0
+        ? useful.slice(nameIdx + 1).find(line => /[A-Z]/i.test(line) && !/^\d{1,2}[\-\/]\d{1,2}[\-\/]\d{2,4}/.test(line) && !/LICEN[CS]E TYPE|DATE OF BIRTH|EXPIRY|^[CRHWL\s]{1,20}$/i.test(line))
+        : undefined) || useful.find(line => /\d/.test(line) || /LOS SANTOS|VINEWOOD|DESERT|LAP|WAY|LANE|ROAD|HILLS|HOUSE|GUY/i.test(line));
       if (!leapName && nameLine) vicName = nameLine;
       if (!leapAddress && addrLine) vicAddress = addrLine;
       if (!leapDob) {
@@ -883,6 +916,113 @@
     return best;
   }
 
+  // ═══════════════════════════════════════════════════════════════════════
+  // AUTOMATIC DESKEW — corrects small rotation in photographed/screenshotted
+  // documents (e.g. a licence card held at a slight angle). Tesseract's
+  // accuracy drops sharply past a couple of degrees of tilt, and nothing in
+  // this pipeline previously corrected for it.
+  //
+  // Classic projection-profile technique: bin "ink" pixels into rows at a
+  // range of candidate rotation angles and pick the angle whose row-sum
+  // profile has the highest variance (text lines are sharp horizontal bands
+  // at the correct angle; a skewed image smears ink across rows, flattening
+  // the profile). Runs on a small downscaled copy for speed, then applies
+  // the winning angle to the full-resolution canvas.
+  // ═══════════════════════════════════════════════════════════════════════
+  function estimateSkewAngleDeg(canvas) {
+    const maxDim = 320;
+    const scale = Math.min(1, maxDim / Math.max(canvas.width, canvas.height));
+    const w = Math.max(1, Math.round(canvas.width * scale));
+    const h = Math.max(1, Math.round(canvas.height * scale));
+    if (w < 20 || h < 20) return { angle: 0, confident: false };
+
+    const work = document.createElement('canvas');
+    work.width = w; work.height = h;
+    const wctx = work.getContext('2d');
+    wctx.drawImage(canvas, 0, 0, w, h);
+    const id = wctx.getImageData(0, 0, w, h).data;
+
+    let sum = 0;
+    const gray = new Float32Array(w * h);
+    for (let i = 0, p = 0; i < id.length; i += 4, p++) {
+      const v = 0.299 * id[i] + 0.587 * id[i + 1] + 0.114 * id[i + 2];
+      gray[p] = v;
+      sum += v;
+    }
+    const mean = sum / gray.length;
+    // "Ink" = darker-than-average pixels, regardless of light/dark theme —
+    // this only needs to find TEXT-LIKE structure, not classify polarity.
+    const inkX = [];
+    const inkY = [];
+    for (let y = 0; y < h; y++) {
+      for (let x = 0; x < w; x++) {
+        if (gray[y * w + x] < mean - 12) { inkX.push(x); inkY.push(y); }
+      }
+    }
+    // Too few/too many ink pixels (near-blank crop, or a photo/icon region
+    // with no real text structure) — the variance signal isn't trustworthy.
+    const density = inkX.length / (w * h);
+    if (density < 0.01 || density > 0.6) return { angle: 0, confident: false };
+
+    const cx = w / 2, cy = h / 2;
+    const varianceAt = (deg) => {
+      const rad = deg * Math.PI / 180;
+      const sin = Math.sin(rad), cos = Math.cos(rad);
+      const rowSums = new Float64Array(h);
+      for (let i = 0; i < inkX.length; i++) {
+        const dx = inkX[i] - cx, dy = inkY[i] - cy;
+        const ry = Math.round(dx * sin + dy * cos + cy);
+        if (ry >= 0 && ry < h) rowSums[ry]++;
+      }
+      let s = 0; for (let i = 0; i < h; i++) s += rowSums[i];
+      const m = s / h;
+      let v = 0; for (let i = 0; i < h; i++) v += (rowSums[i] - m) * (rowSums[i] - m);
+      return v / h;
+    };
+
+    const baseline = varianceAt(0);
+    let bestAngle = 0, bestVar = baseline;
+    // Coarse pass (±8°, 1° steps), then refine ±1° around the winner in 0.1° steps.
+    for (let deg = -8; deg <= 8; deg += 1) {
+      const v = varianceAt(deg);
+      if (v > bestVar) { bestVar = v; bestAngle = deg; }
+    }
+    for (let deg = bestAngle - 1; deg <= bestAngle + 1; deg += 0.1) {
+      const v = varianceAt(Math.round(deg * 10) / 10);
+      if (v > bestVar) { bestVar = v; bestAngle = Math.round(deg * 10) / 10; }
+    }
+    // Require a decisive win over "no rotation" — otherwise a flat/noisy
+    // profile (icons, photos) could pick a spurious angle by chance.
+    const confident = bestVar > baseline * 1.15 && Math.abs(bestAngle) >= 0.3;
+    return { angle: confident ? bestAngle : 0, confident };
+  }
+
+  function deskewCanvas(canvas) {
+    const { angle, confident } = estimateSkewAngleDeg(canvas);
+    if (!confident || !angle) return canvas;
+    const rad = angle * Math.PI / 180;
+    const cos = Math.abs(Math.cos(rad)), sin = Math.abs(Math.sin(rad));
+    const w = canvas.width, h = canvas.height;
+    const outW = Math.round(w * cos + h * sin);
+    const outH = Math.round(w * sin + h * cos);
+    const out = document.createElement('canvas');
+    out.width = outW; out.height = outH;
+    const octx = out.getContext('2d');
+    // Sample the source canvas's border to fill the corners the rotation
+    // exposes, so they read as background rather than a hard black/white
+    // frame that could distract Tesseract at the crop edges.
+    const edge = canvas.getContext('2d').getImageData(0, 0, w, 1).data;
+    let er = 0, eg = 0, eb = 0;
+    for (let i = 0; i < edge.length; i += 4) { er += edge[i]; eg += edge[i + 1]; eb += edge[i + 2]; }
+    const n = edge.length / 4;
+    octx.fillStyle = `rgb(${Math.round(er / n)},${Math.round(eg / n)},${Math.round(eb / n)})`;
+    octx.fillRect(0, 0, outW, outH);
+    octx.translate(outW / 2, outH / 2);
+    octx.rotate(rad);
+    octx.drawImage(canvas, -w / 2, -h / 2);
+    return out;
+  }
+
   async function preprocessImage(blob) {
     return new Promise((resolve, reject) => {
       const img = new Image();
@@ -898,20 +1038,30 @@
         if (shortSide < MIN_DIM) {
           scale = Math.min(3, Math.ceil(MIN_DIM / shortSide));
         }
-        const w = img.width * scale;
-        const h = img.height * scale;
-        
+        let w = img.width * scale;
+        let h = img.height * scale;
+
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = w;
         canvas.height = h;
-        
+
         // Use better interpolation for upscale
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = 'high';
         ctx.drawImage(img, 0, 0, w, h);
-        
-        const imageData = ctx.getImageData(0, 0, w, h);
+
+        // ── Step 1b: Auto-deskew ────────────────────────────────────────
+        // Corrects a small rotation (a photographed/angled licence card,
+        // an off-square screenshot) before any of the pixel work below,
+        // so sharpening/thresholding operate on upright text.
+        const deskewed = deskewCanvas(canvas);
+        const workCanvas = deskewed;
+        const workCtx = workCanvas.getContext('2d');
+        w = workCanvas.width;
+        h = workCanvas.height;
+
+        const imageData = workCtx.getImageData(0, 0, w, h);
         const data = imageData.data;
         const pixelCount = w * h;
         
@@ -1047,8 +1197,8 @@
           }
         }
         
-        ctx.putImageData(imageData, 0, 0);
-        canvas.toBlob(resolve, 'image/png');
+        workCtx.putImageData(imageData, 0, 0);
+        workCanvas.toBlob(resolve, 'image/png');
       };
       img.onerror = () => { URL.revokeObjectURL(img.src); reject(new Error("Image load failed")); };
       img.src = URL.createObjectURL(blob);
