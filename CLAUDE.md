@@ -23,7 +23,6 @@ Or open `index.html` directly. Fully static — a `python3 -m http.server` also 
 | `traffic` | `trafficPage` | LEAP/PIN traffic history analyser |
 | `ocr` | `ocrPage` | Image OCR intake |
 | `recruit` | `recruitPage` | 🎓 Recruit Helper handbook reference |
-| `shift` | `shiftPage` | ⏱ Shift Log — on/off duty log with monthly hours summary (v7.1) |
 
 ## Report types
 Config lives in `assets/js/core.js`: `VICPOL_ALLOWED_REPORT_TYPES`, `REPORT_TYPE_LABEL`, and `REPORT_CARD_VISIBILITY` (which cards show per type). Generators are in `assets/js/reports.js` (`generateArrestReport`, `generateVicPolArrest`, `generateVicPolWarrant`, `generateTrafficWarrant`, `generateFieldContact`, `generateSearchSeizure`, `generateVehicleInspection`). `bail_conditions` is intentionally hidden (city has bail disabled).
@@ -42,7 +41,7 @@ Config lives in `assets/js/core.js`: `VICPOL_ALLOWED_REPORT_TYPES`, `REPORT_TYPE
 - **Recruit Mode**: header button `#recruitModeBtn`, persisted in `localStorage` key `vicpol_recruit_mode`, toggles `body.recruit-mode`. Field hints are `.recruit-hint` elements (hidden unless recruit mode). Live checklist reuses the validation output. Wiring in `interactions.js` + `ui-data.js`.
 
 ## Data persistence
-`localStorage` only, key prefix `vicpol_`. **Do not rename the prefix** — it orphans existing users' saved drafts/templates. Keys include `vicpol_report_autosave`, `vicpol_report_drafts`, `vicpol_report_presets`, `vicpol_active_tab`, `vicpol_recruit_mode`, `vicpol_shift_log`.
+`localStorage` only, key prefix `vicpol_`. **Do not rename the prefix** — it orphans existing users' saved drafts/templates. Keys include `vicpol_report_autosave`, `vicpol_report_drafts`, `vicpol_report_presets`, `vicpol_active_tab`, `vicpol_recruit_mode`.
 
 ## Editing tips
 - Bump the `?v=YYYYMMDD` cache-bust query on changed assets in `index.html` (mobile browsers cache aggressively).

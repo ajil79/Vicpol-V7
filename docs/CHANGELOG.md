@@ -4,10 +4,6 @@ Newest first. Dates are the commit dates on `main`.
 
 ## Unreleased
 
-- **Shift Log tab**: log on/off duty, add past shifts manually, and see monthly totals per
-  officer. Copy a plain-text month summary or export a CSV — no more reconstructing hours by
-  hand for the monthly hours report. Stored under `vicpol_shift_log`, included automatically
-  in backup export/import.
 - **Backup & hand-over**: the Templates modal can now export everything the browser remembers
   (drafts, templates, officer/person lists, callsigns, signatures) to a `.json` file and import
   it on another device. Import merges by default (your entries win on a name clash) or replaces

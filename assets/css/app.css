@@ -898,27 +898,3 @@
     .recruit-checklist .rc-done{font-size:12px;font-weight:800;color:var(--ok)}
 
   
-
-    /* ── Shift Log (v7.1) ───────────────────────────── */
-    .shift-wrap{max-width:860px;margin:0 auto;padding:16px 22px 60px;display:grid;gap:14px;grid-auto-rows:max-content}
-    .shift-card{padding:16px}
-    .shift-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:12px}
-    .shift-btn-start{background:rgba(0,204,102,0.18);border-color:rgba(0,204,102,0.45);color:#9CFFC6;font-weight:800;padding:12px 18px;font-size:14px}
-    .shift-btn-start:hover{background:rgba(0,204,102,0.3);border-color:var(--ok)}
-    .shift-btn-end{background:rgba(255,80,80,0.16);border-color:rgba(255,80,80,0.45);color:#FFB3B3;font-weight:800;padding:12px 18px;font-size:14px}
-    .shift-btn-end:hover{background:rgba(255,80,80,0.28);border-color:#FF6B6B}
-    .shift-live{margin-top:12px;padding:14px;border:1px solid rgba(0,204,102,0.35);border-radius:8px;background:rgba(0,204,102,0.06)}
-    .shift-live-label{font-size:10px;font-weight:800;letter-spacing:0.6px;color:var(--ok);margin-bottom:4px}
-    .shift-live-clock{font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:34px;font-weight:700;line-height:1.1;margin-bottom:10px}
-    .shift-month-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
-    .shift-month-head select{width:auto;min-width:140px}
-    .shift-stats{margin-bottom:12px}
-    .shift-stat{padding:12px;text-align:center;border:1px solid var(--border);border-radius:8px;background:rgba(0,0,0,0.2)}
-    .shift-stat-lbl{font-size:10px;font-weight:700;color:var(--muted);margin-bottom:4px;letter-spacing:0.5px}
-    .shift-stat-val{font-size:26px;font-weight:900;color:var(--accent)}
-    .shift-table td:last-child{width:1%;white-space:nowrap}
-    .shift-del{padding:3px 8px;font-size:11px;color:rgba(255,150,150,0.9)}
-    body.light-mode .shift-stat{background:rgba(0,0,0,0.03)}
-    body.light-mode .shift-btn-start{color:#0B6B3A}
-    body.light-mode .shift-btn-end{color:#9B1C1C}
-    @media (max-width:600px){.shift-live-clock{font-size:28px}}
