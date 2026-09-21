@@ -317,7 +317,9 @@ const GUIDE_SCENARIOS = [
         '<li><strong>Breach ratio</strong> — non-lethal to lethal must be <strong>2:1</strong>. Order of stack: Non-Lethal, Lethal, Non-Lethal.</li>' +
         '<li><strong>Once clear</strong>, detain everyone, render first aid, and write it up as an Arrest Report.</li>' +
       '</ol>' +
+      '<div class="guide-warn"><strong>Demand is a prisoner\'s release?</strong> Neither VicPol nor Corrections leadership can release anyone — only a court order can. De-escalate by explaining that, and never promise it.</div>' +
       '<div class="guide-jump">' +
+        '<button class="btn" type="button" data-guide-topic="mrc-prisoners">📖 MRC &amp; prisoner release</button>' +
         '<button class="btn" type="button" data-guide-topic="critical-incidents">📖 Critical incidents</button>' +
         '<button class="btn" type="button" data-guide-topic="use-of-force">📖 Use of force</button>' +
       '</div>'

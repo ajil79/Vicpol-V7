@@ -4,6 +4,21 @@ Newest first. Dates are the commit dates on `main`.
 
 ## Unreleased
 
+- **Handbook: cross-checked the Recruit Helper against the real source documents** (the BBRP
+  General Duties Handbook 2025 and the BBRP Victoria Police Handbook 2024 Edition, both supplied
+  by the user) and closed the gaps. Everything already in the app checked out accurate against the
+  source (ranks, radio codes, FPO tiers, sentencing caps, licence classes, use-of-force
+  motorcycle/taser guidance) — nothing was wrong, just missing. Added five new topics: **Melbourne
+  Remand Centre & Prisoner Release** (including the rule that only a court order can release a
+  prisoner, cross-linked from the Code 15 scenario since that's exactly when it matters), **Dangerous
+  Articles** (knives/bats — lawful excuses, self-defence is not one), **Forensics & DNA Collection**,
+  **Revoking Weapon Licences**, and **Bicycle Patrol & PSO Deployment**. Extended six existing
+  topics with previously-missing detail: legal representation & friend/family call rules on arrest,
+  FPO Non-Compliance as its own charge (plus the full 4 issuing reasons), Community Service activity
+  caps, the 5-PIN leadership ceiling, credit-card fraud tiers and two missing pieces of legislation,
+  the MDT warrant-copy-and-clear steps, the civilian-loadout return rule, and Use of Force's
+  perimeter/visible-weapon guidance. Skipped two items (contacting an FTO, getting a Government ID)
+  since the user confirmed those are covered in induction rather than needed here.
 - **Handbook: the OCR Intake tool was completely undocumented.** Neither the Recruit Helper
   handbook nor the Day-to-Day Guide ever mentioned it, even though both already had working jump
   buttons wired up for it (`data-rh-page="ocr"`, `data-guide-jump="ocr"`) that no content used.

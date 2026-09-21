@@ -159,6 +159,7 @@ const RECRUIT_HANDBOOK = [
       '<li>3x GSR Test Kit</li><li>1x Evidence Bag</li><li>1x Police Access Card</li><li>1x Police Radio</li>' +
       '</ul>' +
       '<p><strong>Optional support equipment:</strong> Bandages · Medkits · 1x Fire Extinguisher.</p>' +
+      '<p class="rh-note">Going out as a <strong>civilian</strong>? Return everything except your Police Access Card and Police Radio — those stay on you and can\'t be stolen.</p>' +
       '<p class="rh-warn">Selling, stealing or misappropriating police equipment from the armoury is <strong>powergaming</strong> and grounds for removal.</p>'
   },
   {
@@ -220,6 +221,15 @@ const RECRUIT_HANDBOOK = [
       '<button class="rh-tool-link" data-rh-page="traffic" type="button">📊 Traffic History — prior impounds &amp; next tier</button>' +
       '</div>'
   },
+  {
+    id: "bicycle-pso", group: "On Duty & Driving", icon: "🚲",
+    title: "Bicycle Patrol & PSO Deployment",
+    keywords: "bicycle patrol pso push bike helmet callsign 800 899 ratio 1:3 cbd hostile area recruit no fto available",
+    html:
+      '<p><strong>Bicycle patrol</strong> is open to all divisions, focused on the CBD, community engagement and public relations. Switch your callsign to <strong>MEL 800–899</strong> first, and keep a <strong>1:3</strong> ratio (one bike per three cars). You may assist a Code 9/15 inside the patrol area; a supervisor can pull you back to regular calls anytime.</p>' +
+      '<p>Must-haves: hi-vis jacket/body or hi-vis vest, a bicycle helmet, and a firearm holster. Divisional equipment (rifles, SMGs, shotguns) stays away — standard GD equipment only while on bikes.</p>' +
+      '<p><strong>PSO deployment</strong> — recruits can deploy as a PSO on a push-bike when no FTO is available, using a <strong>PSO 8**</strong> callsign. Don\'t enter a hostile area without other units on scene, and call for assistance before making an arrest. Misbehaving loses you the privilege.</p>'
+  },
 
   /* ───────────── PROCEDURES ───────────── */
   {
@@ -236,6 +246,8 @@ const RECRUIT_HANDBOOK = [
       '<p>A <strong>duty of care</strong> applies — ensure no further injury occurs in custody.</p>' +
       '<p><strong>Caution</strong> must be read at the <strong>first available opportunity</strong>. It informs the suspect they are not obliged to answer questions, but anything said is recorded and may be used as evidence. Invite them to confirm they understood.</p>' +
       '<p class="rh-note">Suspects <strong>must</strong> by law provide <strong>Name, Date of Birth and Address</strong>. They may otherwise decline to answer questions.</p>' +
+      '<p><strong>Legal representation</strong> — if the suspect wants to contact a legal practitioner, suspend the interview until that communication has happened, held in private (or in your view but not hearing, for welfare/security). If their practitioner is unavailable, give reasonable time to reach another one before the interview starts.</p>' +
+      '<p><strong>Friend/family call</strong> — the suspect has the right to phone a friend or relative to say where they are. If unanswered, allow another attempt. You may <strong>decline</strong> the call if: they were brought in for a drink/drug-driving matter, or you reasonably believe the call would help another offender escape, destroy evidence, or endanger someone.</p>' +
       '<div class="rh-links"><span class="rh-links-label">Write it up:</span>' +
       '<button class="rh-tool-link" data-rh-report="arrest" type="button">📝 Arrest Report</button>' +
       '</div>'
@@ -264,11 +276,38 @@ const RECRUIT_HANDBOOK = [
       '</div>'
   },
   {
+    id: "dangerous-articles", group: "Procedures", icon: "🔪",
+    title: "Dangerous Articles (Knives, Bats & Improvised Weapons)",
+    keywords: "dangerous article knife knives baseball bat pool cue lawful excuse self defence controlled weapon vehicle storage open carry",
+    html:
+      '<p>Possessing, carrying or using a <strong>dangerous article</strong> in public without a lawful excuse is an offence. This covers non-firearm weapons, anything intended to be used as a weapon, and knives.</p>' +
+      '<p><strong>Bats / pool cues</strong> — carrying one can be lawful if genuinely for sport (e.g. actually playing baseball, in kit, with a glove/ball). No supporting context to back that up? Not a lawful excuse.</p>' +
+      '<p><strong>Knives</strong> — lawful for employment, or recreation such as camping/fishing, but must be transported in the <strong>vehicle\'s storage</strong>, not on the person. Focus enforcement on open carry in public/urban areas. Lawful excuses: employment/duty, lawful sport or recreation, or legitimate collection/display.</p>' +
+      '<p class="rh-warn"><strong>Self-defence is NOT a lawful excuse</strong> for carrying a controlled weapon or dangerous article.</p>' +
+      '<div class="rh-links"><span class="rh-links-label">Write it up:</span>' +
+      '<button class="rh-tool-link" data-rh-report="search_seizure" type="button">🔎 Search &amp; Seizure Report</button>' +
+      '</div>'
+  },
+  {
+    id: "forensics-dna", group: "Procedures", icon: "🧬",
+    title: "Forensics & DNA Collection",
+    keywords: "forensics dna evidence bag collect flashlight shell casing blood cso crime scene officer warrant questioning database expire 464sc",
+    html:
+      '<p><strong>Collecting evidence in the field</strong> — get your flashlight out, look around, and press your evidence key (<strong>E</strong>) on what you find. You can only carry <strong>3 items</strong> at once, so prioritise DNA cells over casings.</p>' +
+      '<p>Any officer can collect forensic evidence (bullet casings, blood, etc.) and bring it to a station for processing. For large scenes (mass shootings, org violence), request a <strong>Crime Scene Officer (CSO)</strong> instead — and don\'t tamper with evidence once one\'s been called.</p>' +
+      '<p class="rh-note">If forensics is your <strong>only</strong> evidence against a suspect, you can only write a <strong>Warrant for Questioning</strong> — not an arrest warrant — unless you also have a confirmed ID some other way.</p>' +
+      '<p><strong>Evidence Bag</strong> — holds up to 3 items (blood, DNA, shell casings). Drag it onto a suspect who\'s committed an <strong>indictable</strong> offence (guns, attempted murder — not evasion) to collect their DNA. You must <strong>RP</strong> taking it and tell the suspect, or you risk being taken to court for an unjustified collection.</p>' +
+      '<p><strong>DNA justification</strong> — at least one of: charged with an indictable offence (mandatory, every time), reasonably suspected of one, or summoned to answer one. DNA on file <strong>expires after 3 months</strong>. <span class="rh-note">Ref: Crimes Act 1958, s464SC.</span></p>' +
+      '<div class="rh-links"><span class="rh-links-label">Write it up:</span>' +
+      '<button class="rh-tool-link" data-rh-report="search_seizure" type="button">🔎 Search &amp; Seizure Report</button>' +
+      '</div>'
+  },
+  {
     id: "charges-pins", group: "Procedures", icon: "📋",
     title: "Charges, PINs & Processing",
     keywords: "charges pins penalty infringement notice processing f6 offender dna indictable orange hammer issue leadership approval",
     html:
-      '<p>You may issue up to <strong>three (3) charges</strong> and <strong>three (3) PINs</strong> <strong>without</strong> VicPol leadership approval.</p>' +
+      '<p>You may issue up to <strong>three (3) charges</strong> and <strong>three (3) PINs</strong> <strong>without</strong> VicPol leadership approval — leadership can approve up to <strong>5 PINs</strong>.</p>' +
       '<p><strong>Processing a suspect:</strong></p><ul>' +
       '<li>Open <strong>F6 Menu</strong> &rarr; Offender Processing.</li>' +
       '<li>Charge Options &rarr; select charges &rarr; Issue Charges.</li>' +
@@ -292,10 +331,22 @@ const RECRUIT_HANDBOOK = [
       '<tr><td>SGT+ — Attempted Murder w/ FPO</td><td>250 weeks</td></tr>' +
       '<tr><td>Magistrate</td><td>450 weeks (450–900 for FPO breaches)</td></tr>' +
       '</tbody></table>' +
-      '<p>Other outcomes: <strong>Set Free</strong>, <strong>Community Service</strong>, or <strong>Send to Prison</strong> (MRC).</p>' +
+      '<p>Other outcomes: <strong>Set Free</strong> (minor/first offences), <strong>Community Service</strong>, or <strong>Send to Prison</strong> (MRC).</p>' +
+      '<p><strong>Community Service</strong> — 6–18 activities without approval, leadership can approve up to 60. Each activity is ~10 seconds, max 8 per charge/offence. Not for murder, assault, robbery or gun crime — those go to prison.</p>' +
       '<div class="rh-links"><span class="rh-links-label">In the Report Tool:</span>' +
       '<button class="rh-tool-link" data-rh-report="arrest" type="button">⚖️ Arrest Report — sentence suggestion from charges</button>' +
       '</div>'
+  },
+  {
+    id: "mrc-prisoners", group: "Procedures", icon: "🏛️",
+    title: "Melbourne Remand Centre & Prisoner Release",
+    keywords: "mrc melbourne remand centre corrections channel 14 check in third eye prison escort release court order hostage demand early release",
+    html:
+      '<p>Before sentencing, try to contact <strong>Corrections</strong> via channel 14 on radio. If none are on duty: escort the prisoner to check-in, then use <strong>F6 &rarr; Offender Processing &rarr; Set Weeks</strong> with their weeks and reason.</p>' +
+      '<p>Checking in removes everything from their pockets, including clean money. They get it back if they finish their tickets and leave properly; not if they break out. Check-in is either you third-eyeing the prisoner (Prison Check In) or the prisoner using the check-in computer themselves.</p>' +
+      '<p class="rh-warn"><strong>The MRC is not VicPol\'s jurisdiction — don\'t act as a Corrections Officer.</strong> That includes non-lethal force to reprimand a prisoner, leaving prisoners in cells, taking their tickets, or using K9s inside the prison.</p>' +
+      '<p><strong>Prisoner release is court-order only.</strong> Neither VicPol nor Corrections leadership can release a prisoner, in any scenario. If hostage-takers demand someone\'s release, de-escalate by explaining you lack that authority — never promise it. For a significant, well-planned attempt on someone serving 250+ weeks, contact an Inspector or Superintendent, who may be able to seek a court order. This does not make MRC hostage situations low priority — still respond to Code 9s there as normal.</p>' +
+      '<p class="rh-note">Also relevant to <button class="rh-jump-link" data-rh-jump="code15-roles" type="button">Code 15 Roles &amp; Breaching</button> when a demand involves a prisoner.</p>'
   },
   {
     id: "fpo", group: "Procedures", icon: "🚫",
@@ -309,10 +360,21 @@ const RECRUIT_HANDBOOK = [
       '<tr><td>Tier 3</td><td>90 Days</td><td>SGT+</td><td>Thoroughly search the person, their vehicle &amp; any occupants.</td></tr>' +
       '<tr><td>Tier 4</td><td>Permanent</td><td>INSP+</td><td>Same as Tier 3.</td></tr>' +
       '</tbody></table>' +
-      '<p>FPOs may be issued for serious reasons (e.g. attempted murder of emergency services, mass murder). After issuing in-city, you <strong>must</strong> also log the request with the FPO BOT — this is as important as issuing the FPO itself.</p>' +
+      '<p>An FPO may be issued for one of four reasons: attempted murder of emergency services, mass murder, repeated improper use of a firearm, or attempting to supply a weapon to someone who already has an FPO. After issuing in-city, you <strong>must</strong> also log the request with the FPO BOT — this is as important as issuing the FPO itself.</p>' +
+      '<p class="rh-warn"><strong>Non-Compliance with a Firearms Prohibition Order</strong> is its own charge — laid when someone under an FPO is found with any firearm, weapon attachment (suppressor, flashlight, extended mag, grip, scope) or ammunition. Search FPO holders proactively, and if you charge non-compliance, your arrest report is mandatory.</p>' +
       '<div class="rh-links"><span class="rh-links-label">Write it up:</span>' +
       '<button class="rh-tool-link" data-rh-report="search_seizure" type="button">🔎 Search &amp; Seizure — FPO search powers</button>' +
       '</div>'
+  },
+  {
+    id: "weapon-license-revocation", group: "Procedures", icon: "🚯",
+    title: "Revoking Weapon Licences",
+    keywords: "revoke weapon license longarm handgun conceal carry repeated gun crime 48 hours 7 days sgt approval discharge",
+    html:
+      '<p>Rare, but used for repeated gun crime or an ongoing pattern of firearm violence. <strong>Minimum</strong> thresholds to allow a request (approval is still case-by-case): <strong>3 gun crimes in 48 hours</strong>, or <strong>5 in 7 days</strong>.</p>' +
+      '<p>Common qualifying charges: discharge weapon in public, possess a firearm without legal authority, possess an illegally modified weapon/accessory without legal authority.</p>' +
+      '<p>You <strong>must</strong> get a SGT+ to authorise a revocation before acting — if none are in city, post in <strong>#police-requests</strong> with the offender\'s name, which licence to revoke (Longarm/Handgun/Conceal Carry), charges and history.</p>' +
+      '<p class="rh-note">Leadership will not approve a revocation that seems unfair.</p>'
   },
   {
     id: "drugs", group: "Procedures", icon: "💊",
@@ -325,7 +387,9 @@ const RECRUIT_HANDBOOK = [
       '<tr><td>Trafficking a Drug of Dependence</td><td>$3,500</td></tr>' +
       '<tr><td>Cultivation of Narcotic Plants</td><td>$1,500</td></tr>' +
       '</tbody></table>' +
-      '<p>Charge types include Cultivation, Manufacturing, Possession, Trafficking and Fraud (fake credit cards). Related legislation: <strong>Victorian Crimes Act 1958</strong> &amp; <strong>Victorian Police Act 2013</strong>.</p>' +
+      '<p>Charge types: <strong>Cultivation</strong> (cannabis/opium plants, catching the grow itself), <strong>Manufacturing</strong> (refining raw narcotic into a sellable product), <strong>Possession</strong> (found during a search), and <strong>Fraud</strong> (fake credit cards).</p>' +
+      '<p><strong>Credit Card Fraud tiers:</strong> Low (up to 199 cards) · Moderate (200–499) · High (500+).</p>' +
+      '<p>Related legislation: <strong>Drugs, Poisons and Controlled Substances Act 1981</strong>, <strong>Victorian Crimes Act 1958</strong>, <strong>Victorian Summary Offences Act 1966</strong> &amp; <strong>Victorian Police Act 2013</strong>.</p>' +
       '<div class="rh-links"><span class="rh-links-label">Write it up:</span>' +
       '<button class="rh-tool-link" data-rh-report="arrest" type="button">📝 Arrest Report — Drug charges &amp; NIK test evidence</button>' +
       '</div>'
@@ -355,8 +419,9 @@ const RECRUIT_HANDBOOK = [
     title: "Warrants, Reports & Move-On Orders",
     keywords: "warrant writing arrest report mdt who what when where how why magistrate hearing move on order disorderly conduct pin f10",
     html:
-      '<p><strong>Warrant writing</strong> — focus on the facts: <strong>WHO, WHAT, WHEN, WHERE, HOW and WHY</strong>. Include time &amp; date and a full location (street, suburb, post code, landmarks). Add the warrant to the suspect\'s history via the MDT (Add Warrant).</p>' +
+      '<p><strong>Warrant writing</strong> — focus on the facts: <strong>WHO, WHAT, WHEN, WHERE, HOW and WHY</strong>. Include time &amp; date and a full location (street, suburb, post code, landmarks). Add the warrant to the suspect\'s history via the MDT (Add Warrant), and <strong>paste a copy in #police-records</strong> so every officer is aware of it.</p>' +
       '<p><strong>Arrest reports</strong> are added in the MDT and should stand alone without testimony.</p>' +
+      '<p class="rh-warn">Once the offender is caught and the matter is resolved (charged <strong>or</strong> released with no charges), the arresting officer <strong>must clear the warrant</strong> using the action menu in MDT.</p>' +
       '<p><strong>Move-On Orders</strong> require an individual to leave an area for a set period. Returning makes them liable to a <strong>Disorderly Conduct</strong> charge or a PIN for not obeying police direction. A verbal move-on is often sufficient.</p>' +
       '<p class="rh-note">Not sure which warrant fits a fleeing driver? See <button class="rh-jump-link" data-rh-jump="code4-flee" type="button">Fled Traffic Stop — Which Warrant?</button></p>' +
       '<div class="rh-links"><span class="rh-links-label">Write it now:</span>' +
@@ -416,6 +481,9 @@ const RECRUIT_HANDBOOK = [
       '<li>Taze/beanbag from a stationary/low-speed vehicle &mdash; <strong>yes</strong> (Less than Lethal +); RP breaking the window.</li>' +
       '<li>Lethal force on an occupant at speed (&gt;20 kph) &mdash; only if armed &amp; refusing orders, fleeing a violent crime, or using the vehicle as a weapon.</li>' +
       '<li>Tactical contact with a motorcycle &mdash; only while they are actively firing at police.</li></ul>' +
+      '<p><strong>Perimeter violations</strong> — anyone who breaches a police perimeter gets <strong>two warnings</strong>, then can be non-lethally detained (taser/beanbag), whether they\'re in a car, on a motorcycle, or on foot.</p>' +
+      '<p><strong>Visible weapon in hand</strong> — <strong>one</strong> warning to put it down or put their hands up. Failure to comply, or an unarmed person running at you after being told to stay back, allows non-lethal force. <strong>Lethal</strong> force is only justified if they run at an officer with the weapon, raise it in any direction, or attempt to draw/reach for a suspected weapon.</p>' +
+      '<p class="rh-note">Example warnings: <em>"Put the weapon down, put the weapon down now."</em> · <em>"Hands up, put your hands up, face away from me."</em> · <em>"Armed Police, put your hands up immediately, this is your only warning."</em></p>' +
       '<div class="rh-links"><span class="rh-links-label">Write it up:</span>' +
       '<button class="rh-tool-link" data-rh-report="arrest" type="button">📝 Arrest Report — state the threat before the response</button>' +
       '</div>'
@@ -653,12 +721,14 @@ const RECRUIT_HANDBOOK = [
   {
     id: "resources", group: "Resources", icon: "🔗",
     title: "Resources & Legislation",
-    keywords: "resources links legislation crimes act 1958 police act 2013 reference handbook",
+    keywords: "resources links legislation crimes act 1958 police act 2013 drugs poisons controlled substances act 1981 summary offences act 1966 reference handbook",
     html:
       '<p>Public legislation referenced throughout the handbook:</p>' +
       '<ul>' +
       '<li><a href="https://www.legislation.vic.gov.au/in-force/acts/crimes-act-1958" target="_blank" rel="noopener noreferrer">Victorian Crimes Act 1958</a></li>' +
       '<li><a href="https://www.legislation.vic.gov.au/in-force/acts/victoria-police-act-2013" target="_blank" rel="noopener noreferrer">Victoria Police Act 2013</a></li>' +
+      '<li><a href="https://www.legislation.vic.gov.au/in-force/acts/drugs-poisons-and-controlled-substances-act-1981" target="_blank" rel="noopener noreferrer">Drugs, Poisons and Controlled Substances Act 1981</a></li>' +
+      '<li><a href="https://www.legislation.vic.gov.au/in-force/acts/summary-offences-act-1966" target="_blank" rel="noopener noreferrer">Victorian Summary Offences Act 1966</a></li>' +
       '</ul>' +
       '<p class="rh-note">Internal Discord channels &amp; BOTs (gd-support-documents, Police EOI BOT, FPO BOT, #police-request) are referenced in the handbook — direct links can be added here on request.</p>'
   }
