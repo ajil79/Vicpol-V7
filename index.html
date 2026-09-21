@@ -42,6 +42,7 @@
 <button aria-controls="trafficPage" aria-selected="false" data-tool-page="traffic" id="tab-traffic" role="tab">Traffic History</button>
 <button aria-controls="ocrPage" aria-label="OCR Intake" aria-selected="false" data-tool-page="ocr" id="tab-ocr" role="tab">📷 OCR Intake</button>
 <button aria-controls="recruitPage" aria-selected="false" data-tool-page="recruit" id="tab-recruit" role="tab">🎓 Recruit Helper</button>
+<button aria-controls="shiftPage" aria-selected="false" data-tool-page="shift" id="tab-shift" role="tab">⏱ Shift Log</button>
 </nav>
 </div>
 <!-- REPORT TOOL PAGE -->
@@ -996,6 +997,14 @@ Paramedic David Ace" rows="3"></textarea></label>
 <div id="guideRoot"></div>
 </div>
 </div>
+<!-- SHIFT LOG PAGE (v7.1) -->
+<div aria-labelledby="tab-shift" class="tool-page" id="shiftPage" role="tabpanel">
+<div class="shift-wrap">
+<div class="guide-head">⏱ Shift Log</div>
+<div class="guide-sub">Log on and off duty here and your hours add themselves up. At the end of the month, copy the summary (or export a CSV) for whoever compiles the VicPol hours report — no more working it out from memory.</div>
+<div id="shiftRoot"></div>
+</div>
+</div>
 <!-- ?v= cache-busting: bump the value whenever any css/js asset changes so
      browsers holding stale copies (especially mobile) fetch fresh files. -->
 <script src="assets/data/charges.js?v=20260921"></script>
@@ -1009,5 +1018,6 @@ Paramedic David Ace" rows="3"></textarea></label>
 <script src="assets/js/recruit-helper.js?v=20260921"></script>
 <script src="assets/data/guide.js?v=20260921"></script>
 <script src="assets/js/guide.js?v=20260921"></script>
+<script src="assets/js/shiftlog.js?v=20260921"></script>
 <script src="assets/js/interactions.js?v=20260921"></script></body>
 </html>

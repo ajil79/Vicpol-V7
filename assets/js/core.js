@@ -1187,6 +1187,9 @@ function enforceVicpolWarrantIdStatus(showToast = false) {
     } else if (currentPage === 'guide') {
       if (badge) { badge.textContent = 'DAY-TO-DAY GUIDE'; badge.dataset.context = 'guide'; }
       if (subtitle) subtitle.textContent = `${APP_META.fullName} - Day-to-Day Guide for recruits`;
+    } else if (currentPage === 'shift') {
+      if (badge) { badge.textContent = 'SHIFT LOG'; badge.dataset.context = 'shift'; }
+      if (subtitle) subtitle.textContent = `${APP_META.fullName} - Shift Log & monthly hours`;
     } else {
       if (badge) {
         badge.textContent = 'TRAFFIC HISTORY';

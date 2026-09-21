@@ -412,7 +412,7 @@
 
   // Restore the last active tab (a #report/#traffic/#ocr/#recruit hash wins over storage)
   try {
-    const pages = ['report', 'traffic', 'ocr', 'recruit', 'guide'];
+    const pages = ['report', 'traffic', 'ocr', 'recruit', 'guide', 'shift'];
     const hashPage = (location.hash || '').replace('#', '');
     const stored = localStorage.getItem('vicpol_active_tab');
     const initial = pages.includes(hashPage) ? hashPage : (pages.includes(stored) ? stored : 'report');
@@ -471,7 +471,7 @@
   }
 
   function showToolPage(page) {
-    const allowedPages = new Set(['report', 'traffic', 'ocr', 'recruit', 'guide']);
+    const allowedPages = new Set(['report', 'traffic', 'ocr', 'recruit', 'guide', 'shift']);
     const target = allowedPages.has(page) ? page : 'report';
     document.querySelectorAll('.tool-page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tool-nav button').forEach(b => { b.classList.remove('nav-active'); b.setAttribute('aria-selected', 'false'); });
@@ -481,13 +481,18 @@
       traffic: { panel: 'trafficPage', tab: 'tab-traffic' },
       ocr: { panel: 'ocrPage', tab: 'tab-ocr' },
       recruit: { panel: 'recruitPage', tab: 'tab-recruit' },
-      guide: { panel: 'guidePage', tab: 'tab-guide' }
+      guide: { panel: 'guidePage', tab: 'tab-guide' },
+      shift: { panel: 'shiftPage', tab: 'tab-shift' }
     };
 
     // Lazy-render the Day-to-Day Guide the first time it's opened, mirroring
     // how the Recruit Helper defers its render until first shown.
     if (target === 'guide' && typeof initDayToDayGuide === 'function') {
       try { initDayToDayGuide(); } catch (e) { console.error('[vicpol] guide init failed:', e); }
+    }
+    // Shift Log renders on every open so the live clock and month are current.
+    if (target === 'shift' && typeof initShiftLog === 'function') {
+      try { initShiftLog(); } catch (e) { console.error('[vicpol] shift log init failed:', e); }
     }
 
     const cfg = pageMap[target] || pageMap.report;
