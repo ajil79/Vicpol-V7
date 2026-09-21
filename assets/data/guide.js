@@ -160,9 +160,7 @@ const GUIDE_RADIO_HTML =
   '<p>Press <span class="rh-pill">END</span> to drop/ping your current location so other units and air support can find you fast. Use it in pursuits and whenever you call for backup.</p>' +
 
   '<h4>Driving &amp; when you can break road rules</h4>' +
-  '<p>Your <strong>priority level</strong> sets what you\'re allowed to do: <strong>Priority 1</strong> (lights &amp; sirens) — you may exceed the limit and break road rules for critical jobs &amp; pursuits; <strong>Priority 2</strong> — the same, but only <em>as necessary</em>, using warning systems at crossings; <strong>Priority 3</strong> — normal road rules. Whatever the priority, drive to the conditions, <strong>clear every intersection</strong>, and be ready to justify it.</p>' +
-
-  '<div class="guide-verify"><strong>✎ Verify server rules:</strong> the exact wording/rules for <strong>imperative pursuit</strong>, the <span class="rh-pill">END</span> location ping, and when you <em>must</em> terminate a pursuit can differ between servers — double-check these three against your current BBRP / GD SOPs and tweak the wording.</div>';
+  '<p>Your <strong>priority level</strong> sets what you\'re allowed to do: <strong>Priority 1</strong> (lights &amp; sirens) — you may exceed the limit and break road rules for critical jobs &amp; pursuits; <strong>Priority 2</strong> — the same, but only <em>as necessary</em>, using warning systems at crossings; <strong>Priority 3</strong> — normal road rules. Whatever the priority, drive to the conditions, <strong>clear every intersection</strong>, and be ready to justify it.</p>';
 
 /* ── Scenario walkthroughs ─────────────────────────────────────────── */
 const GUIDE_SCENARIOS = [
