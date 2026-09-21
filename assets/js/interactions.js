@@ -260,6 +260,10 @@
         return;
     }
 
+    // Drop the auto-link canonical for facts this section owned, otherwise
+    // renderAll → updateReportTypeUI → reconcileSharedLinks puts them back.
+    if (typeof clearLinkedSharedForSection === 'function') clearLinkedSharedForSection(section);
+
     renderAll();
 
     if (section === 'ocr') {
@@ -385,9 +389,7 @@
   safeInit('loadAutosave', () => loadAutosave());
   // Auto-link preference must be known BEFORE renderAll (which reconciles linked
   // fields) so a user who turned it off keeps their deliberately-different values.
-  safeInit('initAutoLinkPref', () => {
-    try { const s = localStorage.getItem('vicpol_autolink_shared'); if (s !== null) state.autoLinkShared = (s === '1'); } catch (e) {}
-  });
+  safeInit('initAutoLinkPref', () => applyAutoLinkPref());
   safeInit('sanitizeVicPolState', () => sanitizeVicPolState(false));
   safeInit('renderAll', () => renderAll());
   safeInit('bindInputs', () => bindInputs());
@@ -565,7 +567,7 @@
       autoLinkToggle.addEventListener('change', () => {
         const on = autoLinkToggle.checked;
         state.autoLinkShared = on;
-        try { localStorage.setItem('vicpol_autolink_shared', on ? '1' : '0'); } catch (e) {}
+        safeLocalStorageSet(AUTOLINK_PREF_KEY, on ? '1' : '0');
         if (on && typeof reconcileSharedLinks === 'function') { try { reconcileSharedLinks(); } catch (e) {} }
         if (typeof debouncedRenderPreview === 'function') debouncedRenderPreview();
         if (typeof throttledAutosave === 'function') throttledAutosave();

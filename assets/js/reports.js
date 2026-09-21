@@ -938,7 +938,8 @@
       const b = backups[idx];
       if (!b) return;
       if (!confirm("Restore this backup? Current form data will be replaced.")) return;
-      state = deepMerge(deepClone(INITIAL_STATE), b.state);
+      state = deepMerge(deepClone(INITIAL_STATE), stripDraftInternals(b.state));
+      applyAutoLinkPref();
       selectedChargesSet = new Set(b.charges || []);
       selectedPinsSet = new Set(b.pins || []);
       renderAll();
@@ -975,6 +976,16 @@
     }
   }
 
+  // Saved drafts/backups carry bookkeeping next to the form state (_charges,
+  // _pins, savedAt) and, from older versions, the device-level autoLinkShared
+  // preference. None of that belongs in `state`; strip it before merging so it
+  // isn't re-serialised into every later autosave and draft.
+  function stripDraftInternals(obj) {
+    if (!obj || typeof obj !== "object") return obj;
+    const { _charges, _pins, savedAt, autoLinkShared, ...rest } = obj;
+    return rest;
+  }
+
   // Drafts — v47: sync Sets before save, use safe storage
   function saveDraft() {
     const name = prompt("Draft name:");
@@ -983,7 +994,7 @@
       state.chargesList = Array.from(selectedChargesSet).join('\n');
       state.pinsList = Array.from(selectedPinsSet).join('\n');
       const drafts = readStoredJson(DRAFTS_KEY, {});
-      drafts[name] = { ...state, _charges: [...selectedChargesSet], _pins: [...selectedPinsSet], savedAt: Date.now() };
+      drafts[name] = { ...stripDraftInternals(state), _charges: [...selectedChargesSet], _pins: [...selectedPinsSet], savedAt: Date.now() };
       if (writeStoredJson(DRAFTS_KEY, drafts)) {
         renderDrafts();
         toast("Draft saved: " + name, "ok");
@@ -1004,7 +1015,8 @@
       const drafts = readStoredJson(DRAFTS_KEY, {});
       if (drafts[name]) {
         const draft = drafts[name];
-        state = deepMerge(deepClone(INITIAL_STATE), draft);
+        state = deepMerge(deepClone(INITIAL_STATE), stripDraftInternals(draft));
+        applyAutoLinkPref();
         if (draft._charges) selectedChargesSet = new Set(draft._charges);
         if (draft._pins) selectedPinsSet = new Set(draft._pins);
         renderAll();

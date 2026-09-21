@@ -4,6 +4,11 @@ Newest first. Dates are the commit dates on `main`.
 
 ## Unreleased
 
+- Auto-link shared details: clearing a linked field no longer wipes the same field in every
+  other section; Stolen/Suspended select defaults are no longer pinned as the shared value;
+  the auto-link toggle keeps the user's setting after Clear All, load draft and restore
+  backup; "Clear this section" no longer gets refilled on the next report-type switch; draft
+  bookkeeping (`_charges`, `_pins`, `savedAt`) no longer leaks into the live form state.
 - Removed two unreferenced 10.9 MB copies of the Tesseract `eng.traineddata.gz` language file
   (`assets/eng.traineddata.gz`, `assets/vendor/tesseract/tessdata/`). The app only ever loaded
   the 1.9 MB fast model at `assets/vendor/tessdata/`, so OCR is unchanged and the deploy is

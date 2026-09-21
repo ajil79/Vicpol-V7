@@ -1303,6 +1303,20 @@ function enforceVicpolWarrantIdStatus(showToast = false) {
     }
   }
 
+  // Auto-link preference is a per-device setting, not draft content. Re-apply it
+  // (and mirror it onto the header checkbox) whenever `state` is rebuilt from
+  // INITIAL_STATE or a saved draft/backup, so the toggle, storage and state can't
+  // drift apart until the next reload.
+  const AUTOLINK_PREF_KEY = "vicpol_autolink_shared";
+  function applyAutoLinkPref() {
+    try {
+      const s = localStorage.getItem(AUTOLINK_PREF_KEY);
+      if (s !== null) state.autoLinkShared = (s === "1");
+    } catch (e) {}
+    const toggle = document.getElementById("autoLinkSharedToggle");
+    if (toggle) toggle.checked = state.autoLinkShared !== false;
+  }
+
   // ============================================================================
   // TEMPLATE/PRESET SYSTEM
   // ============================================================================

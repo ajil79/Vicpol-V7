@@ -940,6 +940,7 @@
       safeLocalStorageSet("vicpol_report_undo_charges", JSON.stringify([...selectedChargesSet]));
       safeLocalStorageSet("vicpol_report_undo_pins", JSON.stringify([...selectedPinsSet]));
       state = deepClone(INITIAL_STATE);
+      applyAutoLinkPref();
       selectedChargesSet.clear();
       selectedPinsSet.clear();
       // Clear defects
@@ -1632,16 +1633,17 @@
     obj[parts[parts.length - 1]] = value;
   }
 
-  function getStatePath(path) {
+  function getPathValue(root, path) {
     if (!path) return "";
     const parts = path.split(".");
-    let obj = state;
+    let obj = root;
     for (const p of parts) {
       if (obj == null) return "";
       obj = obj[p];
     }
     return obj == null ? "" : obj;
   }
+  function getStatePath(path) { return getPathValue(state, path); }
 
   // Write a value into one member (DOM input + its state slot). Direct writes,
   // no event dispatch — the guard is set and we update state ourselves, so the
@@ -1671,7 +1673,11 @@
     if (!state.linkedShared) state.linkedShared = {};
     const value = node.value;
     state.linkedShared[group.key] = value;
-    fanOutLink(group, value, member.id);
+    // Never fan out an empty value: clearing (or backspacing through) a field in
+    // one section must not wipe the same fact in every other section. The
+    // canonical slot is dropped so nothing stale is pushed back later; if a
+    // sibling still holds a value, reconcileSharedLinks re-seeds from it.
+    if (norm(value)) fanOutLink(group, value, member.id);
     debouncedRenderPreview();
     throttledAutosave();
   }
@@ -1691,7 +1697,11 @@
         if (!canonical) {
           for (const m of group.members) {
             const v = norm(m.path ? getStatePath(m.path) : (document.getElementById(m.id) || {}).value);
-            if (v) { canonical = v; break; }
+            // A member still on its INITIAL_STATE default (e.g. the "NO" of a
+            // Stolen/Suspended select) is not user input and must not become
+            // the canonical value that gets pinned into every draft.
+            const dflt = m.path ? norm(getPathValue(INITIAL_STATE, m.path)) : "";
+            if (v && v !== dflt) { canonical = v; break; }
           }
         }
         if (!canonical) continue;
@@ -1700,6 +1710,29 @@
       }
     } finally {
       _linkSyncing = false;
+    }
+  }
+
+  // Forget the canonical value of every group that has a member inside the
+  // given form section. Called by "Clear this section" so the cleared card
+  // isn't silently refilled from a stale canonical on the next report-type
+  // switch. Members are matched by their state path prefix; the narrative card
+  // owns the top-level prelim* fields.
+  const SECTION_LINK_PREFIXES = {
+    offender: ["offender."],
+    trafficWarrant: ["trafficWarrant."],
+    vicpolWarrant: ["vicpolWarrant."],
+    fieldContact: ["fieldContact."],
+    searchSeizure: ["searchSeizure."],
+    vehicleInspection: ["vehicleInspection."],
+    narrative: ["prelimTime", "prelimDate", "prelimLocation"]
+  };
+  function clearLinkedSharedForSection(section) {
+    const prefixes = SECTION_LINK_PREFIXES[section];
+    if (!prefixes || !state.linkedShared || typeof LINK_GROUPS === "undefined") return;
+    for (const group of LINK_GROUPS) {
+      const owns = group.members.some(m => m.path && prefixes.some(p => m.path === p || m.path.startsWith(p)));
+      if (owns) state.linkedShared[group.key] = "";
     }
   }
 
