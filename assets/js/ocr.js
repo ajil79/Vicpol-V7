@@ -1102,15 +1102,3 @@
     
     return t;
   }
-
-
-  // Event Binding (CONSOLIDATED)
-  // ============================================================================
-  // VEHICLE DEFECTS & MODIFICATIONS REFERENCE
-  // ============================================================================
-  
-
-
-
-  const _defectHistory = []; // Stack of {reason: "line added", law: "line added"}
-

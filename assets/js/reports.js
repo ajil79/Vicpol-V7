@@ -987,6 +987,10 @@
       if (writeStoredJson(DRAFTS_KEY, drafts)) {
         renderDrafts();
         toast("Draft saved: " + name, "ok");
+        // Surface the storage meter while drafts are actually being added,
+        // not only when the Templates modal happens to be opened.
+        const q = checkStorageQuota();
+        if (q.pct > 70) toast(`⚠ Storage ${q.pct}% full — delete old drafts soon`, "warn");
       }
     } catch (e) {
       toast("Failed to save draft", "err");

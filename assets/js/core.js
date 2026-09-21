@@ -1904,5 +1904,3 @@ function updateReportTypeUI() {
     // Recruit Mode: keep the live required-fields checklist in step with the preview.
     if (typeof updateRecruitChecklist === "function") { try { updateRecruitChecklist(); } catch (e) {} }
   }, 200);
-
-  // Builds the bullet lines for (1) Preliminary Details from structured inputs

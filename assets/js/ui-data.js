@@ -1,5 +1,10 @@
 /* Traffic defects, evidence lists, render-all, persons/officers/signature pools, OCR availability helpers. */
 
+  // Vehicle defects picked in the Traffic Warrant / Vehicle Inspection cards.
+  // Stack of {name, desc, reason, law}; consumed by buildDefectsOutputLines()
+  // in reports.js and rendered as chips here. Shared global (no module system).
+  const _defectHistory = [];
+
   // ═══════════════════════════════════════════════════════════════════════════
   // RECRUIT MODE — live required-fields checklist (v7)
   // ═══════════════════════════════════════════════════════════════════════════
@@ -931,11 +936,9 @@
       // Capture officer details before clearing
       const carry = getOfficerCarryOver();
       // Store pre-clear state for undo
-      try {
-        localStorage.setItem("vicpol_report_undo_state", JSON.stringify(state));
-        localStorage.setItem("vicpol_report_undo_charges", JSON.stringify([...selectedChargesSet]));
-        localStorage.setItem("vicpol_report_undo_pins", JSON.stringify([...selectedPinsSet]));
-      } catch(e) {}
+      safeLocalStorageSet("vicpol_report_undo_state", JSON.stringify(state));
+      safeLocalStorageSet("vicpol_report_undo_charges", JSON.stringify([...selectedChargesSet]));
+      safeLocalStorageSet("vicpol_report_undo_pins", JSON.stringify([...selectedPinsSet]));
       state = deepClone(INITIAL_STATE);
       selectedChargesSet.clear();
       selectedPinsSet.clear();
@@ -2354,7 +2357,7 @@
   function saveOfficersDB(arr) {
     try {
       const normalized = (arr || []).map(normalizeOfficerRecord).filter(Boolean);
-      localStorage.setItem(OFFICERS_KEY, JSON.stringify(normalized.slice(0,OFFICERS_MAX)));
+      safeLocalStorageSet(OFFICERS_KEY, JSON.stringify(normalized.slice(0,OFFICERS_MAX)));
     } catch(e) {}
   }
 
@@ -2727,7 +2730,7 @@
     try { return JSON.parse(localStorage.getItem(RECENT_CALLSIGNS_KEY) || "[]"); } catch(e) { return []; }
   }
   function saveRecentCallsigns(arr) {
-    try { localStorage.setItem(RECENT_CALLSIGNS_KEY, JSON.stringify((arr || []).slice(0, RECENT_CALLSIGNS_MAX))); } catch(e) {}
+    safeLocalStorageSet(RECENT_CALLSIGNS_KEY, JSON.stringify((arr || []).slice(0, RECENT_CALLSIGNS_MAX)));
   }
   function rememberRecentCallsign(cs) {
     const clean = norm(cs).toUpperCase();
@@ -2747,7 +2750,7 @@
     try { return JSON.parse(localStorage.getItem(CALLSIGNS_KEY) || "[]"); } catch(e) { return []; }
   }
   function saveCallsignPool(arr) {
-    try { localStorage.setItem(CALLSIGNS_KEY, JSON.stringify(arr)); } catch(e) {} 
+    safeLocalStorageSet(CALLSIGNS_KEY, JSON.stringify(arr));
   }
 
   // Migrate: if state has callsigns but localStorage doesn't, seed it
@@ -3361,7 +3364,7 @@
   function saveLastSignature() {
     try {
       const sig = { name: state.sigName || "", rank: state.sigRank || "", division: state.sigDivision || "" };
-      if (sig.name.trim()) localStorage.setItem(SIG_KEY, JSON.stringify(sig));
+      if (sig.name.trim()) safeLocalStorageSet(SIG_KEY, JSON.stringify(sig));
     } catch(e) {}
   }
 
@@ -3459,7 +3462,7 @@
 
   function saveSignatureProfiles(profiles) {
     try {
-      localStorage.setItem(SIG_PROFILES_KEY, JSON.stringify(profiles));
+      safeLocalStorageSet(SIG_PROFILES_KEY, JSON.stringify(profiles));
     } catch(e) {}
   }
 
@@ -3479,7 +3482,7 @@
     try {
       const stored = JSON.parse(localStorage.getItem(SIG_RANKS_KEY) || "[]");
       const updated = uniqueCaseInsensitive([...stored, clean]);
-      localStorage.setItem(SIG_RANKS_KEY, JSON.stringify(updated));
+      safeLocalStorageSet(SIG_RANKS_KEY, JSON.stringify(updated));
     } catch(e) {}
   }
 
@@ -3499,7 +3502,7 @@
     try {
       const stored = JSON.parse(localStorage.getItem(SIG_DIVISIONS_KEY) || "[]");
       const updated = uniqueCaseInsensitive([...stored, clean]);
-      localStorage.setItem(SIG_DIVISIONS_KEY, JSON.stringify(updated));
+      safeLocalStorageSet(SIG_DIVISIONS_KEY, JSON.stringify(updated));
     } catch(e) {}
   }
 

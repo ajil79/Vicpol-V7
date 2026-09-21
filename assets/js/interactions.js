@@ -1125,9 +1125,7 @@
   }
 
   function writeCollapsedCards(map) {
-    try {
-      localStorage.setItem(CARD_COLLAPSE_STORAGE_KEY, JSON.stringify(map || {}));
-    } catch (_) {}
+    safeLocalStorageSet(CARD_COLLAPSE_STORAGE_KEY, JSON.stringify(map || {}));
   }
 
   let collapsedCardState = readCollapsedCards();

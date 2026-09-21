@@ -379,7 +379,7 @@ const RECRUIT_HANDBOOK = [
       '<li><strong>No ID?</strong> Request a Crime Scene Officer (CSO) to the scene, or wait until you are at a station. <strong>Do not use F6 fingerprints unless you are at a station or deployed as CSO.</strong></li>' +
       '<li><strong>Bring to feet &amp; process</strong> — cuff, read the caution, then standard custody procedure.</li>' +
       '</ol>' +
-      '<p style="font-size:11px;color:var(--muted)">Directive: Zoe Prime, Senior Sergeant &middot; MEL 262 &middot; General Duties.</p>' +
+      '<p style="font-size:11px;color:var(--muted)">Directive: Zoe Prime, Inspector &middot; MEL 262 &middot; General Duties.</p>' +
       '<div class="rh-links"><span class="rh-links-label">Write it up:</span>' +
       '<button class="rh-tool-link" data-rh-report="arrest" type="button">📝 Arrest Report — treatment, GSR, items &amp; timeline</button>' +
       '</div>'
