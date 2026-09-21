@@ -4,6 +4,10 @@ Newest first. Dates are the commit dates on `main`.
 
 ## Unreleased
 
+- **Backup & hand-over**: the Templates modal can now export everything the browser remembers
+  (drafts, templates, officer/person lists, callsigns, signatures) to a `.json` file and import
+  it on another device. Import merges by default (your entries win on a name clash) or replaces
+  everything when the checkbox is ticked. Stored values with a newer schema are now logged.
 - Auto-link shared details: clearing a linked field no longer wipes the same field in every
   other section; Stolen/Suspended select defaults are no longer pinned as the shared value;
   the auto-link toggle keeps the user's setting after Clear All, load draft and restore

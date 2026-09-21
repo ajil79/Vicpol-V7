@@ -959,6 +959,16 @@ Paramedic David Ace" rows="3"></textarea></label>
 <button class="btn" id="presetApplyBtn" style="background:rgba(108,138,255,0.18);border-color:rgba(108,138,255,0.35);color:var(--accent)">✓ Apply to Form</button>
 <button class="btn" id="presetCloseBtn">Close</button>
 </div>
+<div style="border-top:1px solid var(--border);margin-top:14px;padding-top:14px">
+<div style="font-size:11px;font-weight:800;color:var(--muted);margin-bottom:4px">BACKUP &amp; HAND-OVER</div>
+<div style="font-size:11px;color:var(--muted);margin-bottom:8px">Save everything this browser remembers — drafts, templates, officer &amp; person lists, callsigns, signatures — to a file. Import it on another device, or give it to a recruit as a starter pack.</div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+<button class="btn" id="backupExportBtn" type="button" title="Download a .json backup of all saved data">⬇ Export backup</button>
+<button class="btn" id="backupImportBtn" type="button" title="Load a .json backup made by this tool">⬆ Import backup</button>
+<input accept=".json,application/json" id="backupImportFile" style="display:none" type="file"/>
+<label style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted);cursor:pointer" title="Off: merge — your existing entries win on a name clash. On: overwrite everything in the file."><input id="backupReplaceToggle" style="width:auto" type="checkbox"/> Replace my data instead of merging</label>
+</div>
+</div>
 <div class="storage-warn" id="storageQuota" style="margin-top:8px"></div>
 </div>
 </div>

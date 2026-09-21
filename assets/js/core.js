@@ -345,6 +345,11 @@ function enforceVicpolWarrantIdStatus(showToast = false) {
     if (!raw) return fallback;
     const parsed = JSON.parse(raw);
     if (parsed && typeof parsed === 'object' && Object.prototype.hasOwnProperty.call(parsed, 'payload')) {
+      // Newer schema than this build understands: still hand back the payload
+      // (deepMerge against INITIAL_STATE tolerates unknown fields) but say so.
+      if (typeof parsed.schema === 'number' && parsed.schema > STORAGE_SCHEMA_VERSION) {
+        console.warn('[vicpol] stored value uses schema ' + parsed.schema + ' (this build: ' + STORAGE_SCHEMA_VERSION + ')');
+      }
       return parsed.payload;
     }
     return parsed;
@@ -1315,6 +1320,178 @@ function enforceVicpolWarrantIdStatus(showToast = false) {
     } catch (e) {}
     const toggle = document.getElementById("autoLinkSharedToggle");
     if (toggle) toggle.checked = state.autoLinkShared !== false;
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // BACKUP EXPORT / IMPORT (hand-over between browsers, devices and officers)
+  // ═══════════════════════════════════════════════════════════════════════════
+  // Everything the app persists lives under localStorage keys prefixed
+  // `vicpol_`. A backup is a JSON envelope holding those raw values, so an
+  // officer can move drafts, templates, officer/person lists, callsigns and
+  // signatures to another browser — or hand a starter pack to a recruit.
+  const BACKUP_SKIP_KEYS = new Set([
+    "vicpol_report_undo_state", "vicpol_report_undo_charges", "vicpol_report_undo_pins",
+    "vicpol_active_tab"
+  ]);
+
+  function listVicpolStorageKeys() {
+    const keys = [];
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith("vicpol_") && !BACKUP_SKIP_KEYS.has(k)) keys.push(k);
+      }
+    } catch (e) {}
+    return keys.sort();
+  }
+
+  function buildBackupEnvelope() {
+    const data = {};
+    for (const k of listVicpolStorageKeys()) {
+      try { data[k] = localStorage.getItem(k); } catch (e) {}
+    }
+    return {
+      app: APP_META.fullName,
+      kind: "vicpol-backup",
+      schema: STORAGE_SCHEMA_VERSION,
+      exportedAt: new Date().toISOString(),
+      data
+    };
+  }
+
+  function backupFileName() {
+    const d = new Date();
+    const pad = n => String(n).padStart(2, "0");
+    return "vicpol-backup-" + d.getFullYear() + pad(d.getMonth() + 1) + pad(d.getDate()) + "-" + pad(d.getHours()) + pad(d.getMinutes()) + ".json";
+  }
+
+  function downloadTextFile(name, text, mime) {
+    const blob = new Blob([text], { type: mime || "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = name;
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 1000);
+  }
+
+  function exportBackup() {
+    const env = buildBackupEnvelope();
+    const n = Object.keys(env.data).length;
+    if (!n) { toast("Nothing to back up yet", "warn"); return; }
+    downloadTextFile(backupFileName(), JSON.stringify(env, null, 2));
+    toast("Backup exported (" + n + " item" + (n === 1 ? "" : "s") + ")", "ok");
+  }
+
+  // Parse a raw stored string, remembering whether it used the {schema,payload}
+  // wrapper so the merged result can be written back in the same shape.
+  function parseStoredRaw(raw) {
+    try {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed) && Object.prototype.hasOwnProperty.call(parsed, "payload")) {
+        return { packed: true, value: parsed.payload };
+      }
+      return { packed: false, value: parsed };
+    } catch (e) {
+      return { packed: false, value: raw, plain: true };
+    }
+  }
+  function serializeStored(parsed, value) {
+    if (parsed.plain) return String(value);
+    return parsed.packed ? packStoredValue(value) : JSON.stringify(value);
+  }
+  function recordKey(item) {
+    if (item && typeof item === "object") {
+      const k = item.name || item.full || item.id;
+      if (k != null) return String(k).trim().toUpperCase();
+    }
+    return JSON.stringify(item);
+  }
+
+  // Merge one incoming stored value into the local one. Objects keyed by name
+  // (drafts, presets) are unioned with the local entry winning on conflict;
+  // arrays (officers, persons, pools) are unioned by record key; anything else
+  // keeps the local value. Returns the raw string to store, or null to skip.
+  function mergeStoredValue(localRaw, incomingRaw) {
+    if (localRaw == null) return incomingRaw;
+    const a = parseStoredRaw(localRaw);
+    const b = parseStoredRaw(incomingRaw);
+    if (Array.isArray(a.value) && Array.isArray(b.value)) {
+      const seen = new Set(a.value.map(recordKey));
+      const merged = a.value.slice();
+      for (const item of b.value) { const k = recordKey(item); if (!seen.has(k)) { seen.add(k); merged.push(item); } }
+      return merged.length === a.value.length ? null : serializeStored(a, merged);
+    }
+    const isObj = v => v && typeof v === "object" && !Array.isArray(v);
+    if (isObj(a.value) && isObj(b.value)) {
+      const merged = { ...b.value, ...a.value };
+      return Object.keys(merged).length === Object.keys(a.value).length ? null : serializeStored(a, merged);
+    }
+    return null;
+  }
+
+  function validateBackupEnvelope(env) {
+    if (!env || typeof env !== "object") return "Not a VicPol backup file.";
+    if (env.kind !== "vicpol-backup" || !env.data || typeof env.data !== "object") return "Not a VicPol backup file.";
+    const keys = Object.keys(env.data);
+    if (!keys.length) return "Backup file is empty.";
+    if (keys.some(k => !k.startsWith("vicpol_"))) return "Backup contains unexpected keys.";
+    if (Object.values(env.data).some(v => typeof v !== "string")) return "Backup values are malformed.";
+    return "";
+  }
+
+  // Apply a parsed envelope. replace=true overwrites every key in the file;
+  // otherwise values are merged as above. Returns counts for the toast.
+  function applyBackupEnvelope(env, opts) {
+    const replace = !!(opts && opts.replace);
+    const summary = { written: 0, merged: 0, skipped: 0, failed: 0 };
+    for (const [k, incoming] of Object.entries(env.data)) {
+      if (BACKUP_SKIP_KEYS.has(k)) { summary.skipped++; continue; }
+      let localRaw = null;
+      try { localRaw = localStorage.getItem(k); } catch (e) {}
+      let toWrite;
+      if (replace || localRaw == null) toWrite = incoming;
+      else toWrite = mergeStoredValue(localRaw, incoming);
+      if (toWrite == null) { summary.skipped++; continue; }
+      if (safeLocalStorageSet(k, toWrite)) { if (localRaw == null || replace) summary.written++; else summary.merged++; }
+      else summary.failed++;
+    }
+    return summary;
+  }
+
+  function importBackupFromText(text, opts) {
+    let env;
+    try { env = JSON.parse(text); } catch (e) { toast("Could not read that file — not valid JSON", "err"); return null; }
+    const problem = validateBackupEnvelope(env);
+    if (problem) { toast(problem, "err"); return null; }
+    if (typeof env.schema === "number" && env.schema > STORAGE_SCHEMA_VERSION &&
+        !confirm("This backup was made by a newer version of the tool. Import anyway?")) return null;
+    const replace = !!(opts && opts.replace);
+    const n = Object.keys(env.data).length;
+    const when = env.exportedAt ? new Date(env.exportedAt).toLocaleString() : "unknown date";
+    const msg = replace
+      ? "Replace your saved data with this backup (" + n + " items, exported " + when + ")?\n\nDrafts, templates, officers and signatures on this device will be overwritten. The page will reload."
+      : "Merge this backup (" + n + " items, exported " + when + ") into your saved data?\n\nExisting entries with the same name are kept; new ones are added. The page will reload.";
+    if (!confirm(msg)) return null;
+    const summary = applyBackupEnvelope(env, { replace });
+    if (summary.failed) toast("Import incomplete — storage is full", "err");
+    else toast("Backup imported: " + summary.written + " added, " + summary.merged + " merged", "ok");
+    return summary;
+  }
+
+  function importBackupFromFile(file, opts) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onerror = () => toast("Could not read that file", "err");
+    reader.onload = () => {
+      const summary = importBackupFromText(String(reader.result || ""), opts);
+      // Every module caches state at startup; a reload is the one reliable way
+      // to make them all pick up the imported data.
+      if (summary && !summary.failed) setTimeout(() => location.reload(), 900);
+    };
+    reader.readAsText(file);
   }
 
   // ============================================================================

@@ -1133,6 +1133,20 @@
     if (presetSaveBtn) presetSaveBtn.addEventListener("click", saveCurrentPreset);
     const presetApplyBtn = document.getElementById("presetApplyBtn");
     if (presetApplyBtn) presetApplyBtn.addEventListener("click", applyPresetToForm);
+    // Backup export / import (hand-over between devices and officers)
+    const backupExportBtn = document.getElementById("backupExportBtn");
+    if (backupExportBtn) backupExportBtn.addEventListener("click", exportBackup);
+    const backupImportBtn = document.getElementById("backupImportBtn");
+    const backupImportFile = document.getElementById("backupImportFile");
+    if (backupImportBtn && backupImportFile) {
+      backupImportBtn.addEventListener("click", () => backupImportFile.click());
+      backupImportFile.addEventListener("change", () => {
+        const file = backupImportFile.files && backupImportFile.files[0];
+        const replace = !!document.getElementById("backupReplaceToggle")?.checked;
+        importBackupFromFile(file, { replace });
+        backupImportFile.value = "";
+      });
+    }
     // Close preset modal on backdrop click
     const presetOverlay = document.getElementById("presetModalOverlay");
     if (presetOverlay) {
