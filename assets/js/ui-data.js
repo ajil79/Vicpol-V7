@@ -473,7 +473,7 @@
 
 
     // Bail Conditions fields
-    const bcFields = ['bcBailAmount', 'bcDate', 'bcTime', 'bcLeapHistory'];
+    const bcFields = ['bcBailAmount', 'bcDate', 'bcTime', 'bcLeapHistory', 'bcJudge', 'bcSentenceWeeks'];
     bcFields.forEach(field => {
       if (el[field]) {
         el[field].addEventListener("input", () => {
@@ -1512,6 +1512,8 @@
       if (el.bcDate) el.bcDate.value = bc.date || "";
       if (el.bcTime) el.bcTime.value = bc.time || "";
       if (el.bcLeapHistory) el.bcLeapHistory.value = bc.leapHistory || "";
+      if (el.bcJudge) el.bcJudge.value = bc.judge || "";
+      if (el.bcSentenceWeeks) el.bcSentenceWeeks.value = bc.sentenceWeeks || "";
       const bcOrgMemberEl = document.getElementById('bcOrgMember');
       const bcViolenceEl = document.getElementById('bcViolence');
       const bcFPOEl = document.getElementById('bcFPO');

@@ -4,6 +4,31 @@ Newest first. Dates are the commit dates on `main`.
 
 ## Unreleased
 
+- **Re-enabled Bail Conditions** (report type + calculator), previously hidden while bail was
+  disabled city-wide. Turned it back on by uncommenting the `<option>` and restoring
+  `"bail_conditions"` to `VICPOL_ALLOWED_REPORT_TYPES` — the card, generator and bail-amount
+  calculator (charge costs + LEAP history + org/violence/FPO multipliers) were already fully
+  built, just switched off.
+- **Fixed a real, app-wide bug found while testing it: every checkbox in the app was invisible.**
+  `input[type="checkbox"]` had `appearance:none` (inherited from the generic input reset) with no
+  explicit width/height and no `:checked` styling of any kind, which collapses a checkbox to a
+  literal 0×0 box in this Chromium build — confirmed with an isolated repro, and confirmed it hit
+  every checkbox in the app (auto-link toggle, OCR weapons-only/auto-apply, all three bail
+  multipliers), not just the newly re-enabled ones. Restored native checkbox rendering with
+  explicit sizing and an app-themed `accent-color`.
+- **Fixed `validateDraft()` incorrectly flagging bail reports as incomplete.** Bail was lumped into
+  the arrest/warrant/traffic catch-all, which requires officers-listed, preliminary
+  time/date/location and a narrative summary — none of which the Bail Conditions card has a UI
+  for, so a fully-completed bail report could never clear those three warnings. Gave it its own
+  validation branch checking what the bail form actually collects (charges/PINs, offender DOB,
+  bail amount, bail date/time, signature).
+- **Bail template: added support for court-organised bail**, after the user supplied a real
+  boilerplate example used in their group. Added optional "Approving Magistrate / Judge" and
+  "Agreed Sentence if Breached (weeks)" fields; when set, the generated document's forfeiture and
+  non-appearance clauses now name the judge and pre-agreed sentence (matching the reference
+  document's wording), and gracefully fall back to the original generic wording for a standard
+  officer-granted bail when left blank. Verified all four combinations (neither/weeks-only/
+  judge-only/both set) render grammatically, and that both fields persist through save/reload.
 - **Responsive audit: pc/tablet/mobile.** Ran a full audit rather than assuming problems — the
   app was already solidly responsive (correct viewport meta, the report form/preview stack
   correctly below 1100px, the OCR grid collapses correctly, the tab bar scrolls horizontally with

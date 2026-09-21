@@ -9,7 +9,7 @@
    is used, but ARE cached at that point via the runtime fallback below, so
    OCR keeps working offline on every visit after the first.
 */
-const CACHE_VERSION = "20260927";
+const CACHE_VERSION = "20260930";
 const CACHE_NAME = "vicpol-v7-" + CACHE_VERSION;
 
 const PRECACHE_URLS = [

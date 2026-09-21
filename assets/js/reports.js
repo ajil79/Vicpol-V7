@@ -525,7 +525,19 @@
     }
     add("The offender cannot be charged with any indictable or non-indictable offences. (PINs are permissible.)");
     add("");
-    add("If the offender is charged, their bail amount will be forfeited, and they will be found guilty instantly of their bail charges as well as the new charges without the opportunity to fight the charges in the Magistrates' Court of Victoria. They can appeal in the District Court without reason later on.");
+    // Court-organised bail: judge/sentence-on-breach clauses only appear when set —
+    // a standard officer-granted bail has neither field filled in.
+    const judge = s(bc.judge);
+    const weeks = s(bc.sentenceWeeks);
+    let breachSentenceClause = "";
+    if (weeks && judge) breachSentenceClause = ` and sentenced to ${weeks} weeks (as per ${judge})`;
+    else if (weeks) breachSentenceClause = ` and sentenced to ${weeks} weeks`;
+    else if (judge) breachSentenceClause = ` (as ordered by ${judge})`;
+    let nonAppearanceSentenceClause = "";
+    if (weeks && judge) nonAppearanceSentenceClause = `, plus ${weeks} weeks as ordered by ${judge}`;
+    else if (weeks) nonAppearanceSentenceClause = `, plus ${weeks} weeks`;
+    else if (judge) nonAppearanceSentenceClause = ` (as ordered by ${judge})`;
+    add(`If the offender is charged, their bail amount will be forfeited, and they will be found guilty instantly of their bail charges${breachSentenceClause} as well as the new charges without the opportunity to fight the charges in the Magistrates' Court of Victoria. They can appeal in the District Court without reason later on.`);
     add("");
     add("The offender will receive an additional breach of bail charge if they are charged with any offence.");
     add("");
@@ -537,7 +549,7 @@
     add("");
     add("If the offender does not appear without informing a magistrate or the arresting officer, they will be charged with breach of bail, failure to attend, and their bail charges. An arrest warrant will be issued, which they cannot contest in magistrates' court. They can appeal in the District Court without reason later on.");
     add("");
-    add("The magistrate will wait up to 15 minutes after the case has begun for the offender to appear. If the offender does not show up within this time, it will count as a non-appearance, and their bail amount will be forfeited.");
+    add(`The magistrate will wait up to 15 minutes after the case has begun for the offender to appear. If the offender does not show up within this time, it will count as a non-appearance, and their bail amount will be forfeited${nonAppearanceSentenceClause}.`);
     add("");
     add("If the offender appears, they will receive their bail amount back in full.");
     add("");
@@ -1168,8 +1180,16 @@
       if (!norm(state.officersList)) warnings.push("No officers listed.");
       if (!norm(state.searchSeizure?.summary)) warnings.push("Missing search summary.");
       if (!norm(state.sigName)) warnings.push("Missing signature name.");
+    } else if (type === "bail_conditions") {
+      // Bail has its own, much smaller card set (no officers/narrative UI) —
+      // validate only what its form actually shows, not the arrest checklist.
+      if (!norm(state.chargesList) && !norm(state.pinsList)) warnings.push("No charges or PINs selected.");
+      if (!norm(state.offender.dob)) warnings.push("Missing offender DOB.");
+      if (!norm(state.bailConditions?.bailAmount)) warnings.push("Missing bail amount.");
+      if (!norm(state.bailConditions?.date) || !norm(state.bailConditions?.time)) warnings.push("Missing bail date/time.");
+      if (!norm(state.sigName)) warnings.push("Missing signature name.");
     } else {
-      // Arrest, warrant, traffic, bail — all need officers + charges + DOB + prelim + summary + sig
+      // Arrest, warrant, traffic — all need officers + charges + DOB + prelim + summary + sig
       if (!norm(state.chargesList) && !norm(state.pinsList)) warnings.push("No charges or PINs selected.");
       if (!norm(state.officersList)) warnings.push("No officers listed.");
       if (!norm(state.offender.dob) && type !== "traffic_warrant") warnings.push("Missing offender DOB.");

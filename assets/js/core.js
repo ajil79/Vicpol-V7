@@ -1048,7 +1048,8 @@ function enforceVicpolWarrantIdStatus(showToast = false) {
       sigRank: "Senior Constable", sigName: ""
     },
     bailConditions: {
-      bailAmount: "", date: "", time: "", orgMember: false, violence: false, fpo: false, leapHistory: ""
+      bailAmount: "", date: "", time: "", orgMember: false, violence: false, fpo: false, leapHistory: "",
+      judge: "", sentenceWeeks: ""
     },
     fieldContact: {
       name: "", dob: "", phone: "", time: "", date: "", location: "",
@@ -1742,6 +1743,8 @@ function enforceVicpolWarrantIdStatus(showToast = false) {
     bcDate: document.getElementById("bcDate"),
     bcTime: document.getElementById("bcTime"),
     bcLeapHistory: document.getElementById("bcLeapHistory"),
+    bcJudge: document.getElementById("bcJudge"),
+    bcSentenceWeeks: document.getElementById("bcSentenceWeeks"),
     bailConditionsCard: document.getElementById("bailConditionsCard"),
     
     // Field Contact
@@ -1893,8 +1896,7 @@ function enforceVicpolWarrantIdStatus(showToast = false) {
     "arrest",
     "vicpol_arrest",
     "vicpol_warrant",
-    // "bail_conditions" — hidden while bail is disabled in the city; re-add here
-    // and restore the <option> in index.html to re-enable.
+    "bail_conditions",
     "traffic_warrant",
     "field_contact",
     "search_seizure",
