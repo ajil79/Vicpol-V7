@@ -12,7 +12,7 @@ const RECRUIT_HANDBOOK = [
     keywords: "code 0 1 2 3 4 5 6 8 9 10 12 15 16 duress traffic stop meal break alarm robbery collision disconnect headpop",
     html:
       '<p>Standard radio codes used over comms. <strong>Code 9</strong> (Duress) is the most critical — it sends a distress signal to all officers.</p>' +
-      '<table class="rh-table"><thead><tr><th>Code</th><th>Meaning</th></tr></thead><tbody>' +
+      '<div class="rh-table-wrap"><table class="rh-table"><thead><tr><th>Code</th><th>Meaning</th></tr></thead><tbody>' +
       '<tr><td>Code 0</td><td>Disconnected / Headpopped</td></tr>' +
       '<tr><td>Code 1</td><td>On Patrol / Available</td></tr>' +
       '<tr><td>Code 2</td><td>Arrived at station &lt;NAME&gt;</td></tr>' +
@@ -26,7 +26,7 @@ const RECRUIT_HANDBOOK = [
       '<tr><td>Code 12</td><td>Traffic Crash / Collision</td></tr>' +
       '<tr><td>Code 15</td><td>Silent Alarm / Robbery</td></tr>' +
       '<tr><td>Code 16</td><td>Collision with serious injuries</td></tr>' +
-      '</tbody></table>' +
+      '</tbody></table></div>' +
       '<p class="rh-note">Driver took off during your Code 4? See <button class="rh-jump-link" data-rh-jump="code4-flee" type="button">Fled Traffic Stop — Which Warrant?</button></p>'
   },
   {
@@ -36,7 +36,7 @@ const RECRUIT_HANDBOOK = [
     html:
       '<p>Victoria Police use the standard <strong>NATO phonetic alphabet</strong> to spell plates and names clearly over radio.</p>' +
       '<p class="rh-note">Example plate check: <em>"MEL 269, can I get a plate check on NNH 726 — that\'s November, November, Hotel, Seven, Two, Six."</em></p>' +
-      '<table class="rh-table"><tbody>' +
+      '<div class="rh-table-wrap"><table class="rh-table"><tbody>' +
       '<tr><td>A — Alpha</td><td>B — Bravo</td><td>C — Charlie</td><td>D — Delta</td></tr>' +
       '<tr><td>E — Echo</td><td>F — Foxtrot</td><td>G — Golf</td><td>H — Hotel</td></tr>' +
       '<tr><td>I — India</td><td>J — Juliet</td><td>K — Kilo</td><td>L — Lima</td></tr>' +
@@ -44,7 +44,7 @@ const RECRUIT_HANDBOOK = [
       '<tr><td>Q — Quebec</td><td>R — Romeo</td><td>S — Sierra</td><td>T — Tango</td></tr>' +
       '<tr><td>U — Uniform</td><td>V — Victor</td><td>W — Whiskey</td><td>X — X-ray</td></tr>' +
       '<tr><td>Y — Yankee</td><td>Z — Zulu</td><td></td><td></td></tr>' +
-      '</tbody></table>' +
+      '</tbody></table></div>' +
       '<p class="rh-note">Units over radio are always <strong>minutes</strong> and <strong>kilometres</strong>.</p>'
   },
   {
@@ -53,14 +53,14 @@ const RECRUIT_HANDBOOK = [
     keywords: "callsign prefix mel mtt vin grp k9 por melbourne mt thomas vinewood grapeseed van divvy pigeon unmarked region station auto gd",
     html:
       '<p>When deploying as General Duties use the <strong>"Login Auto GD Callsign"</strong> option. If your assigned callsign is taken, log out and use a different one. The prefix is based on the region/station you patrol from.</p>' +
-      '<table class="rh-table"><thead><tr><th>Prefix</th><th>Region / Unit</th></tr></thead><tbody>' +
+      '<div class="rh-table-wrap"><table class="rh-table"><thead><tr><th>Prefix</th><th>Region / Unit</th></tr></thead><tbody>' +
       '<tr><td><span class="rh-pill">MEL xxx</span></td><td>Melbourne</td></tr>' +
       '<tr><td><span class="rh-pill">MTT xxx</span></td><td>Mt. Thomas</td></tr>' +
       '<tr><td><span class="rh-pill">VIN xxx</span></td><td>Vinewood</td></tr>' +
       '<tr><td><span class="rh-pill">GRP xxx</span></td><td>Grapeseed</td></tr>' +
       '<tr><td><span class="rh-pill">K9 xxx</span></td><td>K9 unit (must be certified &amp; deployed as K9)</td></tr>' +
       '<tr><td><span class="rh-pill">POR xxx</span></td><td>PORT unit (must be certified &amp; deployed as PORT)</td></tr>' +
-      '</tbody></table>' +
+      '</tbody></table></div>' +
       '<p><strong>Number &amp; suffix conventions:</strong></p>' +
       '<ul>' +
       '<li><strong>2xx</strong> — standard car (MDT default).</li>' +
@@ -75,7 +75,7 @@ const RECRUIT_HANDBOOK = [
     keywords: "rank structure chain of command recruit probationary constable first senior leading sergeant inspector superintendent insignia spc rct pcon con",
     html:
       '<p>Chain of command, junior to senior (<strong>Superintendent</strong> is highest):</p>' +
-      '<table class="rh-table"><thead><tr><th>#</th><th>Rank</th><th>Abbr.</th></tr></thead><tbody>' +
+      '<div class="rh-table-wrap"><table class="rh-table"><thead><tr><th>#</th><th>Rank</th><th>Abbr.</th></tr></thead><tbody>' +
       '<tr><td>1</td><td>Recruit</td><td>RCT</td></tr>' +
       '<tr><td>2</td><td>Probationary Constable</td><td>PCON</td></tr>' +
       '<tr><td>3</td><td>Constable</td><td>CON</td></tr>' +
@@ -86,7 +86,7 @@ const RECRUIT_HANDBOOK = [
       '<tr><td>8</td><td>Senior Sergeant</td><td>S/SGT</td></tr>' +
       '<tr><td>9</td><td>Inspector</td><td>INSP</td></tr>' +
       '<tr><td>10</td><td>Superintendent</td><td>SUPT</td></tr>' +
-      '</tbody></table>' +
+      '</tbody></table></div>' +
       '<p class="rh-note"><strong>Special Constable (SPC)</strong> is a separate stream and is recorded distinctly from Senior Constable (SC).</p>'
   },
   {
@@ -95,11 +95,11 @@ const RECRUIT_HANDBOOK = [
     keywords: "priority 1 2 3 lights sirens emergency pursuit non-urgent driving response",
     html:
       '<p>Three priority levels for attending a job:</p>' +
-      '<table class="rh-table"><thead><tr><th>Priority</th><th>Lights/Sirens</th><th>Use</th></tr></thead><tbody>' +
+      '<div class="rh-table-wrap"><table class="rh-table"><thead><tr><th>Priority</th><th>Lights/Sirens</th><th>Use</th></tr></thead><tbody>' +
       '<tr><td><strong>Priority 1</strong></td><td>Lights &amp; Sirens</td><td>Critical emergencies &amp; pursuits. May exceed speed limit &amp; break road rules if required.</td></tr>' +
       '<tr><td><strong>Priority 2</strong></td><td>Lights, sirens as necessary</td><td>Can exceed limit/road rules but use warning systems at crossings; control speed in built-up areas.</td></tr>' +
       '<tr><td><strong>Priority 3</strong></td><td>None</td><td>Non-urgent calls. Regular road rules apply.</td></tr>' +
-      '</tbody></table>' +
+      '</tbody></table></div>' +
       '<p class="rh-warn">When responding, ensure intersections are <strong>CLEAR</strong> — slow (look left &amp; right) or stop at every intersection. Change your siren tone periodically.</p>'
   },
   {
@@ -108,19 +108,19 @@ const RECRUIT_HANDBOOK = [
     keywords: "gold silver bronze license class vehicle speed pursue pursuit terminate armoured livery gold class priority highway cirt port tailgator rebla streiter oracle buffalo sandstorm aleutian everon bison jogger pigeon",
     html:
       '<p>Three licence classes govern speed and pursuit ability. Abusing your class on or off duty can have it <strong>downgraded</strong>.</p>' +
-      '<table class="rh-table"><thead><tr><th>Class</th><th>Conditions</th></tr></thead><tbody>' +
+      '<div class="rh-table-wrap"><table class="rh-table"><thead><tr><th>Class</th><th>Conditions</th></tr></thead><tbody>' +
       '<tr><td><strong>Gold</strong></td><td>Unrestricted speed · can pursue · can terminate own &amp; others\' pursuits · may use opposite lanes.</td></tr>' +
       '<tr><td><strong>Silver</strong></td><td>250 kph limit · can be primary in pursuits · can terminate own pursuits (not others\').</td></tr>' +
       '<tr><td><strong>Bronze</strong></td><td>200 kph limit · cannot pursue · cannot intercept for a Code 4.</td></tr>' +
-      '</tbody></table>' +
+      '</tbody></table></div>' +
       '<p><strong>Vehicle classes:</strong> Gold vehicles — Senior Constable+ with a Gold licence (GD livery only). Silver — most common, Silver and above. Bronze — transport vehicles.</p>' +
       '<p><strong>Pursuit priority:</strong> Highway Patrol is always primary. Open slots are filled in this order — <strong>CIRT</strong>, then <strong>PORT</strong>, then <strong>GD</strong> — licence class permitting.</p>' +
       '<p><strong>General Duties vehicles by class:</strong></p>' +
-      '<table class="rh-table"><thead><tr><th>Class</th><th>Vehicles</th></tr></thead><tbody>' +
+      '<div class="rh-table-wrap"><table class="rh-table"><thead><tr><th>Class</th><th>Vehicles</th></tr></thead><tbody>' +
       '<tr><td><strong>Gold</strong></td><td>Obey Tailgator S (GD &amp; UM) · Ubermacht Rebla (GD, PORT &amp; UM) · Benefactor Streiter (GD &amp; UM — <em>Leadership only</em>)</td></tr>' +
       '<tr><td><strong>Silver</strong></td><td>Vapid Oracle (GD) · Bravado Buffalo (GD &amp; UM) · Vapid Sandstorm (GD &amp; PORT) · Vapid Aleutian (GD &amp; PORT) · Everon Divvy Van (GD &amp; PORT) · Karin Everon Offroad (GD &amp; PORT) · Bravado Bison XL (GD, PORT &amp; UM)</td></tr>' +
       '<tr><td><strong>Bronze</strong></td><td>CSO Van (CSO only) · Benefactor Jogger (PORT) · Ibishu Pigeon (GD &amp; PORT)</td></tr>' +
-      '</tbody></table>' +
+      '</tbody></table></div>' +
       '<p class="rh-warn"><strong>DO NOT use armoured vehicles</strong> — all are approval-based only.</p>'
   },
   {
@@ -176,12 +176,12 @@ const RECRUIT_HANDBOOK = [
     keywords: "anpr radar speed unmarked pigeon ratio 5:1 6:1 parking duty request gd support documents approval prefix stationary slicktop lightbar ctrl+d",
     html:
       '<p>Deployment ratios limit how many specialist units are active at once. Requests go through <strong>GD Support Documents</strong> and require GD leadership approval.</p>' +
-      '<table class="rh-table"><thead><tr><th>Capability</th><th>Ratio / Rule</th><th>Min Rank</th></tr></thead><tbody>' +
+      '<div class="rh-table-wrap"><table class="rh-table"><thead><tr><th>Capability</th><th>Ratio / Rule</th><th>Min Rank</th></tr></thead><tbody>' +
       '<tr><td>Speed Radar</td><td>Request to use</td><td>Constable+</td></tr>' +
       '<tr><td>ANPR / Radar</td><td><strong>5:1</strong> — no more than 5 highway units in MDT; turn off if more highway clock on</td><td>Constable+</td></tr>' +
       '<tr><td>Unmarked</td><td><strong>6:1</strong> — need 6 other units in MDT; use <strong>U</strong> prefix</td><td>First Constable+</td></tr>' +
       '<tr><td>Pigeon (parking)</td><td><strong>6:1</strong> · parking duty only · max <strong>3 hours</strong> · <strong>no pursuits</strong> · <strong>P</strong> suffix</td><td>—</td></tr>' +
-      '</tbody></table>' +
+      '</tbody></table></div>' +
       '<p class="rh-warn">General Duties must <strong>not</strong> sit roadside running a stationary radar. ANPR needs a lightbar with ANPR sensors (no slicktops) — toggle it with <code>CTRL+D</code> or <code>/anpr</code>; the radar controls open with <code>O</code>.</p>' +
       '<p>Submit via <em>Request Vehicle Approval</em> in gd-support-documents; a GD leader will Approve or Deny (with reasoning if denied).</p>'
   },
@@ -335,13 +335,13 @@ const RECRUIT_HANDBOOK = [
     keywords: "sentencing indictable mrc melbourne remand centre weeks prison community service magistrate lsc sgt attempted murder fpo approval",
     html:
       '<p><strong>Indictable charges</strong> (orange dot) are serious offences requiring weeks in the <strong>Melbourne Remand Centre (MRC)</strong>. Sentencing caps depend on the approving rank:</p>' +
-      '<table class="rh-table"><thead><tr><th>Authority</th><th>Max sentence</th></tr></thead><tbody>' +
+      '<div class="rh-table-wrap"><table class="rh-table"><thead><tr><th>Authority</th><th>Max sentence</th></tr></thead><tbody>' +
       '<tr><td>Standard Min / Max</td><td>40 / 90 weeks</td></tr>' +
       '<tr><td>LSC+ (no SGT/Magistrate)</td><td>110 weeks</td></tr>' +
       '<tr><td>SGT+ (no Magistrate)</td><td>150 weeks</td></tr>' +
       '<tr><td>SGT+ — Attempted Murder w/ FPO</td><td>250 weeks</td></tr>' +
       '<tr><td>Magistrate</td><td>450 weeks (450–900 for FPO breaches)</td></tr>' +
-      '</tbody></table>' +
+      '</tbody></table></div>' +
       '<p>Other outcomes: <strong>Set Free</strong> (minor/first offences), <strong>Community Service</strong>, or <strong>Send to Prison</strong> (MRC).</p>' +
       '<p><strong>Community Service</strong> — 6–18 activities without approval, leadership can approve up to 60. Each activity is ~10 seconds, max 8 per charge/offence. Not for murder, assault, robbery or gun crime — those go to prison.</p>' +
       '<div class="rh-links"><span class="rh-links-label">In the Report Tool:</span>' +
@@ -365,12 +365,12 @@ const RECRUIT_HANDBOOK = [
     keywords: "fpo firearms prohibition order tier 1 2 3 4 days permanent lsc sgt insp pfpo search powers approval bot breach",
     html:
       '<p>An FPO grants police search powers over a person. FPOs auto-remove when their duration expires. Tiers:</p>' +
-      '<table class="rh-table"><thead><tr><th>Tier</th><th>Duration</th><th>Approval</th><th>Search Powers</th></tr></thead><tbody>' +
+      '<div class="rh-table-wrap"><table class="rh-table"><thead><tr><th>Tier</th><th>Duration</th><th>Approval</th><th>Search Powers</th></tr></thead><tbody>' +
       '<tr><td>Tier 1</td><td>30 Days</td><td>LSC+</td><td>Search the person for firearms.</td></tr>' +
       '<tr><td>Tier 2</td><td>60 Days</td><td>SGT+</td><td>Search the person &amp; the vehicle they operate.</td></tr>' +
       '<tr><td>Tier 3</td><td>90 Days</td><td>SGT+</td><td>Thoroughly search the person, their vehicle &amp; any occupants.</td></tr>' +
       '<tr><td>Tier 4</td><td>Permanent</td><td>INSP+</td><td>Same as Tier 3.</td></tr>' +
-      '</tbody></table>' +
+      '</tbody></table></div>' +
       '<p>An FPO may be issued for one of four reasons: attempted murder of emergency services, mass murder, repeated improper use of a firearm, or attempting to supply a weapon to someone who already has an FPO. A <strong>permanent</strong> FPO (INSP+) is only requested once someone has progressed Short &rarr; Medium &rarr; Long and is still breaching. After issuing in-city, you <strong>must</strong> also log the request with the FPO BOT — this is as important as issuing the FPO itself.</p>' +
       '<p class="rh-warn"><strong>Non-Compliance with a Firearms Prohibition Order</strong> is its own charge — laid when someone under an FPO is found with any firearm, weapon attachment (suppressor, flashlight, extended mag, grip, scope) or ammunition. Search FPO holders proactively, and if you charge non-compliance, your arrest report is mandatory.</p>' +
       '<div class="rh-links"><span class="rh-links-label">Write it up:</span>' +
@@ -393,11 +393,11 @@ const RECRUIT_HANDBOOK = [
     keywords: "drugs narcotics cultivation manufacturing possession trafficking large quantity processed unprocessed fraud credit card fines implements methlab acetone lithium battery weed seed poppy seed acid tab xanax",
     html:
       '<p>Charging depends on amount &amp; classification. <strong>Large Quantity</strong> = 20 processed units <strong>or</strong> 50 unprocessed units.</p>' +
-      '<table class="rh-table"><thead><tr><th>Charge</th><th>Max Fine</th></tr></thead><tbody>' +
+      '<div class="rh-table-wrap"><table class="rh-table"><thead><tr><th>Charge</th><th>Max Fine</th></tr></thead><tbody>' +
       '<tr><td>Possession of a Large Quantity Drug of Dependence</td><td>$2,500</td></tr>' +
       '<tr><td>Trafficking a Drug of Dependence</td><td>$3,500</td></tr>' +
       '<tr><td>Cultivation of Narcotic Plants</td><td>$1,500</td></tr>' +
-      '</tbody></table>' +
+      '</tbody></table></div>' +
       '<p>Charge types: <strong>Cultivation</strong> (cannabis/opium plants, catching the grow itself), <strong>Manufacturing</strong> (refining raw narcotic into a sellable product), <strong>Possession</strong> (found during a search), and <strong>Fraud</strong> (fake credit cards).</p>' +
       '<p><strong>Which items count as what:</strong> <em>Unprocessed</em> — weed seed, raw cocaine, poppy seed. <em>Processed</em> — bag of cocaine / opium / weed / meth, opium, weed, acid tab, Xanax. <em>Implements</em> — portable methlab, acetone, lithium battery. Possession of Implements for Trafficking can <strong>only</strong> be charged if they actually hold one of those.</p>' +
       '<p><strong>Credit Card Fraud tiers:</strong> Low (up to 199 cards) · Moderate (200–499) · High (500+).</p>' +
@@ -412,11 +412,11 @@ const RECRUIT_HANDBOOK = [
     keywords: "code 4 flee fled evade fail to stop failed intercept pursuit warrant arrest questioning bodycam bwc id confirmed unconfirmed rego registered owner plate reader melroads traffic warrant",
     html:
       '<p>Driver takes off during a simple <strong>Code 4</strong> (traffic stop)? The paperwork depends on what you locked in before they fled — <strong>body cam</strong>, <strong>ID</strong> and <strong>rego</strong>:</p>' +
-      '<table class="rh-table"><thead><tr><th>What you have</th><th>Report to write</th></tr></thead><tbody>' +
+      '<div class="rh-table-wrap"><table class="rh-table"><thead><tr><th>What you have</th><th>Report to write</th></tr></thead><tbody>' +
       '<tr><td><strong>ID CONFIRMED</strong> — licence handed over, MDT/LEAP profile matched, or fingerprints (a verbal name is <em>not</em> confirmation)</td><td>VicPol <strong>Warrant for Arrest</strong> — record the ID confirmation basis in the warrant</td></tr>' +
       '<tr><td><strong>ID unconfirmed</strong>, but <strong>rego confirmed</strong> (plate read / plate reader hit) and/or <strong>BWC</strong> captured the driver</td><td>VicPol <strong>Warrant for Questioning</strong> — the registered owner is a lead, not a confirmed ID</td></tr>' +
       '<tr><td><strong>No stop achieved</strong> — vehicle failed to pull over / intercept abandoned for public safety</td><td><strong>Traffic Warrant</strong> — tick <em>"Failed attempt to intercept"</em>; paste the MELROADS excerpt, or screenshot it and use <strong>OCR Intake</strong>, to fill the vehicle details</td></tr>' +
-      '</tbody></table>' +
+      '</tbody></table></div>' +
       '<p class="rh-note">Rule of thumb: an <strong>arrest warrant</strong> needs identity confirmed <strong>beyond reasonable doubt</strong>. Anything less — even a confirmed rego with a likely driver — stays a <strong>questioning warrant</strong> until identity is confirmed.</p>' +
       '<p>Evidence to log before writing: <strong>BWC</strong>, plate reader / rego check, MDT / MELROADS profile, radar reading. The report narrative has quick-add buttons for each.</p>' +
       '<div class="rh-links"><span class="rh-links-label">Write it now:</span>' +
@@ -449,11 +449,11 @@ const RECRUIT_HANDBOOK = [
     keywords: "code 15 code 9 robbery alarm hostage negotiator additional units perimeter breach k9 sweep cirt port duress secure scene roles",
     html:
       '<p>On a robbery / alarm (Code 15) or duress (Code 9), arrive quietly, secure the area, and fill defined roles. Request specialist units (CIRT / PORT / HWY / K9) as needed.</p>' +
-      '<table class="rh-table"><thead><tr><th>Role</th><th>Responsibilities</th></tr></thead><tbody>' +
+      '<div class="rh-table-wrap"><table class="rh-table"><thead><tr><th>Role</th><th>Responsibilities</th></tr></thead><tbody>' +
       '<tr><td><strong>Negotiator</strong></td><td>Communicate with hostage-takers for demands · relay all information to the SC (scene commander).</td></tr>' +
       '<tr><td><strong>Additional Units</strong></td><td>Keep a secure perimeter · listen to directions · stand by for a possible breach.</td></tr>' +
       '<tr><td><strong>K9</strong></td><td>Sweep the area for possible suspects.</td></tr>' +
-      '</tbody></table>' +
+      '</tbody></table></div>' +
       '<p class="rh-warn">Do not use doors/abilities to powergame your way into an active scene — wait for direction.</p>' +
       '<div class="rh-links"><span class="rh-links-label">Write it up:</span>' +
       '<button class="rh-tool-link" data-rh-report="arrest" type="button">📝 Arrest Report — scene, roles, victims &amp; timeline</button>' +
@@ -548,11 +548,11 @@ const RECRUIT_HANDBOOK = [
     keywords: "code 15 roles scene command negotiator additional units breach ratio non lethal lethal 2:1 hostage perimeter demands warnings breaching order",
     html:
       '<p>A Code 15 (robbery / hostage) runs on three roles. Stay off the primary channel unless you have something to add.</p>' +
-      '<table class="rh-table"><thead><tr><th>Role</th><th>Job</th></tr></thead><tbody>' +
+      '<div class="rh-table-wrap"><table class="rh-table"><thead><tr><th>Role</th><th>Job</th></tr></thead><tbody>' +
       '<tr><td><strong>Scene Command (SC)</strong></td><td>Makes all decisions on scene, co-ordinates units, approves demands.</td></tr>' +
       '<tr><td><strong>Negotiator</strong></td><td>Communicates with the offenders for demands; relays everything to SC.</td></tr>' +
       '<tr><td><strong>Additional units</strong></td><td>Keep a secure perimeter, follow directions, stand by for a possible breach.</td></tr>' +
-      '</tbody></table>' +
+      '</tbody></table></div>' +
       '<p><strong>Gather:</strong> number of hostages/takers, weapons, demands (no money/items), direction of travel &amp; ETA.</p>' +
       '<p><strong>Breaching:</strong> non-lethal to lethal ratio must be <strong>2:1</strong>. Order of stack: <strong>Non-Lethal → Lethal → Non-Lethal</strong>. Give the warnings first:</p>' +
       '<div class="rh-note"><em>"Melbourne Police — if anyone is inside the building please make yourself known."</em> (Repeat x2)<br>' +
@@ -597,12 +597,12 @@ const RECRUIT_HANDBOOK = [
     html:
       '<p>As the face of the community you are held to the highest standard <strong>on and off duty</strong>. Be: <strong>Respectful · Helpful · Understanding · Professional.</strong></p>' +
       '<p><strong>Discretional Based Policing</strong> — consider your actions before deciding. Use the <strong>S.E.L.F test</strong>:</p>' +
-      '<table class="rh-table"><tbody>' +
+      '<div class="rh-table-wrap"><table class="rh-table"><tbody>' +
       '<tr><td><strong>S — Scrutiny</strong></td><td>Transparent, accountable, able to withstand scrutiny.</td></tr>' +
       '<tr><td><strong>E — Ethical</strong></td><td>Adheres to policy &amp; ethical standards; upholds integrity.</td></tr>' +
       '<tr><td><strong>L — Lawful</strong></td><td>Complies with law, regulations &amp; human rights.</td></tr>' +
       '<tr><td><strong>F — Fair</strong></td><td>Fair to all stakeholders; upholds equality &amp; equity.</td></tr>' +
-      '</tbody></table>'
+      '</tbody></table></div>'
   },
   {
     id: "career-roadmap", group: "Conduct & Career", icon: "🛣️",
@@ -616,7 +616,7 @@ const RECRUIT_HANDBOOK = [
       '<li><strong>Senior Constable +</strong> — RCV cert (PORT only); carry the service shotgun while PORT; transfer to CIRT; obtain Gold Class licence (min 30 days); apply for Certification FTO; considered for leadership (if invited).</li>' +
       '</ul>' +
       '<p><strong>Certifications &amp; how to apply:</strong></p>' +
-      '<table class="rh-table"><thead><tr><th>Certification</th><th>Rank</th><th>How to Apply</th></tr></thead><tbody>' +
+      '<div class="rh-table-wrap"><table class="rh-table"><thead><tr><th>Certification</th><th>Rank</th><th>How to Apply</th></tr></thead><tbody>' +
       '<tr><td>K9 (Dog Squad)</td><td>Constable+</td><td>Police EOI BOT — Certification EOI</td></tr>' +
       '<tr><td>Crime Scene Officer (CSO)</td><td>Constable+</td><td>Police EOI BOT — Certification EOI</td></tr>' +
       '<tr><td>Public Order Response Team (PORT)</td><td>First Constable+</td><td>Police EOI BOT — Certification EOI</td></tr>' +
@@ -624,7 +624,7 @@ const RECRUIT_HANDBOOK = [
       '<tr><td>Field Training Officer (FTO)</td><td>First Constable+</td><td>Police EOI BOT — Certification EOI</td></tr>' +
       '<tr><td>Police Academy Training Officer</td><td>First Constable+</td><td>Contact General Duties S/SGT</td></tr>' +
       '<tr><td>Motorcycle</td><td>First Constable+</td><td>CIRT &amp; Highway Patrol — Police EOI BOT</td></tr>' +
-      '</tbody></table>'
+      '</tbody></table></div>'
   },
   {
     id: "uniforms", group: "Conduct & Career", icon: "👮",
@@ -648,7 +648,7 @@ const RECRUIT_HANDBOOK = [
     keywords: "commands keybind g wheel gwheel impound tow pduress dragout dragin drag cuff search frisk location spb f8 bind keyboard mdt",
     html:
       '<p><strong>G-Wheel tools:</strong></p>' +
-      '<table class="rh-table"><thead><tr><th>Tool</th><th>Action</th></tr></thead><tbody>' +
+      '<div class="rh-table-wrap"><table class="rh-table"><thead><tr><th>Tool</th><th>Action</th></tr></thead><tbody>' +
       '<tr><td>Truck — ImpoundTow</td><td>Calls TBT/RACV to tow a vehicle.</td></tr>' +
       '<tr><td>Bell — PDuress</td><td>Code 9 distress signal to fellow officers.</td></tr>' +
       '<tr><td>Car — Dragout / Dragin</td><td>Force suspects out of / into a vehicle (transport only).</td></tr>' +
@@ -656,7 +656,7 @@ const RECRUIT_HANDBOOK = [
       '<tr><td>Lock Person — Cuff</td><td>Cuff a suspect.</td></tr>' +
       '<tr><td>Magnifying Glass — Search</td><td>Search someone\'s inventory.</td></tr>' +
       '<tr><td>Hands — Frisk</td><td>Pat down a suspect (chance to find illegal goods).</td></tr>' +
-      '</tbody></table>' +
+      '</tbody></table></div>' +
       '<p><strong>Useful commands:</strong> <code>/location</code> · <code>/pduress</code> · <code>/cuff</code> (faster cuff, no G-Wheel) · <code>/drag</code> (faster drag) · <code>/dsleo</code> (opens MDT, no F6) · <code>/closeinventory</code> · <code>/pbackup</code> · <code>/hudsettings</code> · <code>/spb</code> (street names on minimap) · <code>/police_callsign</code>.</p>' +
       '<p><strong>RP shortcuts:</strong> <code>e medic2</code> — a tidier kneel for forensics &amp; first aid. Keybind handy texts like <em>"Looks for ID"</em> or <em>"Head to toe — what do I find?"</em> via <code>do</code>.</p>' +
       '<p class="rh-note">Keybind any command via the F8 menu: <code>bind keyboard &lt;key&gt; &lt;command&gt;</code>.</p>'
@@ -718,7 +718,7 @@ const RECRUIT_HANDBOOK = [
     keywords: "leadership progress behaviour record fto sfto certification training reports feedback misconduct inactivity transfers social emotional intelligence",
     html:
       '<p>If you want to move into leadership, your <strong>behaviour record</strong> matters. Leaders weigh what helps against what hurts.</p>' +
-      '<table class="rh-table"><thead><tr><th>Helps ✅</th><th>Hurts ❌</th></tr></thead><tbody>' +
+      '<div class="rh-table-wrap"><table class="rh-table"><thead><tr><th>Helps ✅</th><th>Hurts ❌</th></tr></thead><tbody>' +
       '<tr><td>Good, professional behaviour</td><td>Misconducts</td></tr>' +
       '<tr><td>High report standards</td><td>Poor reports</td></tr>' +
       '<tr><td>Leading &amp; communicating well</td><td>Inability to lead</td></tr>' +
@@ -726,7 +726,7 @@ const RECRUIT_HANDBOOK = [
       '<tr><td>Certification training</td><td>Inactivity</td></tr>' +
       '<tr><td>Being a friendly face; owning mistakes</td><td>Poor behaviour/tone; can\'t take feedback</td></tr>' +
       '<tr><td>Social &amp; emotional intelligence</td><td>Constantly transferring divisions</td></tr>' +
-      '</tbody></table>' +
+      '</tbody></table></div>' +
       '<p class="rh-note">Leaders are around for a chat if you need direction — ask.</p>'
   },
 

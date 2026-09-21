@@ -4,6 +4,16 @@ Newest first. Dates are the commit dates on `main`.
 
 ## Unreleased
 
+- **Responsive audit: pc/tablet/mobile.** Ran a full audit rather than assuming problems — the
+  app was already solidly responsive (correct viewport meta, the report form/preview stack
+  correctly below 1100px, the OCR grid collapses correctly, the tab bar scrolls horizontally with
+  fade edges, the backup modal fits a 375px phone). Two real gaps fixed: the 18 Recruit Helper
+  tables (`assets/data/recruit.js`) had no horizontal-scroll fallback, so a table row too long to
+  wrap would be silently clipped instead of scrollable — wrapped all 18 in `.rh-table-wrap`
+  (`overflow-x:auto`), verified with a synthetic worst-case row that it now scrolls instead of
+  clipping. Mobile touch targets on the action bar and card-collapse/section-toggle buttons were
+  under the ~40px minimum at narrow widths (as small as ~30px at ≤600px, ~26px at ≤400px) — bumped
+  padding and added explicit `min-height` at both the 600px and 400px breakpoints.
 - **Verified the two image-only handbook slides the user supplied (impound durations, drugs
   classification).** The impound schedule in all three places it lives (`core.js`, `interactions.js`,
   the Traffic Warrant `<select>`) matches the slide row for row. The drug thresholds (20 processed /

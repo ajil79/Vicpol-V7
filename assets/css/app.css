@@ -117,7 +117,7 @@
       main{padding:0 10px 14px}
       .title{font-size:15px}
       .actions{gap:6px}
-      .actions .btn{padding:7px 8px; font-size:11px; border-radius:4px}
+      .actions .btn{padding:10px 10px; font-size:11px; border-radius:4px; min-height:40px}
       .btn{padding:8px 10px; font-size:12px; border-radius:4px}
       .grid2{grid-template-columns:1fr !important}
       .grid3{grid-template-columns:1fr !important}
@@ -127,8 +127,8 @@
       .kbd{display:none}
       .tool-nav{padding-left:max(10px,env(safe-area-inset-left));padding-right:max(10px,env(safe-area-inset-right));gap:0}
       .tool-nav button{padding:10px 14px;font-size:12px}
-      .section-toggle-btn{padding:8px 12px}
-      .card-collapse-btn{padding:8px 12px}
+      .section-toggle-btn{padding:10px 12px; min-height:40px}
+      .card-collapse-btn{padding:10px 12px; min-height:40px}
       /* Let a card header's controls drop under the title instead of forcing the
          card wider than the phone screen (was the main cause of sideways scroll). */
       .section-header-row{flex-wrap:wrap;row-gap:6px}
@@ -145,7 +145,7 @@
       main{padding:0 6px 10px}
       .title{font-size:13px}
       .sub{font-size:11px}
-      .actions .btn{padding:6px 8px;font-size:10px}
+      .actions .btn{padding:9px 8px;font-size:10px;min-height:38px}
       .card{padding:10px;border-radius:6px}
       .tool-nav button{padding:8px 10px;font-size:11px}
       .hint{font-size:10px}
@@ -778,6 +778,7 @@
     .rh-body-inner ul{margin:8px 0 8px 18px;line-height:1.6}
     .rh-body-inner li{margin:3px 0}
     .rh-body-inner strong{color:#fff}
+    .rh-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
     .rh-table{width:100%;border-collapse:collapse;margin:10px 0;font-size:12.5px}
     .rh-table th,.rh-table td{border:1px solid var(--border);padding:6px 9px;text-align:left;vertical-align:top}
     .rh-table th{background:rgba(0,191,255,0.10);font-weight:800;color:var(--text)}
