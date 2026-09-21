@@ -4,6 +4,16 @@ Newest first. Dates are the commit dates on `main`.
 
 ## Unreleased
 
+- **Verified the two image-only handbook slides the user supplied (impound durations, drugs
+  classification).** The impound schedule in all three places it lives (`core.js`, `interactions.js`,
+  the Traffic Warrant `<select>`) matches the slide row for row. The drug thresholds (20 processed /
+  50 unprocessed) were already right. One real error fixed: the Credit Card Fraud charge notes in
+  `charges.js` said 0–100 and 100–500 cards; the handbook's tiers are up to 199, 200–499 and 500+.
+  Added the slide's exact in-game item names (weed seed, poppy seed, raw cocaine, bag of
+  meth/opium/…, portable methlab, acetone, lithium battery, counterfeit credit card) to the item
+  catalogue so the OCR pockets matcher recognises them — previously a pockets line reading
+  "COCAINE" (unprocessed) substring-matched "Cocaine Bags" (processed). The drugs topic now lists
+  which items count as processed, unprocessed and implements.
 - **Handbook: full knowledge audit against the two source PDFs, plus a sanity pass.** Every topic
   and guide scenario was re-read against the BBRP General Duties Handbook (2025) and the Victoria
   Police Handbook (2024 Edition). Nothing already in the app was wrong. Added the rules the source

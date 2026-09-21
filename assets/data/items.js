@@ -39,10 +39,16 @@ window.ITEM_CATALOG = [
         { name: "Drug Scales", cat: "drugs" }, { name: "Snap-lock Bags (packaging)", cat: "drugs" },
         { name: "Vacuum Sealer", cat: "drugs" }, { name: "Drug Lab Equipment", cat: "drugs" },
         { name: "Drug Pipe", cat: "drugs" }, { name: "Syringes", cat: "drugs" },
+        // Exact in-game names from the VicPol Handbook drugs slide (processed / unprocessed / implements)
+        { name: "Weed Seed", cat: "drugs" }, { name: "Poppy Seed", cat: "drugs" }, { name: "Cocaine", cat: "drugs" },
+        { name: "Weed", cat: "drugs" }, { name: "Opium", cat: "drugs" }, { name: "Acid Tab", cat: "drugs" },
+        { name: "Bag of Cocaine", cat: "drugs" }, { name: "Bag of Opium", cat: "drugs" }, { name: "Bag of Weed", cat: "drugs" }, { name: "Bag of Meth", cat: "drugs" },
+        { name: "Portable Methlab", cat: "drugs" }, { name: "Acetone", cat: "drugs" }, { name: "Lithium Battery", cat: "drugs" },
         { name: "Cash (mixed denominations)", cat: "drugs" },
         // Gear & Other
         { name: "Bulletproof Vest", cat: "gear" }, { name: "Heavy Bulletproof Vest", cat: "gear" }, { name: "Light Bulletproof Vest", cat: "gear" },
         { name: "Handcuffs", cat: "gear" }, { name: "NOS Bottles", cat: "gear" },
+        { name: "Obviously Counterfeit Credit Card", cat: "gear" },
         { name: "Boosting Tablet", cat: "gear" }, { name: "Car Hacking Device", cat: "gear" },
         { name: "GPS Hacking Device", cat: "gear" }, { name: "Credit Card", cat: "gear" },
         { name: "Lockpick", cat: "gear" },

@@ -390,7 +390,7 @@ const RECRUIT_HANDBOOK = [
   {
     id: "drugs", group: "Procedures", icon: "💊",
     title: "Drugs & Credit-Card Fraud",
-    keywords: "drugs narcotics cultivation manufacturing possession trafficking large quantity processed unprocessed fraud credit card fines",
+    keywords: "drugs narcotics cultivation manufacturing possession trafficking large quantity processed unprocessed fraud credit card fines implements methlab acetone lithium battery weed seed poppy seed acid tab xanax",
     html:
       '<p>Charging depends on amount &amp; classification. <strong>Large Quantity</strong> = 20 processed units <strong>or</strong> 50 unprocessed units.</p>' +
       '<table class="rh-table"><thead><tr><th>Charge</th><th>Max Fine</th></tr></thead><tbody>' +
@@ -399,6 +399,7 @@ const RECRUIT_HANDBOOK = [
       '<tr><td>Cultivation of Narcotic Plants</td><td>$1,500</td></tr>' +
       '</tbody></table>' +
       '<p>Charge types: <strong>Cultivation</strong> (cannabis/opium plants, catching the grow itself), <strong>Manufacturing</strong> (refining raw narcotic into a sellable product), <strong>Possession</strong> (found during a search), and <strong>Fraud</strong> (fake credit cards).</p>' +
+      '<p><strong>Which items count as what:</strong> <em>Unprocessed</em> — weed seed, raw cocaine, poppy seed. <em>Processed</em> — bag of cocaine / opium / weed / meth, opium, weed, acid tab, Xanax. <em>Implements</em> — portable methlab, acetone, lithium battery. Possession of Implements for Trafficking can <strong>only</strong> be charged if they actually hold one of those.</p>' +
       '<p><strong>Credit Card Fraud tiers:</strong> Low (up to 199 cards) · Moderate (200–499) · High (500+).</p>' +
       '<p>Related legislation: <strong>Drugs, Poisons and Controlled Substances Act 1981</strong>, <strong>Victorian Crimes Act 1958</strong>, <strong>Victorian Summary Offences Act 1966</strong> &amp; <strong>Victorian Police Act 2013</strong>.</p>' +
       '<div class="rh-links"><span class="rh-links-label">Write it up:</span>' +

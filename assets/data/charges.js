@@ -547,7 +547,7 @@ window.CHARGES = [
     "cat": "Fraud",
     "name": "Credit Card Fraud - Low",
     "cost": "5,000 - 8,000",
-    "notes": "Possession of 0-100 false/fake/counterfeit credit cards",
+    "notes": "Possession of up to 199 false/fake/counterfeit credit cards",
     "sentenceType": "Com Serv",
     "liability": "MR"
   },
@@ -555,7 +555,7 @@ window.CHARGES = [
     "cat": "Fraud",
     "name": "Credit Card Fraud - Moderate or Trafficking",
     "cost": "8,000 - 15,000",
-    "notes": "Possession of 100-500 fake counterfeit credit cards or Sale of 100-500 counterfeit credit cards",
+    "notes": "Possession of 200-499 fake counterfeit credit cards or Sale of 200-499 counterfeit credit cards",
     "sentenceType": "Indictable",
     "liability": "MR"
   },
