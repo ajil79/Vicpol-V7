@@ -836,16 +836,16 @@
 
     if (window.Tesseract && typeof window.Tesseract.createWorker === "function") {
       try {
-        return await window.Tesseract.createWorker("eng", 1, options);
+        const worker = await window.Tesseract.createWorker(options);
+        if (typeof worker.loadLanguage === "function") await worker.loadLanguage("eng");
+        if (typeof worker.initialize === "function") await worker.initialize("eng");
+        return worker;
       } catch (e) {
         lastError = e;
       }
 
       try {
-        const worker = await window.Tesseract.createWorker(options);
-        if (typeof worker.loadLanguage === "function") await worker.loadLanguage("eng");
-        if (typeof worker.initialize === "function") await worker.initialize("eng");
-        return worker;
+        return await window.Tesseract.createWorker("eng", 1, options);
       } catch (e) {
         lastError = e;
       }

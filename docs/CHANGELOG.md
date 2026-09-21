@@ -4,6 +4,16 @@ Newest first. Dates are the commit dates on `main`.
 
 ## Unreleased
 
+- **Fix: OCR startup showed a scary "failed to load" error banner even though it worked.**
+  `createOCRWorker()` tried a 3-argument `createWorker("eng", 1, options)` call first; on this
+  server's locked-down CSP, that variant internally attempts to fetch Tesseract's worker script
+  from a CDN (`cdn.jsdelivr.net`), which is blocked and throws an uncaught error the app's global
+  error handler surfaced as `⚠ Something failed to load … importScripts … failed to load`. The
+  code already had a working fallback (the single-argument `createWorker(options)` form, which
+  loads everything locally) but only tried it *after* the doomed CDN attempt had already thrown.
+  Reordered so the reliable local-asset path runs first; the CDN-triggering attempt is now only a
+  fallback. Verified with Playwright directly against the real app: OCR recognition still works
+  identically (same text, same confidence) but with zero page errors instead of one.
 - **Critical fix: OCR was blocked by the app's own Content Security Policy.** `script-src` had no
   `'wasm-unsafe-eval'`, which modern browsers require to run WebAssembly — and Tesseract.js's OCR
   engine is WASM. Found via a real end-to-end run: the OCR worker hung indefinitely (never resolved
