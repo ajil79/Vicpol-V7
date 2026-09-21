@@ -4,6 +4,12 @@ Newest first. Dates are the commit dates on `main`.
 
 ## Unreleased
 
+- **Critical fix: OCR was blocked by the app's own Content Security Policy.** `script-src` had no
+  `'wasm-unsafe-eval'`, which modern browsers require to run WebAssembly — and Tesseract.js's OCR
+  engine is WASM. Found via a real end-to-end run: the OCR worker hung indefinitely (never resolved
+  or rejected) with `WebAssembly.instantiate()` silently refused by CSP. Fixed in both the CSP
+  `<meta>` tag and the `Content-Security-Policy` HTTP header. Verified afterwards: the worker now
+  starts in ~1.1s and a real recognition run returns correct text at 96% confidence.
 - **OCR overhaul, driven by real BlueBird RP screenshots the user supplied.** Found and fixed a
   genuine pre-existing data-corruption bug: the regex that recognises "NO" values in
   `normaliseBool` contained literal backspace control-character bytes instead of the text `NO|N0`
