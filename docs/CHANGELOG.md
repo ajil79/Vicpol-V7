@@ -4,6 +4,16 @@ Newest first. Dates are the commit dates on `main`.
 
 ## Unreleased
 
+- **Handbook: the OCR Intake tool was completely undocumented.** Neither the Recruit Helper
+  handbook nor the Day-to-Day Guide ever mentioned it, even though both already had working jump
+  buttons wired up for it (`data-rh-page="ocr"`, `data-guide-jump="ocr"`) that no content used.
+  Added a new "OCR Screenshot Intake" Quick Reference topic explaining how to load an image, pick
+  a mode, and apply the extracted fields. Wired jump buttons/links into it from the three places an
+  officer actually needs it: the "Fled Traffic Stop" handbook topic (softened the "paste the
+  MELROADS excerpt" instruction to mention scanning it instead), and the Day-to-Day Guide's
+  "Driver fled" and "Making an arrest" scenarios (both already told recruits to run a LEAP/MELROADS
+  check by hand). Also caught and fixed `sw.js`'s `CACHE_VERSION` not having been bumped alongside
+  the OCR fix below, despite `ocr.js` being a precached asset.
 - **Fix: OCR startup showed a scary "failed to load" error banner even though it worked.**
   `createOCRWorker()` tried a 3-argument `createWorker("eng", 1, options)` call first; on this
   server's locked-down CSP, that variant internally attempts to fetch Tesseract's worker script

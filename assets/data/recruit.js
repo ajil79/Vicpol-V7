@@ -115,6 +115,22 @@ const RECRUIT_HANDBOOK = [
       '<p><strong>Vehicle classes:</strong> Gold vehicles — Senior Constable+ with a Gold licence (GD livery only). Silver — most common, Silver and above. Bronze — transport vehicles.</p>' +
       '<p class="rh-warn"><strong>DO NOT use armoured vehicles</strong> — all are approval-based only.</p>'
   },
+  {
+    id: "ocr-intake", group: "Quick Reference", icon: "📷",
+    title: "OCR Screenshot Intake",
+    keywords: "ocr screenshot image intake scan leap crimtrac melroads licence card person panel vehicle panel weapons pockets auto detect advanced apply paste drop upload read fields",
+    html:
+      '<p>The <strong>OCR Intake</strong> tab reads a screenshot of an in-game terminal — a LEAP/CrimTrac person panel, a MELROADS vehicle panel, a licence card, or a weapons/pockets list — and pulls the fields straight into a report, so you don\'t have to retype them.</p>' +
+      '<p><strong>How to use it:</strong></p><ul>' +
+      '<li><strong>Load the image</strong> — <code>Ctrl+V</code> paste, drag &amp; drop, or tap the drop zone to pick a file / take a photo.</li>' +
+      '<li><strong>Pick a mode</strong> (or leave it on <strong>Auto detect</strong>) — Licence card · LEAP/person panel · MELROADS/vehicle panel · Weapons/pockets text.</li>' +
+      '<li><strong>Run Advanced OCR</strong> for a multi-pass, layout-aware read. Results split into <strong>Person/Licence</strong>, <strong>Vehicle/LEAP</strong> and <strong>Items/Weapons</strong> boxes, each with its own <strong>Apply</strong> button (or use <strong>Apply All</strong>).</li>' +
+      '</ul>' +
+      '<p class="rh-warn"><strong>Always check the extracted fields before submitting.</strong> OCR can misread a character — a rego digit, a name — especially on an angled or low-resolution screenshot. A quick glance at the source image catches it.</p>' +
+      '<div class="rh-links"><span class="rh-links-label">Use it:</span>' +
+      '<button class="rh-tool-link" data-rh-page="ocr" type="button">📷 Open OCR Intake</button>' +
+      '</div>'
+  },
 
   /* ───────────── ON DUTY & DRIVING ───────────── */
   {
@@ -323,11 +339,12 @@ const RECRUIT_HANDBOOK = [
       '<table class="rh-table"><thead><tr><th>What you have</th><th>Report to write</th></tr></thead><tbody>' +
       '<tr><td><strong>ID CONFIRMED</strong> — licence handed over, MDT/LEAP profile matched, fingerprints, or verbal ID on BWC</td><td>VicPol <strong>Warrant for Arrest</strong> — record the ID confirmation basis in the warrant</td></tr>' +
       '<tr><td><strong>ID unconfirmed</strong>, but <strong>rego confirmed</strong> (plate read / plate reader hit) and/or <strong>BWC</strong> captured the driver</td><td>VicPol <strong>Warrant for Questioning</strong> — the registered owner is a lead, not a confirmed ID</td></tr>' +
-      '<tr><td><strong>No stop achieved</strong> — vehicle failed to pull over / intercept abandoned for public safety</td><td><strong>Traffic Warrant</strong> — tick <em>"Failed attempt to intercept"</em>; paste the MELROADS excerpt to fill the vehicle details</td></tr>' +
+      '<tr><td><strong>No stop achieved</strong> — vehicle failed to pull over / intercept abandoned for public safety</td><td><strong>Traffic Warrant</strong> — tick <em>"Failed attempt to intercept"</em>; paste the MELROADS excerpt, or screenshot it and use <strong>OCR Intake</strong>, to fill the vehicle details</td></tr>' +
       '</tbody></table>' +
       '<p class="rh-note">Rule of thumb: an <strong>arrest warrant</strong> needs identity confirmed <strong>beyond reasonable doubt</strong>. Anything less — even a confirmed rego with a likely driver — stays a <strong>questioning warrant</strong> until identity is confirmed.</p>' +
       '<p>Evidence to log before writing: <strong>BWC</strong>, plate reader / rego check, MDT / MELROADS profile, radar reading. The report narrative has quick-add buttons for each.</p>' +
       '<div class="rh-links"><span class="rh-links-label">Write it now:</span>' +
+      '<button class="rh-tool-link" data-rh-page="ocr" type="button">📷 OCR Intake — scan the LEAP/MELROADS screenshot</button>' +
       '<button class="rh-tool-link" data-rh-report="vicpol_arrest" type="button">📝 Warrant for Arrest</button>' +
       '<button class="rh-tool-link" data-rh-report="vicpol_warrant" type="button">❓ Warrant for Questioning</button>' +
       '<button class="rh-tool-link" data-rh-report="traffic_warrant" type="button">🚗 Traffic Warrant</button>' +

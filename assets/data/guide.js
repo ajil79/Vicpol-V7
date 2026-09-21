@@ -207,7 +207,7 @@ const GUIDE_SCENARIOS = [
       '<ol class="guide-steps">' +
         '<li><strong>Only pursue if your licence class allows it.</strong> Bronze — do not pursue. Note the rego, description and direction of travel.</li>' +
         '<li><strong>If you pursue</strong>, give clear pursuit comms (read the format from <strong>Radio calls</strong> above) and keep them updated.</li>' +
-        '<li><strong>Run the plate</strong> to find the registered owner and check stolen status.</li>' +
+        '<li><strong>Run the plate</strong> to find the registered owner and check stolen status — screenshot the MELROADS result and use <strong>OCR Intake</strong> to pull it straight into the warrant.</li>' +
       '</ol>' +
       '<div class="guide-q">Which warrant do I write? Ask yourself one question:</div>' +
       '<div class="muted" style="font-size:12px;margin-bottom:2px">Did you <strong>formally confirm the driver\'s identity</strong> (licence / ID / fingerprint) <strong>before</strong> they fled?</div>' +
@@ -225,6 +225,7 @@ const GUIDE_SCENARIOS = [
         '</div>' +
       '</div>' +
       '<div class="guide-jump">' +
+        '<button class="btn" type="button" data-guide-jump="ocr">📷 Scan the plate/LEAP result</button>' +
         '<button class="btn" type="button" data-guide-topic="code4-flee">📖 Fled stop — which warrant?</button>' +
       '</div>'
   },
@@ -236,12 +237,13 @@ const GUIDE_SCENARIOS = [
         '<li><strong>State the threat before the force.</strong> Only use force that\'s proportionate — always able to be justified in the report.</li>' +
         '<li><strong>Cuff and search.</strong> A full search is lawful because you\'re arresting them. Note everything found.</li>' +
         '<li><strong>Read the caution</strong> word-for-word (read it from <strong>Radio calls</strong> above) and note whether they understood and accepted.</li>' +
-        '<li><strong>Identify properly</strong> — licence, MDT profile, or fingerprints. State the method in the report.</li>' +
+        '<li><strong>Identify properly</strong> — licence, MDT profile, or fingerprints. Screenshot a LEAP profile or licence card and use <strong>OCR Intake</strong> to pull the name/DOB/address in. State the method in the report.</li>' +
         '<li><strong>Process</strong> at the station: record charges vs PINs, sentence within the caps, and where they were processed/sentenced.</li>' +
         '<li><strong>Write the Arrest Report</strong> — court-ready, stands alone without your testimony.</li>' +
       '</ol>' +
       '<div class="guide-jump">' +
         '<button class="btn" type="button" data-guide-jump="report" data-report-type="arrest" style="background:var(--vp-accent-btn);border-color:var(--accent)">→ Start Arrest Report</button>' +
+        '<button class="btn" type="button" data-guide-jump="ocr">📷 OCR Intake</button>' +
         '<button class="btn" type="button" data-guide-topic="arrest-caution">📖 Arrest &amp; caution</button>' +
         '<button class="btn" type="button" data-guide-topic="sentencing">📖 Sentencing caps</button>' +
       '</div>'
