@@ -4,6 +4,9 @@ Newest first. Dates are the commit dates on `main`.
 
 ## Unreleased
 
+- Added a CI workflow (`.github/workflows/check.yml`) and `npm test`: syntax-checks every JS
+  file, fails if an asset's `?v=` cache-bust is older than its last commit, and fails if a
+  file over 5MB is added outside `assets/vendor/`.
 - **Backup & hand-over**: the Templates modal can now export everything the browser remembers
   (drafts, templates, officer/person lists, callsigns, signatures) to a `.json` file and import
   it on another device. Import merges by default (your entries win on a name clash) or replaces

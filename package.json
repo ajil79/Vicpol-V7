@@ -4,7 +4,8 @@
   "description": "VicPol Tool v7 — Recruit-focused reports, warrants, traffic paperwork & handbook reference",
   "scripts": {
     "start": "npx serve .",
-    "dev": "npx serve ."
+    "dev": "npx serve .",
+    "test": "node scripts/check-syntax.js && node scripts/check-cachebust.js && node scripts/check-file-sizes.js"
   },
   "license": "UNLICENSED",
   "private": true

@@ -1,0 +1,22 @@
+name: Check
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Syntax-check all JS
+        run: node scripts/check-syntax.js
+      - name: Cache-bust versions are current
+        run: node scripts/check-cachebust.js
+      - name: No oversized files outside assets/vendor
+        run: node scripts/check-file-sizes.js
