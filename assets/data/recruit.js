@@ -44,7 +44,8 @@ const RECRUIT_HANDBOOK = [
       '<tr><td>Q — Quebec</td><td>R — Romeo</td><td>S — Sierra</td><td>T — Tango</td></tr>' +
       '<tr><td>U — Uniform</td><td>V — Victor</td><td>W — Whiskey</td><td>X — X-ray</td></tr>' +
       '<tr><td>Y — Yankee</td><td>Z — Zulu</td><td></td><td></td></tr>' +
-      '</tbody></table>'
+      '</tbody></table>' +
+      '<p class="rh-note">Units over radio are always <strong>minutes</strong> and <strong>kilometres</strong>.</p>'
   },
   {
     id: "callsigns", group: "Quick Reference", icon: "🆔",
@@ -104,7 +105,7 @@ const RECRUIT_HANDBOOK = [
   {
     id: "license-classes", group: "Quick Reference", icon: "🚓",
     title: "Licence & Vehicle Classes",
-    keywords: "gold silver bronze license class vehicle speed pursue pursuit terminate armoured livery gold class",
+    keywords: "gold silver bronze license class vehicle speed pursue pursuit terminate armoured livery gold class priority highway cirt port tailgator rebla streiter oracle buffalo sandstorm aleutian everon bison jogger pigeon",
     html:
       '<p>Three licence classes govern speed and pursuit ability. Abusing your class on or off duty can have it <strong>downgraded</strong>.</p>' +
       '<table class="rh-table"><thead><tr><th>Class</th><th>Conditions</th></tr></thead><tbody>' +
@@ -113,6 +114,13 @@ const RECRUIT_HANDBOOK = [
       '<tr><td><strong>Bronze</strong></td><td>200 kph limit · cannot pursue · cannot intercept for a Code 4.</td></tr>' +
       '</tbody></table>' +
       '<p><strong>Vehicle classes:</strong> Gold vehicles — Senior Constable+ with a Gold licence (GD livery only). Silver — most common, Silver and above. Bronze — transport vehicles.</p>' +
+      '<p><strong>Pursuit priority:</strong> Highway Patrol is always primary. Open slots are filled in this order — <strong>CIRT</strong>, then <strong>PORT</strong>, then <strong>GD</strong> — licence class permitting.</p>' +
+      '<p><strong>General Duties vehicles by class:</strong></p>' +
+      '<table class="rh-table"><thead><tr><th>Class</th><th>Vehicles</th></tr></thead><tbody>' +
+      '<tr><td><strong>Gold</strong></td><td>Obey Tailgator S (GD &amp; UM) · Ubermacht Rebla (GD, PORT &amp; UM) · Benefactor Streiter (GD &amp; UM — <em>Leadership only</em>)</td></tr>' +
+      '<tr><td><strong>Silver</strong></td><td>Vapid Oracle (GD) · Bravado Buffalo (GD &amp; UM) · Vapid Sandstorm (GD &amp; PORT) · Vapid Aleutian (GD &amp; PORT) · Everon Divvy Van (GD &amp; PORT) · Karin Everon Offroad (GD &amp; PORT) · Bravado Bison XL (GD, PORT &amp; UM)</td></tr>' +
+      '<tr><td><strong>Bronze</strong></td><td>CSO Van (CSO only) · Benefactor Jogger (PORT) · Ibishu Pigeon (GD &amp; PORT)</td></tr>' +
+      '</tbody></table>' +
       '<p class="rh-warn"><strong>DO NOT use armoured vehicles</strong> — all are approval-based only.</p>'
   },
   {
@@ -165,7 +173,7 @@ const RECRUIT_HANDBOOK = [
   {
     id: "patrol-ratios", group: "On Duty & Driving", icon: "📡",
     title: "ANPR, Radar, Unmarked & Pigeon Ratios",
-    keywords: "anpr radar speed unmarked pigeon ratio 5:1 6:1 parking duty request gd support documents approval prefix",
+    keywords: "anpr radar speed unmarked pigeon ratio 5:1 6:1 parking duty request gd support documents approval prefix stationary slicktop lightbar ctrl+d",
     html:
       '<p>Deployment ratios limit how many specialist units are active at once. Requests go through <strong>GD Support Documents</strong> and require GD leadership approval.</p>' +
       '<table class="rh-table"><thead><tr><th>Capability</th><th>Ratio / Rule</th><th>Min Rank</th></tr></thead><tbody>' +
@@ -174,6 +182,7 @@ const RECRUIT_HANDBOOK = [
       '<tr><td>Unmarked</td><td><strong>6:1</strong> — need 6 other units in MDT; use <strong>U</strong> prefix</td><td>First Constable+</td></tr>' +
       '<tr><td>Pigeon (parking)</td><td><strong>6:1</strong> · parking duty only · max <strong>3 hours</strong> · <strong>no pursuits</strong> · <strong>P</strong> suffix</td><td>—</td></tr>' +
       '</tbody></table>' +
+      '<p class="rh-warn">General Duties must <strong>not</strong> sit roadside running a stationary radar. ANPR needs a lightbar with ANPR sensors (no slicktops) — toggle it with <code>CTRL+D</code> or <code>/anpr</code>; the radar controls open with <code>O</code>.</p>' +
       '<p>Submit via <em>Request Vehicle Approval</em> in gd-support-documents; a GD leader will Approve or Deny (with reasoning if denied).</p>'
   },
   {
@@ -184,20 +193,21 @@ const RECRUIT_HANDBOOK = [
       '<p>Clear pursuit comms keep everyone informed. Lead with the major components, then minor ones as able.</p>' +
       '<p><strong>Major components:</strong></p><ul>' +
       '<li>Your Callsign</li><li>Vehicle Colour / Type</li><li>Location / Direction</li><li>Speed</li></ul>' +
-      '<p><strong>Minor components:</strong> Licence / Vehicle Class · Weather Conditions · Traffic Conditions.</p>' +
+      '<p><strong>Minor components:</strong> Licence / Vehicle Class · Weather Conditions · Traffic Conditions · Reason for the pursuit.</p>' +
       '<p class="rh-note">Location example: <em>"Westbound Vespucci Blvd."</em> — always pair direction with the road name.</p>' +
       '<p><strong>Common radio scripts:</strong></p><ul>' +
-      '<li>Traffic stop: <em>"[CALLSIGN] Code 4 with a [VEHICLE DESCRIPTION] going [LOCATION], additional required / not required."</em></li>' +
+      '<li>Traffic stop: <em>"[CALLSIGN] Code 4 on a [COLOUR] [VEHICLE TYPE], [DIRECTION] [LOCATION], additionals required / not required."</em> e.g. <em>"MEL 269, Code 4 on a white SUV, northbound Sinner Street, no additionals required."</em></li>' +
       '<li>Responding: <em>"[CALLSIGN] enroute to [JOB], [DISTANCE] out."</em> Include the distance; over <strong>3 km</strong> add <strong>"Delayed Response"</strong>.</li>' +
       '</ul>'
   },
   {
     id: "rbt-rdt", group: "On Duty & Driving", icon: "🧪",
     title: "Mandatory RBT & RDT",
-    keywords: "rbt rdt breath test drug test traffic offence dangerous driving code 4 mandatory alcohol",
+    keywords: "rbt rdt breath test drug test traffic offence dangerous driving code 4 mandatory alcohol evade hit and run disqualified never licensed second test crime lab saliva",
     html:
-      '<p>Traffic-based offences require a mandatory <strong>Random Breath Test (RBT)</strong> and <strong>Random Drug Test (RDT)</strong>. Dangerous driving is a common trigger.</p>' +
-      '<p>Incorporate the RBT/RDT into your Code 4 (traffic stop) flow before charging traffic offences.</p>' +
+      '<p>Charging <em>any</em> traffic-based offence requires a mandatory <strong>Random Breath Test (RBT)</strong> and <strong>Random Drug Test (RDT)</strong> first. Traffic-based offences include: engage in a police pursuit / evade police, dangerous driving, fail to stop and render assistance (hit &amp; run), and driving never licensed / while disqualified.</p>' +
+      '<p><strong>How:</strong> once the suspect is in custody and cautioned, sit them in the back seat, open the rear door and run the RBT and RDT. A positive means a <strong>second test at the station</strong> — the crime lab breathalyser for alcohol, a saliva swab for drugs — then use F6 for the second result so the suspect can decide the outcome.</p>' +
+      '<p class="rh-note">The tests are RP-based. A positive result is an invitation to take the RP further — ask why they were drinking or using. Reward depth; don\'t reward a troll.</p>' +
       '<p class="rh-note">Driver fled before you could test? See <button class="rh-jump-link" data-rh-jump="code4-flee" type="button">Fled Traffic Stop — Which Warrant?</button></p>' +
       '<div class="rh-links"><span class="rh-links-label">Write it up:</span>' +
       '<button class="rh-tool-link" data-rh-report="arrest" type="button">📝 Arrest Report — DUI / drug-driving charges</button>' +
@@ -271,6 +281,7 @@ const RECRUIT_HANDBOOK = [
       '<li>There is evidence on scene that would lead to an arrest;</li>' +
       '<li>The POI has a warrant or FPO.</li></ul>' +
       '<p>Prior to searching, always ask if they have any <strong>sharps</strong>.</p>' +
+      '<p class="rh-warn"><strong>You cannot search anyone for a traffic violation</strong> — searches are for criminal activity only. Doing so is an illegal search and leaves you liable.</p>' +
       '<div class="rh-links"><span class="rh-links-label">Write it up:</span>' +
       '<button class="rh-tool-link" data-rh-report="search_seizure" type="button">🔎 Search &amp; Seizure Report</button>' +
       '</div>'
@@ -360,7 +371,7 @@ const RECRUIT_HANDBOOK = [
       '<tr><td>Tier 3</td><td>90 Days</td><td>SGT+</td><td>Thoroughly search the person, their vehicle &amp; any occupants.</td></tr>' +
       '<tr><td>Tier 4</td><td>Permanent</td><td>INSP+</td><td>Same as Tier 3.</td></tr>' +
       '</tbody></table>' +
-      '<p>An FPO may be issued for one of four reasons: attempted murder of emergency services, mass murder, repeated improper use of a firearm, or attempting to supply a weapon to someone who already has an FPO. After issuing in-city, you <strong>must</strong> also log the request with the FPO BOT — this is as important as issuing the FPO itself.</p>' +
+      '<p>An FPO may be issued for one of four reasons: attempted murder of emergency services, mass murder, repeated improper use of a firearm, or attempting to supply a weapon to someone who already has an FPO. A <strong>permanent</strong> FPO (INSP+) is only requested once someone has progressed Short &rarr; Medium &rarr; Long and is still breaching. After issuing in-city, you <strong>must</strong> also log the request with the FPO BOT — this is as important as issuing the FPO itself.</p>' +
       '<p class="rh-warn"><strong>Non-Compliance with a Firearms Prohibition Order</strong> is its own charge — laid when someone under an FPO is found with any firearm, weapon attachment (suppressor, flashlight, extended mag, grip, scope) or ammunition. Search FPO holders proactively, and if you charge non-compliance, your arrest report is mandatory.</p>' +
       '<div class="rh-links"><span class="rh-links-label">Write it up:</span>' +
       '<button class="rh-tool-link" data-rh-report="search_seizure" type="button">🔎 Search &amp; Seizure — FPO search powers</button>' +
@@ -401,7 +412,7 @@ const RECRUIT_HANDBOOK = [
     html:
       '<p>Driver takes off during a simple <strong>Code 4</strong> (traffic stop)? The paperwork depends on what you locked in before they fled — <strong>body cam</strong>, <strong>ID</strong> and <strong>rego</strong>:</p>' +
       '<table class="rh-table"><thead><tr><th>What you have</th><th>Report to write</th></tr></thead><tbody>' +
-      '<tr><td><strong>ID CONFIRMED</strong> — licence handed over, MDT/LEAP profile matched, fingerprints, or verbal ID on BWC</td><td>VicPol <strong>Warrant for Arrest</strong> — record the ID confirmation basis in the warrant</td></tr>' +
+      '<tr><td><strong>ID CONFIRMED</strong> — licence handed over, MDT/LEAP profile matched, or fingerprints (a verbal name is <em>not</em> confirmation)</td><td>VicPol <strong>Warrant for Arrest</strong> — record the ID confirmation basis in the warrant</td></tr>' +
       '<tr><td><strong>ID unconfirmed</strong>, but <strong>rego confirmed</strong> (plate read / plate reader hit) and/or <strong>BWC</strong> captured the driver</td><td>VicPol <strong>Warrant for Questioning</strong> — the registered owner is a lead, not a confirmed ID</td></tr>' +
       '<tr><td><strong>No stop achieved</strong> — vehicle failed to pull over / intercept abandoned for public safety</td><td><strong>Traffic Warrant</strong> — tick <em>"Failed attempt to intercept"</em>; paste the MELROADS excerpt, or screenshot it and use <strong>OCR Intake</strong>, to fill the vehicle details</td></tr>' +
       '</tbody></table>' +
@@ -572,8 +583,9 @@ const RECRUIT_HANDBOOK = [
       '<ul>' +
       '<li><strong>Powergaming</strong> — no selling armoury items; no using police abilities off duty (search, tackle, lockpick, cop pockets); no reattaching to pursuits after vehicle damage without a proper repair; don\'t exceed inventory capacity.</li>' +
       '<li><strong>RDM (Random Death Match)</strong> — police must abide by the <strong>last resort policy</strong>; use of force is an OOC catch to prevent RDM by police.</li>' +
-      '<li><strong>New Life Rule</strong> — don\'t interview victims before AV arrives; don\'t use info from downed parties unless revived; only new-life once an active scene is over and no one is nearby.</li>' +
-      '<li><strong>FailRP / VDM (Vehicle Death Match)</strong> — stay in character; don\'t use a vehicle as a weapon outside justified force.</li>' +
+      '<li><strong>New Life Rule</strong> — don\'t interview victims before AV arrives; don\'t use info from downed parties unless revived; only new-life once an active scene is over and no one is nearby. New-lifing on an active scene gets you <strong>automatically carded</strong>.</li>' +
+      '<li><strong>FailRP</strong> — stay in character. Police vehicles don\'t kill on crash by design (so you can keep attending calls without tying up AV) — you must still RP your injuries, or detach from a scene where you\'d realistically have died.</li>' +
+      '<li><strong>VDM (Vehicle Death Match)</strong> — don\'t use a vehicle as a weapon outside justified force; intentional contact (PIT) needs INSP+ approval.</li>' +
       '</ul>' +
       '<p class="rh-note">Cop pockets are for collecting evidence / removing items from suspects — not for unfair carry advantages.</p>'
   },

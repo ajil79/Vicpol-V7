@@ -4,6 +4,21 @@ Newest first. Dates are the commit dates on `main`.
 
 ## Unreleased
 
+- **Handbook: full knowledge audit against the two source PDFs, plus a sanity pass.** Every topic
+  and guide scenario was re-read against the BBRP General Duties Handbook (2025) and the Victoria
+  Police Handbook (2024 Edition). Nothing already in the app was wrong. Added the rules the source
+  has that the app didn't: **no searches for traffic violations** (illegal search, officer liable),
+  pursuit priority order (Highway → CIRT → PORT → GD) and the official GD vehicle list by class,
+  the GD ban on stationary radar plus ANPR/radar controls, the full RBT/RDT procedure (which
+  offences trigger it, rear-seat test, second test at the station lab), the Code 4 plate-scan step
+  (`PAGEUP` twice) and the source's Code 4 radio wording, "reason for the pursuit" in pursuit comms,
+  the New Life "auto-carded" and police-crash RP rules, radio units (minutes/kilometres), and the
+  Short → Medium → Long progression a permanent FPO requires. Resolved one internal contradiction:
+  the Recruit Helper counted a verbal name on bodycam as a confirmed ID while the Guide said "never a
+  verbal name" — per the user, a verbal name is not confirmation, so both pages now agree. Also
+  verified: every handbook jump link resolves to a real topic/report/tab, and all new numbers match
+  the source text one-for-one. The caution wording was checked against the current handbook and
+  deliberately kept as the in-city version.
 - **Handbook: cross-checked the Recruit Helper against the real source documents** (the BBRP
   General Duties Handbook 2025 and the BBRP Victoria Police Handbook 2024 Edition, both supplied
   by the user) and closed the gaps. Everything already in the app checked out accurate against the

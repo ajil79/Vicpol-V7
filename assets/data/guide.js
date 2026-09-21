@@ -45,7 +45,7 @@ const GUIDE_COPY = [
   },
   {
     id: "code4", icon: "🚓", label: "Traffic stop (Code 4) call",
-    text: "[CALLSIGN] Code 4 with a [VEHICLE DESCRIPTION] going [LOCATION]. Additional required / not required."
+    text: "[CALLSIGN] Code 4 on a [COLOUR] [VEHICLE TYPE], [DIRECTION] [LOCATION]. Additionals required / not required.\n(e.g. \"MEL 269, Code 4 on a white SUV, northbound Sinner Street, no additionals required.\")"
   },
   {
     id: "enroute", icon: "📻", label: "Enroute call",
@@ -57,6 +57,7 @@ const GUIDE_COPY = [
       "[CALLSIGN] in an active pursuit with [VEHICLE DESCRIPTION], [#] heads on board.\n" +
       "Licence Class [GOLD/SILVER], Vehicle Class [GOLD/SILVER].\n" +
       "Traffic is [LIGHT / MODERATE / HEAVY], weather is [CLEAR / FOGGY / RAINY].\n" +
+      "Reason for pursuit: [REASON].\n" +
       "Heading [DIRECTION] on [ROAD] towards [LANDMARK].\n" +
       "Right-right, continuing [DIRECTION] on [STREET NAME]."
   },
@@ -137,7 +138,7 @@ const GUIDE_RADIO_HTML =
   '<p><strong>Open smoothly.</strong> Lead with the <em>major</em> components, then fill in the minor ones as you can:</p>' +
   '<ul>' +
     '<li><strong>Major:</strong> your callsign · vehicle colour/type · location &amp; direction · speed.</li>' +
-    '<li><strong>Minor:</strong> licence/vehicle class · weather · traffic.</li>' +
+    '<li><strong>Minor:</strong> licence/vehicle class · weather · traffic · reason for the pursuit.</li>' +
   '</ul>' +
   '<p><strong>Keep updates flowing.</strong> Call every change of road or direction — <em>"right-right onto [street]"</em>, <em>"left-left"</em> — plus speed and hazards, so backup and air support can slot in. Always pair a direction with the road name (e.g. <em>"westbound on [road]"</em>).</p>' +
   '<div class="guide-jump" style="margin-top:6px">' +
@@ -189,7 +190,8 @@ const GUIDE_SCENARIOS = [
       '<div class="muted" style="margin-bottom:6px">The minimum reason for a stop is an RBT/RDT — you don\'t need more than that.</div>' +
       '<ol class="guide-steps">' +
         '<li><strong>Call it up</strong> — use the Code 4 radio call (read it from <strong>Radio calls</strong> above) with the vehicle description and location.</li>' +
-        '<li><strong>Approach and introduce yourself</strong> — rank, name, and why you\'ve stopped them.</li>' +
+        '<li><strong>Scan the plate</strong> — <span class="rh-pill">PAGEUP</span> twice, and note any flags (licence expired, wanted, rego expired).</li>' +
+        '<li><strong>Approach and introduce yourself</strong> — rank, name, why you\'ve stopped them — and check their licence. Screenshot the LEAP result and use <strong>OCR Intake</strong> to pull it into the report.</li>' +
         '<li><strong>Mandatory RBT &amp; RDT</strong> — if you\'re going to charge <em>any</em> traffic offence, you must run a roadside breath test and drug test first. No exceptions.</li>' +
         '<li><strong>Decide the outcome:</strong> a <strong>PIN</strong> is a fine only (speeding, minor stuff); a <strong>charge</strong> is a criminal offence (dangerous/reckless driving, evade). Serious offences → arrest.</li>' +
         '<li><strong>Write it up</strong> — a fine/traffic matter goes in a Traffic Warrant; an arrest goes in an Arrest Report.</li>' +
@@ -198,6 +200,7 @@ const GUIDE_SCENARIOS = [
         '<button class="btn" type="button" data-guide-jump="report" data-report-type="traffic_warrant" style="background:var(--vp-accent-btn);border-color:var(--accent)">→ Start Traffic Warrant</button>' +
         '<button class="btn" type="button" data-guide-jump="report" data-report-type="arrest">→ Start Arrest Report</button>' +
         '<button class="btn" type="button" data-guide-topic="rbt-rdt">📖 RBT/RDT rules</button>' +
+        '<button class="btn" type="button" data-guide-jump="ocr">📷 OCR Intake</button>' +
       '</div>'
   },
   {
@@ -252,7 +255,7 @@ const GUIDE_SCENARIOS = [
     id: "search", icon: "🔎", label: "Search: frisk vs full",
     html:
       '<h3>When can I search?</h3>' +
-      '<div class="guide-warn"><strong>Get this right.</strong> A frisk and a full search have different legal thresholds. Always give the pre-search declaration first (read it from <strong>Radio calls</strong> above).</div>' +
+      '<div class="guide-warn"><strong>Get this right.</strong> A frisk and a full search have different legal thresholds. Always give the pre-search declaration first (read it from <strong>Radio calls</strong> above). <strong>Never search anyone for a traffic violation</strong> — searches are for criminal activity only; anything else is an illegal search and you\'re liable.</div>' +
       '<div class="guide-decision">' +
         '<div class="guide-branch no">' +
           '<h4>🖐 Frisk (non-invasive pat down)</h4>' +
