@@ -4,6 +4,15 @@ Newest first. Dates are the commit dates on `main`.
 
 ## Unreleased
 
+- **Officer roster refreshed to August 2026 hours.** Six department moves (Jake Ramirez, Ryan
+  Booth and Tony Pier to Leadership; Jonathan Cow-Kelly and Mitch Erdstein to Victoria Police;
+  Sir Reginald to Special Constable), two renames (Stella O'Riley → Stella Hayes, promoted to
+  Leadership; Anthony Vivian → Anthony Vivian-Robinson), and 13 new officers added. Harvey
+  Decker and Emily Cumpson are confirmed departed and now flagged inactive — kept in the saved
+  list, sorted last in autocomplete with an "Inactive" tag, never deleted. A new
+  `migrateAugust2026Roster()` applies all of this to existing saved officer lists in place
+  (renames don't leave a duplicate, callsigns are preserved), the same way the existing June
+  migration does.
 - Added a CI workflow (`.github/workflows/check.yml`) and `npm test`: syntax-checks every JS
   file, fails if an asset's `?v=` cache-bust is older than its last commit, and fails if a
   file over 5MB is added outside `assets/vendor/`.

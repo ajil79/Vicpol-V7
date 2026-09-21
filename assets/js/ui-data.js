@@ -2367,6 +2367,9 @@
       name,
       division,
       divisions,
+      // Confirmed-departed officers (see DEPARTED_OFFICERS / migrateAugust2026Roster)
+      // are kept in the saved list, just flagged, so nobody's history disappears.
+      inactive: !!officer.inactive,
       ts: officer.ts || Date.now()
     };
   }
@@ -2408,131 +2411,153 @@
     } catch(e) {}
   }
 
-  // Default officer roster from VicPol June 2026 Hours
+  // Default officer roster from VicPol August 2026 Hours
   const DEFAULT_OFFICERS = [
-    // Leadership Team (28)
-    {name:"Aaron McCrann",           rank:"",    division:"Leadership"},
-    {name:"Alexander Hale",          rank:"",    division:"Leadership"},
-    {name:"Alicia Draykos",          rank:"",    division:"Leadership"},
-    {name:"Anders Luciano",          rank:"",    division:"Leadership"},
-    {name:"Angus Porter",            rank:"",    division:"Leadership"},
-    {name:"Ben Ghost-Winters",       rank:"",    division:"Leadership"},
-    {name:"Brad Bentley",            rank:"",    division:"Leadership"},
-    {name:"Bruce D-Shark",           rank:"",    division:"Leadership"},
-    {name:"Burton",                  rank:"Chief Commissioner", division:"Leadership"},
-    {name:"Daniel Squelch-Ashburn",  rank:"",    division:"Leadership"},
-    {name:"Ford Robinson",           rank:"SGT", division:"Leadership"},
-    {name:"Franklin Sanchez",        rank:"",    division:"Leadership"},
-    {name:"Harvey Decker",           rank:"",    division:"Leadership"},
-    {name:"Hester Cow-Kelly",        rank:"",    division:"Leadership"},
-    {name:"Jake Jay-Ashburn",        rank:"",    division:"Leadership"},
-    {name:"James Edwin",             rank:"",    division:"Leadership"},
-    {name:"Jim Morgan",              rank:"",    division:"Leadership"},
-    {name:"Jonathan Cow-Kelly",      rank:"",    division:"Leadership"},
-    {name:"Lachie Milton",           rank:"",    division:"Leadership"},
-    {name:"Lewis Ashburn",           rank:"",    division:"Leadership"},
-    {name:"Luca O'Riley",            rank:"",    division:"Leadership"},
-    {name:"Mike Frosties",           rank:"",    division:"Leadership"},
-    {name:"Mike Simple",             rank:"",    division:"Leadership"},
-    {name:"Mitch Erdstein",          rank:"",    division:"Leadership"},
-    {name:"Nemo DaFish",             rank:"",    division:"Leadership"},
-    {name:"Nunya Biznus",            rank:"",    division:"Leadership"},
-    {name:"Oliver Burton-Stater",    rank:"",    division:"Leadership"},
-    {name:"Zoe Prime",               rank:"",    division:"Leadership"},
-    // Special Constables (13)
-    {name:"Adrian Benedict",         rank:"SPC", division:"Special Constable"},
-    {name:"Alfred Pier",             rank:"SPC", division:"Special Constable"},
-    {name:"Anya Burton",             rank:"SPC", division:"Special Constable"},
-    {name:"Bobby Sinclair",          rank:"SPC", division:"Special Constable"},
-    {name:"Bragi Luciano-Cow",       rank:"SPC", division:"Special Constable"},
-    {name:"Hercules Draykos",        rank:"SPC", division:"Special Constable"},
-    {name:"James Kade",              rank:"SPC", division:"Special Constable"},
-    {name:"Michael West",            rank:"SPC", division:"Special Constable"},
-    {name:"Rose Panchak",            rank:"SPC", division:"Special Constable"},
-    {name:"Ross Owans",              rank:"SPC", division:"Special Constable"},
-    {name:"Steven Evans",            rank:"SPC", division:"Special Constable"},
-    {name:"Titus Jorgan",            rank:"SPC", division:"Special Constable"},
-    {name:"Wiggy Donovan",           rank:"SPC", division:"Special Constable"},
-    // Victoria Police Officers (73)
-    {name:"Aaron Ford",              rank:"",    division:"Victoria Police"},
-    {name:"Aaron Hudson",            rank:"",    division:"Victoria Police"},
-    {name:"Alemain Taumata",         rank:"",    division:"Victoria Police"},
-    {name:"Alex Michaels",           rank:"",    division:"Victoria Police"},
-    {name:"Alisha Taumata",          rank:"",    division:"Victoria Police"},
-    {name:"Anthony Vivian",          rank:"",    division:"Victoria Police"},
-    {name:"Arlo Bobby-Brown",        rank:"",    division:"Victoria Police"},
-    {name:"Ben Ramirez",             rank:"",    division:"Victoria Police"},
-    {name:"Billy Cooper",            rank:"",    division:"Victoria Police"},
-    {name:"Blake Cross",             rank:"",    division:"Victoria Police"},
-    {name:"Bob Bean",                rank:"",    division:"Victoria Police"},
-    {name:"Bonnie Rose",             rank:"",    division:"Victoria Police"},
-    {name:"Chris Gray",              rank:"",    division:"Victoria Police"},
-    {name:"Chris Turner",            rank:"",    division:"Victoria Police"},
-    {name:"Cody Turner",             rank:"",    division:"Victoria Police"},
-    {name:"Daniel Snow",             rank:"",    division:"Victoria Police"},
-    {name:"Daquavis Milton",         rank:"",    division:"Victoria Police"},
-    {name:"David Ace",               rank:"",    division:"Victoria Police"},
-    {name:"David Windsor",           rank:"",    division:"Victoria Police"},
-    {name:"Dexter Gutho-Ross",       rank:"",    division:"Victoria Police"},
-    {name:"Domonic Crooks",          rank:"",    division:"Victoria Police"},
-    {name:"Ellie Odinson",           rank:"",    division:"Victoria Police"},
-    {name:"Emily Cumpson",           rank:"",    division:"Victoria Police"},
-    {name:"Ethan Mac-Osbourne",      rank:"",    division:"Victoria Police"},
-    {name:"Frangelico Kamasutra",    rank:"",    division:"Victoria Police"},
-    {name:"Jack Blasco",             rank:"",    division:"Victoria Police"},
-    {name:"Jake Ramirez",            rank:"",    division:"Victoria Police"},
-    {name:"Jason Waterfalls",        rank:"",    division:"Victoria Police"},
-    {name:"Jay Michael",             rank:"",    division:"Victoria Police"},
-    {name:"Jeffery Cumpson",         rank:"",    division:"Victoria Police"},
-    {name:"Joey Hale-Vale",          rank:"",    division:"Victoria Police"},
-    {name:"John Chilton",            rank:"",    division:"Victoria Police"},
-    {name:"Joseph O'Connelley",      rank:"",    division:"Victoria Police"},
-    {name:"Leonard Bo",              rank:"",    division:"Victoria Police"},
-    {name:"Lexi Rivera",             rank:"",    division:"Victoria Police"},
-    {name:"Liam Kone-Galetto",       rank:"",    division:"Victoria Police"},
-    {name:"Logan Itani",             rank:"",    division:"Victoria Police"},
-    {name:"Luigi Johnson-Cow",       rank:"",    division:"Victoria Police"},
-    {name:"Luke Not",                rank:"",    division:"Victoria Police"},
-    {name:"Michael Cumpson",         rank:"",    division:"Victoria Police"},
-    {name:"Michael Draykos",         rank:"",    division:"Victoria Police"},
-    {name:"Mike Ray",                rank:"",    division:"Victoria Police"},
-    {name:"Mitch Cooper",            rank:"",    division:"Victoria Police"},
-    {name:"Moey Rose",               rank:"",    division:"Victoria Police"},
-    {name:"Nicholas Minjaj",         rank:"",    division:"Victoria Police"},
-    {name:"Riccardo Amato-Sphinx",   rank:"",    division:"Victoria Police"},
-    {name:"Ringo Almera",            rank:"",    division:"Victoria Police"},
-    {name:"Rob Jones",               rank:"",    division:"Victoria Police"},
-    {name:"Rob Oshae",               rank:"",    division:"Victoria Police"},
-    {name:"Robert Balding",          rank:"",    division:"Victoria Police"},
-    {name:"Robert-Ross Draykos",     rank:"",    division:"Victoria Police"},
-    {name:"Robbie Robinson",         rank:"",    division:"Victoria Police"},
-    {name:"Ronny Decker-Jones",      rank:"",    division:"Victoria Police"},
-    {name:"Rowan Spud",              rank:"",    division:"Victoria Police"},
-    {name:"Ryan Booth",              rank:"",    division:"Victoria Police"},
-    {name:"Ryan Michaels",           rank:"",    division:"Victoria Police"},
-    {name:"Ryder Smith",             rank:"",    division:"Victoria Police"},
-    {name:"Samantha Snow-Cow",       rank:"",    division:"Victoria Police"},
-    {name:"Shane Van-Robinson",      rank:"",    division:"Victoria Police"},
-    {name:"Simon Whittaker",         rank:"",    division:"Victoria Police"},
-    {name:"Sir Reginald",            rank:"",    division:"Victoria Police"},
-    {name:"Stella O'Riley",          rank:"",    division:"Victoria Police"},
-    {name:"Stephen Palmes",          rank:"",    division:"Victoria Police"},
-    {name:"Sunny Freckle",           rank:"",    division:"Victoria Police"},
-    {name:"Teekay Strauss",          rank:"",    division:"Victoria Police"},
-    {name:"Tim Sandero",             rank:"",    division:"Victoria Police"},
-    {name:"Toby Burks",              rank:"",    division:"Victoria Police"},
-    {name:"Tommy Dextra",            rank:"",    division:"Victoria Police"},
-    {name:"Tony Pier",               rank:"",    division:"Victoria Police"},
-    {name:"Xavier Hendrix",          rank:"",    division:"Victoria Police"},
-    {name:"Zak Ghost",               rank:"",    division:"Victoria Police"},
-    {name:"Zeus Snow",               rank:"",    division:"Victoria Police"},
-    {name:"Zoe Ashby",               rank:"",    division:"Victoria Police"},
+    // Leadership Team (30)
+    {name:"Aaron McCrann",    rank:"",    division:"Leadership"},
+    {name:"Alexander Hale",   rank:"",    division:"Leadership"},
+    {name:"Alicia Draykos",   rank:"",    division:"Leadership"},
+    {name:"Anders Luciano",   rank:"",    division:"Leadership"},
+    {name:"Angus Porter",     rank:"",    division:"Leadership"},
+    {name:"Ben Ghost-Winters",rank:"",    division:"Leadership"},
+    {name:"Brad Bentley",     rank:"",    division:"Leadership"},
+    {name:"Bruce D-Shark",    rank:"",    division:"Leadership"},
+    {name:"Burton",           rank:"Chief Commissioner",division:"Leadership"},
+    {name:"Daniel Squelch-Ashburn",rank:"",    division:"Leadership"},
+    {name:"Ford Robinson",    rank:"SGT", division:"Leadership"},
+    {name:"Franklin Sanchez", rank:"",    division:"Leadership"},
+    {name:"Harvey Decker",    rank:"",    division:"Leadership"},
+    {name:"Hester Cow-Kelly", rank:"",    division:"Leadership"},
+    {name:"Jake Jay-Ashburn", rank:"",    division:"Leadership"},
+    {name:"Jake Ramirez",     rank:"",    division:"Leadership"},
+    {name:"James Edwin",      rank:"",    division:"Leadership"},
+    {name:"Jim Morgan",       rank:"",    division:"Leadership"},
+    {name:"Lachie Milton",    rank:"",    division:"Leadership"},
+    {name:"Lewis Ashburn",    rank:"",    division:"Leadership"},
+    {name:"Luca O'Riley",     rank:"",    division:"Leadership"},
+    {name:"Mike Frosties",    rank:"",    division:"Leadership"},
+    {name:"Mike Simple",      rank:"",    division:"Leadership"},
+    {name:"Nemo DaFish",      rank:"",    division:"Leadership"},
+    {name:"Nunya Biznus",     rank:"",    division:"Leadership"},
+    {name:"Oliver Burton-Stater",rank:"",    division:"Leadership"},
+    {name:"Ryan Booth",       rank:"",    division:"Leadership"},
+    {name:"Stella Hayes",     rank:"",    division:"Leadership"},
+    {name:"Tony Pier",        rank:"",    division:"Leadership"},
+    {name:"Zoe Prime",        rank:"",    division:"Leadership"},
+    // Special Constables (14)
+    {name:"Adrian Benedict",rank:"SPC", division:"Special Constable"},
+    {name:"Alfred Pier", rank:"SPC", division:"Special Constable"},
+    {name:"Anya Burton", rank:"SPC", division:"Special Constable"},
+    {name:"Bobby Sinclair",rank:"SPC", division:"Special Constable"},
+    {name:"Bragi Luciano-Cow",rank:"SPC", division:"Special Constable"},
+    {name:"Hercules Draykos",rank:"SPC", division:"Special Constable"},
+    {name:"James Kade",  rank:"SPC", division:"Special Constable"},
+    {name:"Michael West",rank:"SPC", division:"Special Constable"},
+    {name:"Rose Panchak",rank:"SPC", division:"Special Constable"},
+    {name:"Ross Owans",  rank:"SPC", division:"Special Constable"},
+    {name:"Sir Reginald",rank:"SPC", division:"Special Constable"},
+    {name:"Steven Evans",rank:"SPC", division:"Special Constable"},
+    {name:"Titus Jorgan",rank:"SPC", division:"Special Constable"},
+    {name:"Wiggy Donovan",rank:"SPC", division:"Special Constable"},
+    // Victoria Police Officers (83)
+    {name:"Aaron Ford",        rank:"",    division:"Victoria Police"},
+    {name:"Aaron Hudson",      rank:"",    division:"Victoria Police"},
+    {name:"Alemain Taumata",   rank:"",    division:"Victoria Police"},
+    {name:"Alex Michaels",     rank:"",    division:"Victoria Police"},
+    {name:"Alisha Taumata",    rank:"",    division:"Victoria Police"},
+    {name:"Anthony Vivian-Robinson",rank:"",    division:"Victoria Police"},
+    {name:"Arlo Bobby-Brown",  rank:"",    division:"Victoria Police"},
+    {name:"Ben Ramirez",       rank:"",    division:"Victoria Police"},
+    {name:"Billy Cooper",      rank:"",    division:"Victoria Police"},
+    {name:"Blake Cross",       rank:"",    division:"Victoria Police"},
+    {name:"Bob Bean",          rank:"",    division:"Victoria Police"},
+    {name:"Bonnie Rose",       rank:"",    division:"Victoria Police"},
+    {name:"Chris Gray",        rank:"",    division:"Victoria Police"},
+    {name:"Chris Turner",      rank:"",    division:"Victoria Police"},
+    {name:"Cindy Spuckler",    rank:"",    division:"Victoria Police"},
+    {name:"Cody Turner",       rank:"",    division:"Victoria Police"},
+    {name:"Daniel Snow",       rank:"",    division:"Victoria Police"},
+    {name:"Daquavis Milton",   rank:"",    division:"Victoria Police"},
+    {name:"David Ace",         rank:"",    division:"Victoria Police"},
+    {name:"David Windsor",     rank:"",    division:"Victoria Police"},
+    {name:"Dexter Gutho-Ross", rank:"",    division:"Victoria Police"},
+    {name:"Domonic Crooks",    rank:"",    division:"Victoria Police"},
+    {name:"Ellie Odinson",     rank:"",    division:"Victoria Police"},
+    {name:"Emily Cumpson",     rank:"",    division:"Victoria Police"},
+    {name:"Emily E.B.C",       rank:"",    division:"Victoria Police"},
+    {name:"Ethan Mac-Osbourne",rank:"",    division:"Victoria Police"},
+    {name:"Frangelico Kamasutra",rank:"",    division:"Victoria Police"},
+    {name:"Gabe Diker",        rank:"",    division:"Victoria Police"},
+    {name:"Harold Custardbottom",rank:"",    division:"Victoria Police"},
+    {name:"Harvey Hayes",      rank:"",    division:"Victoria Police"},
+    {name:"Hunter Simmons",    rank:"",    division:"Victoria Police"},
+    {name:"Jack Blasco",       rank:"",    division:"Victoria Police"},
+    {name:"Jason Waterfalls",  rank:"",    division:"Victoria Police"},
+    {name:"Jay Michael",       rank:"",    division:"Victoria Police"},
+    {name:"Jeffery Cumpson",   rank:"",    division:"Victoria Police"},
+    {name:"Joey Corners",      rank:"",    division:"Victoria Police"},
+    {name:"Joey Hale-Vale",    rank:"",    division:"Victoria Police"},
+    {name:"John Chilton",      rank:"",    division:"Victoria Police"},
+    {name:"Jonathan Cow-Kelly",rank:"",    division:"Victoria Police"},
+    {name:"Jonathan Johnson-Cow",rank:"",    division:"Victoria Police"},
+    {name:"Joseph O'Connelley",rank:"",    division:"Victoria Police"},
+    {name:"Laila Downeasy",    rank:"",    division:"Victoria Police"},
+    {name:"Leonard Bo",        rank:"",    division:"Victoria Police"},
+    {name:"Lexi Rivera",       rank:"",    division:"Victoria Police"},
+    {name:"Liam Kone-Galetto", rank:"",    division:"Victoria Police"},
+    {name:"Logan Itani",       rank:"",    division:"Victoria Police"},
+    {name:"Luigi Johnson-Cow", rank:"",    division:"Victoria Police"},
+    {name:"Luke Not",          rank:"",    division:"Victoria Police"},
+    {name:"Michael Cumpson",   rank:"",    division:"Victoria Police"},
+    {name:"Michael Draykos",   rank:"",    division:"Victoria Police"},
+    {name:"Miles Jackson",     rank:"",    division:"Victoria Police"},
+    {name:"Mike Ray",          rank:"",    division:"Victoria Police"},
+    {name:"Mitch Cooper",      rank:"",    division:"Victoria Police"},
+    {name:"Mitch Erdstein",    rank:"",    division:"Victoria Police"},
+    {name:"Moey Rose",         rank:"",    division:"Victoria Police"},
+    {name:"Nicholas Minjaj",   rank:"",    division:"Victoria Police"},
+    {name:"Riccardo Amato-Sphinx",rank:"",    division:"Victoria Police"},
+    {name:"Ringo Almera",      rank:"",    division:"Victoria Police"},
+    {name:"Rob Jones",         rank:"",    division:"Victoria Police"},
+    {name:"Rob Oshae",         rank:"",    division:"Victoria Police"},
+    {name:"Robert Balding",    rank:"",    division:"Victoria Police"},
+    {name:"Robert-Ross Draykos",rank:"",    division:"Victoria Police"},
+    {name:"Robbie Robinson",   rank:"",    division:"Victoria Police"},
+    {name:"Ronny Decker-Jones",rank:"",    division:"Victoria Police"},
+    {name:"Rowan Spud",        rank:"",    division:"Victoria Police"},
+    {name:"Ryan Michaels",     rank:"",    division:"Victoria Police"},
+    {name:"Ryan Ramirez",      rank:"",    division:"Victoria Police"},
+    {name:"Ryder Smith",       rank:"",    division:"Victoria Police"},
+    {name:"Samantha Snow-Cow", rank:"",    division:"Victoria Police"},
+    {name:"Shane Van-Robinson",rank:"",    division:"Victoria Police"},
+    {name:"Simon Whittaker",   rank:"",    division:"Victoria Police"},
+    {name:"Spencer King",      rank:"",    division:"Victoria Police"},
+    {name:"Stephen Palmes",    rank:"",    division:"Victoria Police"},
+    {name:"Summer Rivera",     rank:"",    division:"Victoria Police"},
+    {name:"Sunny Freckle",     rank:"",    division:"Victoria Police"},
+    {name:"Teekay Strauss",    rank:"",    division:"Victoria Police"},
+    {name:"Tim Sandero",       rank:"",    division:"Victoria Police"},
+    {name:"Toby Burks",        rank:"",    division:"Victoria Police"},
+    {name:"Tommy Dextra",      rank:"",    division:"Victoria Police"},
+    {name:"Xavier Hendrix",    rank:"",    division:"Victoria Police"},
+    {name:"Zak Ghost",         rank:"",    division:"Victoria Police"},
+    {name:"Zeus Snow",         rank:"",    division:"Victoria Police"},
+    {name:"Zoe Ashby",         rank:"",    division:"Victoria Police"},
   ];
+
+  // People confirmed to have left VicPol (August 2026 roster refresh). Kept in
+  // DEFAULT_OFFICERS above — never removed from anyone's saved list — just
+  // flagged inactive so they sort to the bottom of autocomplete instead of
+  // vanishing. This is a short, explicit, user-confirmed list, not something
+  // inferred from an hours deck: a name simply missing from a month's hours
+  // report means no hours that month, not that the person left.
+  const DEPARTED_OFFICERS = ["Harvey Decker", "Emily Cumpson"];
+  const DEPARTED_OFFICERS_SET = new Set(DEPARTED_OFFICERS.map(n => n.toUpperCase()));
 
   function seedOfficersDB() {
     const existing = loadOfficersDB();
     const existingKeys = new Set(existing.map(o => o.name.trim().toUpperCase()));
-    
+
     // Build list of officers not yet in DB
     const toAdd = [];
     DEFAULT_OFFICERS.forEach((o, i) => {
@@ -2540,7 +2565,7 @@
       if (!existingKeys.has(nameUpper)) {
         const rankPart = o.rank ? o.rank + " " : "";
         const full = rankPart + o.name;
-        toAdd.push({ full, callsign: "", rank: o.rank, name: o.name, division: o.division, ts: Date.now() - 1000 - i });
+        toAdd.push({ full, callsign: "", rank: o.rank, name: o.name, division: o.division, inactive: DEPARTED_OFFICERS_SET.has(nameUpper), ts: Date.now() - 1000 - i });
       }
     });
     
@@ -2615,6 +2640,68 @@
           return { ...o, rank: "", division: "Leadership", divisions: ["Leadership"], full: rebuildFull(o, "", o.name) };
         }
       }
+      return o;
+    });
+    if (changed) saveOfficersDB(updated);
+  }
+
+  // One-time, idempotent migration for the August 2026 roster refresh: renames,
+  // department moves and confirmed departures, applied to existing local
+  // databases the same way migrateJune2026Roster() does. Runs BEFORE
+  // seedOfficersDB(); a fresh/empty DB just no-ops (seedOfficersDB seeds the
+  // already-current DEFAULT_OFFICERS + DEPARTED_OFFICERS flag directly).
+  function migrateAugust2026Roster() {
+    const arr = loadOfficersDB();
+    let changed = false;
+    const renames = {
+      "STELLA O'RILEY": { name: "Stella Hayes", division: "Leadership" },
+      "ANTHONY VIVIAN":  { name: "Anthony Vivian-Robinson" }
+    };
+    // Department moves where the name itself doesn't change.
+    const moves = {
+      "JAKE RAMIREZ":       "Leadership",
+      "RYAN BOOTH":         "Leadership",
+      "TONY PIER":          "Leadership",
+      "JONATHAN COW-KELLY": "Victoria Police",
+      "MITCH ERDSTEIN":     "Victoria Police",
+      "SIR REGINALD":       "Special Constable"
+    };
+    const rebuildFull = (o, rank, name) => {
+      const cs = (o.callsigns && o.callsigns.length) ? o.callsigns.join(" • ") : o.callsign;
+      const rankName = [rank, name].filter(Boolean).join(" ");
+      return cs ? (cs + " | " + rankName) : rankName;
+    };
+    const updated = arr.map(o => {
+      const key = norm(o.name).toUpperCase();
+
+      const patch = renames[key];
+      if (patch) {
+        changed = true;
+        const name = patch.name;
+        const division = ("division" in patch) ? patch.division : o.division;
+        const rank = ("division" in patch && division === "Special Constable") ? "SPC" : o.rank;
+        const next = { ...o, name, rank, division, full: rebuildFull(o, rank, name) };
+        if ("division" in patch) next.divisions = [division];
+        return next;
+      }
+
+      const newDivision = moves[key];
+      if (newDivision && norm(o.division) !== newDivision) {
+        changed = true;
+        // Special Constable carries rank "SPC" by convention (see
+        // migrateSpecialConstableRanks / DEFAULT_OFFICERS above).
+        const rank = newDivision === "Special Constable" ? "SPC" : o.rank;
+        return { ...o, rank, division: newDivision, divisions: [newDivision], full: rebuildFull(o, rank, o.name) };
+      }
+
+      // Confirmed departures: flag inactive without touching anything else.
+      // Applied even to a user-edited record — unlike the corrections above,
+      // this isn't guessing at a stale seed, it's a specific, named departure.
+      if (DEPARTED_OFFICERS_SET.has(key) && !o.inactive) {
+        changed = true;
+        return { ...o, inactive: true };
+      }
+
       return o;
     });
     if (changed) saveOfficersDB(updated);
@@ -3113,8 +3200,11 @@
       return;
     }
 
-    // Order by seniority (Superintendent → Recruit), unranked last, then by name.
+    // Order by active-first, then seniority (Superintendent → Recruit), unranked
+    // last, then by name. Departed officers sort to the bottom regardless of rank.
     const sorted = filtered.slice().sort((a, b) => {
+      const activeDiff = (a.inactive ? 1 : 0) - (b.inactive ? 1 : 0);
+      if (activeDiff !== 0) return activeDiff;
       const diff = rankOrderIndex(b.rank) - rankOrderIndex(a.rank);
       if (diff !== 0) return diff;
       return (a.name || a.full || "").localeCompare(b.name || b.full || "");
@@ -3123,12 +3213,14 @@
     container.innerHTML = "";
     sorted.forEach(o => {
       const row = document.createElement("div");
-      row.style.cssText = "display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;padding:10px;background:rgba(0,0,0,0.2);border:1px solid var(--border);border-radius:8px";
+      row.style.cssText = "display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;padding:10px;background:rgba(0,0,0,0.2);border:1px solid var(--border);border-radius:8px"
+        + (o.inactive ? ";opacity:0.55" : "");
 
       const info = document.createElement("div");
       const displayName = buildOfficerDisplayName(o);
       const divisionList = dedupeKeepCase([...(o.divisions || []), o.division]);
-      info.innerHTML = '<div style="font-size:12px;font-weight:800">' + escapeHtml(displayName || o.full) + '</div>'
+      const inactiveTag = o.inactive ? ' <span style="font-size:9px;font-weight:900;letter-spacing:0.4px;color:rgba(255,150,150,0.9);background:rgba(255,80,80,0.12);border:1px solid rgba(255,80,80,0.3);border-radius:4px;padding:1px 6px;vertical-align:middle">INACTIVE</span>' : '';
+      info.innerHTML = '<div style="font-size:12px;font-weight:800">' + escapeHtml(displayName || o.full) + inactiveTag + '</div>'
         + (divisionList.length ? '<div style="font-size:11px;color:var(--muted);margin-top:4px">' + escapeHtml(divisionList.join(' • ')) + '</div>' : '');
 
       // Rank badge + inline rank editor
@@ -3348,19 +3440,23 @@
     const drop = document.getElementById("acOfficer");
     if (!input || !drop) return;
 
+    // Active officers first (then by whatever order loadOfficersDB returns),
+    // inactive/departed ones sorted to the end of the dropdown.
+    const activeFirst = arr => arr.slice().sort((a, b) => (a.inactive ? 1 : 0) - (b.inactive ? 1 : 0));
+
     makeFieldAC(input, drop,
       val => {
         const q = val.trim().toUpperCase();
         const all = loadOfficersDB();
-        return q
-          ? all.filter(o => o.full.toUpperCase().includes(q) || o.callsign.toUpperCase().includes(q) || (o.callsigns||[]).some(cs => cs.toUpperCase().includes(q)) || o.name.toUpperCase().includes(q) || (o.division||"").toUpperCase().includes(q) || (o.divisions||[]).some(div => div.toUpperCase().includes(q))).slice(0, 10)
-          : all.slice(0, 10);
+        return activeFirst(q
+          ? all.filter(o => o.full.toUpperCase().includes(q) || o.callsign.toUpperCase().includes(q) || (o.callsigns||[]).some(cs => cs.toUpperCase().includes(q)) || o.name.toUpperCase().includes(q) || (o.division||"").toUpperCase().includes(q) || (o.divisions||[]).some(div => div.toUpperCase().includes(q)))
+          : all).slice(0, 10);
       },
       o => {
         const csTag = (o.callsigns && o.callsigns.length ? o.callsigns.join(" • ") : o.callsign) ? ((o.callsigns && o.callsigns.length ? o.callsigns.join(" • ") : o.callsign) + " | ") : "";
         const rankName = [o.rank, o.name].filter(Boolean).join(" ");
         const divisionText = (o.divisions && o.divisions.length ? o.divisions.join(" • ") : o.division) || "";
-        return { main: csTag + rankName, sub: divisionText, officer: o };
+        return { main: csTag + rankName, sub: divisionText + (o.inactive ? " · Inactive" : ""), officer: o };
       },
       item => {
         // On select: fill the input with the full string
@@ -3998,5 +4094,6 @@
   // All three are idempotent, so running once per load is safe.
   migrateSpecialConstableRanks();
   migrateJune2026Roster();
+  migrateAugust2026Roster();
   seedOfficersDB();
 
