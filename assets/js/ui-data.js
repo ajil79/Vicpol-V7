@@ -322,14 +322,16 @@
     const defectsPanel = document.getElementById("defectsPanel");
     const defectsToggleIcon = document.getElementById("defectsToggleIcon");
     if (defectsToggle && defectsPanel) {
-      defectsToggle.addEventListener("click", (e) => {
-        if (e.target.closest('.section-toggle-btn')) return; // let eye toggle handle itself
+      const toggleDefects = (e) => {
+        if (e && e.target && e.target.closest('.section-toggle-btn')) return; // let eye toggle handle itself
         const open = defectsPanel.style.display !== "none";
         defectsPanel.style.display = open ? "none" : "block";
         defectsToggle.setAttribute('aria-expanded', open ? 'false' : 'true');
         if (defectsToggleIcon) defectsToggleIcon.textContent = open ? "▶ Show" : "▼ Hide";
         if (!open) renderDefectsList();
-      });
+      };
+      defectsToggle.addEventListener("click", toggleDefects);
+      if (typeof bindActivateKeys === "function") bindActivateKeys(defectsToggle, toggleDefects);
     }
     const defectSearch = document.getElementById("defectSearch");
     if (defectSearch) {

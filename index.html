@@ -18,7 +18,7 @@
       </div>
 </div>
 </noscript>
-<a class="skip-link" href="#reportPage" onblur="this.style.top='-40px'" onfocus="this.style.top='0'" style="position:absolute;top:-40px;left:0;background:var(--accent);color:#fff;padding:8px 16px;z-index:10000;font-weight:700;transition:top 0.2s">Skip to content</a>
+<a class="skip-link" href="#reportPage" id="skipLink">Skip to content</a>
 <header role="banner">
 <div>
 <div class="title">VicPol Tool v7</div>
@@ -37,15 +37,15 @@
 <!-- Nav Bar -->
 <div class="tool-nav-wrap" id="toolNavWrap">
 <nav aria-label="Tool navigation" class="tool-nav" id="toolNav" role="tablist">
-<button aria-controls="guidePage" aria-selected="false" data-tool-page="guide" id="tab-guide" role="tab">🧭 Day-to-Day Guide</button>
-<button aria-controls="reportPage" aria-selected="true" class="nav-active" data-tool-page="report" id="tab-report" role="tab">Report Tool</button>
-<button aria-controls="trafficPage" aria-selected="false" data-tool-page="traffic" id="tab-traffic" role="tab">Traffic History</button>
-<button aria-controls="ocrPage" aria-label="OCR Intake" aria-selected="false" data-tool-page="ocr" id="tab-ocr" role="tab">📷 OCR Intake</button>
-<button aria-controls="recruitPage" aria-selected="false" data-tool-page="recruit" id="tab-recruit" role="tab">🎓 Recruit Helper</button>
+<button aria-controls="guidePage" aria-selected="false" data-tool-page="guide" id="tab-guide" role="tab" tabindex="-1">🧭 Day-to-Day Guide</button>
+<button aria-controls="reportPage" aria-selected="true" class="nav-active" data-tool-page="report" id="tab-report" role="tab" tabindex="0">Report Tool</button>
+<button aria-controls="trafficPage" aria-selected="false" data-tool-page="traffic" id="tab-traffic" role="tab" tabindex="-1">Traffic History</button>
+<button aria-controls="ocrPage" aria-label="OCR Intake" aria-selected="false" data-tool-page="ocr" id="tab-ocr" role="tab" tabindex="-1">📷 OCR Intake</button>
+<button aria-controls="recruitPage" aria-selected="false" data-tool-page="recruit" id="tab-recruit" role="tab" tabindex="-1">🎓 Recruit Helper</button>
 </nav>
 </div>
 <!-- REPORT TOOL PAGE -->
-<div aria-labelledby="tab-report" class="tool-page active" id="reportPage" role="tabpanel">
+<div aria-labelledby="tab-report" class="tool-page active" id="reportPage" role="tabpanel" tabindex="-1">
 <main role="main">
 <div style="display:grid; gap:14px; grid-auto-rows:max-content">
 <!-- Report Type -->
@@ -729,7 +729,7 @@ Paramedic David Ace" rows="3"></textarea></label>
 </div>
 </main>
 </div><!-- end #reportPage -->
-<div aria-labelledby="tab-traffic" class="tool-page" id="trafficPage" role="tabpanel">
+<div aria-labelledby="tab-traffic" class="tool-page" id="trafficPage" role="tabpanel" tabindex="-1">
 <div style="max-width:700px;margin:0 auto;padding:16px 22px 40px">
 <div style="font-size:18px;font-weight:900;margin-bottom:14px">Traffic History Checker</div>
 <div class="card" style="padding:16px;margin-bottom:14px">
@@ -782,7 +782,7 @@ Paramedic David Ace" rows="3"></textarea></label>
 </div>
 </div>
 </div><!-- end #trafficPage -->
-<div aria-labelledby="tab-ocr" class="tool-page" id="ocrPage" role="tabpanel">
+<div aria-labelledby="tab-ocr" class="tool-page" id="ocrPage" role="tabpanel" tabindex="-1">
 <div style="max-width:900px;margin:0 auto;padding:16px 22px 40px">
 <!-- Drop / Paste zone — large, prominent -->
 <div class="card" style="margin-bottom:14px">
@@ -974,7 +974,7 @@ Paramedic David Ace" rows="3"></textarea></label>
 </div>
 
 <!-- RECRUIT HELPER PAGE -->
-<div aria-labelledby="tab-recruit" class="tool-page" id="recruitPage" role="tabpanel">
+<div aria-labelledby="tab-recruit" class="tool-page" id="recruitPage" role="tabpanel" tabindex="-1">
 <div class="rh-wrap">
 <div class="rh-head">🎓 Recruit Helper</div>
 <div class="rh-sub">Quick in-app reference from the BBRP General Duties Handbook (2025), Victoria Police Handbook (2024) &amp; Melbourne Police Help Guide (2025). Shortcut buttons in a topic jump straight to the matching report type in the Report Tool.</div>
@@ -989,7 +989,7 @@ Paramedic David Ace" rows="3"></textarea></label>
 </div>
 </div>
 <!-- DAY-TO-DAY GUIDE PAGE -->
-<div aria-labelledby="tab-guide" class="tool-page" id="guidePage" role="tabpanel">
+<div aria-labelledby="tab-guide" class="tool-page" id="guidePage" role="tabpanel" tabindex="-1">
 <div class="guide-wrap">
 <div class="guide-head">🧭 Day-to-Day Guide</div>
 <div class="guide-sub">Plain-English steps for the situations you'll hit on patrol. Pick a scenario — each one tells you what to do on scene, gives you radio calls and the caution to read out loud, and jumps you into the right report. Based on the BBRP 2024 Police Handbook, GD Handbook (2025) &amp; Melbourne Police Help Guide (2025).</div>

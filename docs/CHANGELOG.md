@@ -4,6 +4,15 @@ Newest first. Dates are the commit dates on `main`.
 
 ## Unreleased
 
+- **Accessibility: keyboard-navigable tabs and focus management.** The tool nav now follows the
+  WAI-ARIA tabs pattern: roving `tabindex` (only the active tab is Tab-reachable), Left/Right/
+  Home/End arrow-key navigation, and the current tab is reflected in the URL hash (deep-linkable,
+  Back-button friendly) via `history.replaceState`. Clicking a tab moves focus into the shown
+  page; arrow-key navigation keeps focus on the tab list. The skip link now focuses whichever
+  page is actually active, not always the Report Tool, and its show/hide styling moved from
+  inline `onfocus`/`onblur` handlers to a `.skip-link:focus` CSS rule. The two hand-rolled
+  `role="button"` toggles (Professional Report Guidelines, Vehicle Defects Reference) now respond
+  to Enter/Space, not just click.
 - **Officer roster refreshed to August 2026 hours.** Six department moves (Jake Ramirez, Ryan
   Booth and Tony Pier to Leadership; Jonathan Cow-Kelly and Mitch Erdstein to Victoria Police;
   Sir Reginald to Special Constable), two renames (Stella O'Riley → Stella Hayes, promoted to

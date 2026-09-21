@@ -377,6 +377,7 @@
     });
     toolNav.addEventListener('scroll', updateNavFades, { passive: true });
     window.addEventListener('resize', updateNavFades, { passive: true });
+    bindTabListKeyboardNav();
   }
 
   // Each init step runs guarded so one failing step (corrupt autosave,
@@ -416,7 +417,7 @@
     const hashPage = (location.hash || '').replace('#', '');
     const stored = localStorage.getItem('vicpol_active_tab');
     const initial = pages.includes(hashPage) ? hashPage : (pages.includes(stored) ? stored : 'report');
-    if (initial !== 'report') showToolPage(initial);
+    if (initial !== 'report') showToolPage(initial, { skipFocus: true });
   } catch {}
   // Center the active tab + set edge-fades for the current viewport on load.
   safeInit('centerActiveTab', () => centerActiveTab(false));
@@ -470,11 +471,20 @@
     updateNavFades();
   }
 
-  function showToolPage(page) {
+  // `opts.skipFocus` — true only for the very first page shown at startup, so
+  // loading the app with e.g. #traffic in the URL doesn't yank keyboard focus
+  // away from nothing in particular. Every later call (click, arrow-key, a
+  // guide/recruit jump link) moves focus into the panel, per the WAI-ARIA
+  // tabs pattern, so keyboard and screen-reader users land on the new content.
+  function showToolPage(page, opts) {
     const allowedPages = new Set(['report', 'traffic', 'ocr', 'recruit', 'guide']);
     const target = allowedPages.has(page) ? page : 'report';
     document.querySelectorAll('.tool-page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tool-nav button').forEach(b => { b.classList.remove('nav-active'); b.setAttribute('aria-selected', 'false'); });
+    document.querySelectorAll('.tool-nav button').forEach(b => {
+      b.classList.remove('nav-active');
+      b.setAttribute('aria-selected', 'false');
+      b.setAttribute('tabindex', '-1');
+    });
 
     const pageMap = {
       report: { panel: 'reportPage', tab: 'tab-report' },
@@ -497,30 +507,95 @@
     if (tab) {
       tab.classList.add('nav-active');
       tab.setAttribute('aria-selected', 'true');
+      tab.setAttribute('tabindex', '0');
       centerActiveTab(true);
     }
     updateToolChrome(target);
     try { localStorage.setItem('vicpol_active_tab', target); } catch {}
+    // Deep-linkable + Back-button-friendly: reflect the tab in the URL. Uses
+    // history.replaceState (not location.hash =) so it never adds a jump
+    // target to browser history or scrolls the page.
+    try { history.replaceState(null, '', '#' + target); } catch (e) {}
+    if (panel && !(opts && opts.skipFocus)) {
+      try { panel.focus({ preventScroll: true }); } catch (e) { panel.focus(); }
+    }
   }
 
   window.showToolPage = showToolPage;
+
+  // Roving-tabindex arrow-key navigation for the tab list (WAI-ARIA APG tabs
+  // pattern): Left/Right move+activate the previous/next tab (wrapping),
+  // Home/End jump to the first/last. Click already activates via the
+  // delegated listener above; this covers keyboard-only users.
+  function bindTabListKeyboardNav() {
+    const nav = document.getElementById('toolNav');
+    if (!nav || nav.dataset.kbBound === '1') return;
+    nav.dataset.kbBound = '1';
+    nav.addEventListener('keydown', (e) => {
+      const tabs = Array.from(nav.querySelectorAll('button[data-tool-page]'));
+      const current = tabs.indexOf(document.activeElement);
+      if (current === -1) return;
+      let nextIndex = null;
+      if (e.key === 'ArrowRight') nextIndex = (current + 1) % tabs.length;
+      else if (e.key === 'ArrowLeft') nextIndex = (current - 1 + tabs.length) % tabs.length;
+      else if (e.key === 'Home') nextIndex = 0;
+      else if (e.key === 'End') nextIndex = tabs.length - 1;
+      else return;
+      e.preventDefault();
+      const next = tabs[nextIndex];
+      next.focus();
+      // skipFocus: arrow-key nav follows the standard tablist pattern — focus
+      // stays on the tab itself so Left/Right/Home/End keep working without
+      // needing to Shift+Tab back out of the panel after every move. A mouse
+      // click (no skipFocus) still jumps into the panel, since these "tabs"
+      // are really separate full-page views the user is navigating to.
+      showToolPage(next.dataset.toolPage, { skipFocus: true });
+    });
+  }
+
+  // Enter/Space activation for a `role="button"` element (native <button>s get
+  // this for free; our two hand-rolled toggle divs don't). Space is guarded
+  // with preventDefault so it doesn't also scroll the page.
+  function bindActivateKeys(el, handler) {
+    el.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+      e.preventDefault();
+      handler(e);
+    });
+  }
 
   function initUiBindings() {
     // Tool-nav tab clicks are bound via delegation at the top of the init
     // sequence (see "Initialize" above) so they survive any init failure.
 
+    // Skip link: focus the panel that's actually showing, not always #reportPage
+    // (the href is a static fallback for no-JS / JS-not-yet-loaded).
+    const skipLink = document.getElementById('skipLink');
+    if (skipLink && skipLink.dataset.bound !== '1') {
+      skipLink.dataset.bound = '1';
+      skipLink.addEventListener('click', (e) => {
+        const active = document.querySelector('.tool-page.active');
+        if (active) {
+          e.preventDefault();
+          try { active.focus({ preventScroll: false }); } catch (err) { active.focus(); }
+        }
+      });
+    }
+
     const guidelinesToggle = document.getElementById('guidelinesToggle');
     const guidelinesBody = document.getElementById('guidelinesBody');
     if (guidelinesToggle && guidelinesBody && guidelinesToggle.dataset.bound !== '1') {
       guidelinesToggle.dataset.bound = '1';
-      guidelinesToggle.addEventListener('click', () => {
+      const toggleGuidelines = () => {
         guidelinesToggle.classList.toggle('open');
         guidelinesBody.classList.toggle('open');
         const isOpen = guidelinesBody.classList.contains('open');
         guidelinesToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
         const hintSpan = guidelinesToggle.querySelector('span[style]');
         if (hintSpan) hintSpan.textContent = isOpen ? '— click to collapse' : '— click to expand';
-      });
+      };
+      guidelinesToggle.addEventListener('click', toggleGuidelines);
+      bindActivateKeys(guidelinesToggle, toggleGuidelines);
     }
 
     // ── Recruit Mode toggle (v7) ──
