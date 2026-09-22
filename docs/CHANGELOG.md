@@ -4,6 +4,14 @@ Newest first. Dates are the commit dates on `main`.
 
 ## Unreleased
 
+- **Charge and PIN search: smarter at every keystroke, with autocorrect.** It already filtered as
+  you typed, but only as one exact substring, so a typo ("assualt", "robery"), words in a
+  different order ("weapon deadly assault") or a single letter (matched ~100 of 113 charges via
+  words like "a"/"and") were all useless. Search now matches each word separately in any order,
+  ranks results (names starting with what you typed come first from the very first letter),
+  tolerates typos and shows a clickable "Did you mean …?" row, and understands common shorthand:
+  DUI/drink driving, ADW, FPO, GTA, b&e, hit and run, speeding, seatbelt, jaywalking, cops, EMS,
+  rego, and licence/license spelling. Arrow keys + Enter still pick from the ranked list.
 - **Re-enabled Bail Conditions** (report type + calculator), previously hidden while bail was
   disabled city-wide. Turned it back on by uncommenting the `<option>` and restoring
   `"bail_conditions"` to `VICPOL_ALLOWED_REPORT_TYPES` — the card, generator and bail-amount

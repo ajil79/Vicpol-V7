@@ -383,8 +383,158 @@ function enforceVicpolWarrantIdStatus(showToast = false) {
     return ENTRY_UI_ALIASES[name] || "";
   }
 
-  function getEntrySearchText(entry) {
-    return [entry?.name || '', getEntryUiAlias(entry?.name || ''), entry?.notes || ''].filter(Boolean).join(' ').toLowerCase();
+  // ── Charge / PIN search: ranked, word-order-free, typo-tolerant ──
+  const normSearchText = (str) => String(str || '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, ' ').trim();
+
+  // Shorthand officers actually type → words that appear in the charge/PIN names.
+  const SEARCH_SHORTHAND = [
+    [/\bb and e\b/g, 'breaking entering'],
+    [/\b(dui|dwi|drink(ing)? driv(e|ing)|drunk driv(e|ing)|pca)\b/g, 'bac'],
+    [/\bdrug driv(e|ing)\b/g, 'drug detected'],
+    [/\badw\b/g, 'assault deadly weapon'],
+    [/\bfpo\b/g, 'firearm prohibition'],
+    [/\bgta\b/g, 'theft motor vehicle'],
+    [/\bccw\b/g, 'concealed'],
+    [/\bspeeding\b/g, 'speed'],
+    [/\bseatbelt\b/g, 'seat belt'],
+    [/\bjay ?walk(ing)?\b/g, 'j walking'],
+    [/\bhit ?n ?run\b/g, 'hit run'],
+    [/\blicen[cs]ed\b/g, 'licensed'],
+    [/\blicen[cs]e\b/g, 'license'],
+    [/\b(ems|ambo|ambulance|paramedics?)\b/g, 'emergency'],
+    [/\bcops?\b/g, 'police'],
+    [/\brego\b/g, 'registered']
+  ];
+  const SEARCH_STOPWORDS = new Set(['and', 'or', 'of', 'the', 'a', 'an', 'to', 'in', 'on', 'for', 'with', 'by', 'at']);
+
+  // Optimal-string-alignment distance (handles swapped letters: "assualt"),
+  // bailing out once it can no longer come in under `max`.
+  function editDistance(a, b, max) {
+    if (Math.abs(a.length - b.length) > max) return max + 1;
+    let prev2 = null, prev = Array.from({ length: b.length + 1 }, (_, j) => j);
+    for (let i = 1; i <= a.length; i++) {
+      const cur = [i];
+      let rowMin = i;
+      for (let j = 1; j <= b.length; j++) {
+        const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+        let v = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + cost);
+        if (prev2 && i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) v = Math.min(v, prev2[j - 2] + 1);
+        cur.push(v);
+        if (v < rowMin) rowMin = v;
+      }
+      if (rowMin > max) return max + 1;
+      prev2 = prev; prev = cur;
+    }
+    return prev[b.length];
+  }
+
+  const _searchIndexCache = new WeakMap();
+  function getEntrySearchIndex(entry) {
+    let idx = _searchIndexCache.get(entry);
+    if (!idx) {
+      const name = normSearchText(entry?.name);
+      const other = normSearchText([getEntryUiAlias(entry?.name || ''), entry?.notes, entry?.cat].filter(Boolean).join(' '));
+      const aliasWords = normSearchText(getEntryUiAlias(entry?.name || '')).split(' ').filter(Boolean);
+      idx = {
+        name,
+        other,
+        nameWords: name.split(' ').filter(Boolean),
+        otherWords: other.split(' ').filter(Boolean),
+        fuzzyWords: [...new Set(name.split(' ').concat(aliasWords).filter(w => w.length >= 3))]
+      };
+      _searchIndexCache.set(entry, idx);
+    }
+    return idx;
+  }
+
+  function parseSearchQuery(raw) {
+    let q = normSearchText(raw);
+    SEARCH_SHORTHAND.forEach(([re, to]) => { q = q.replace(re, to); });
+    let tokens = q.split(' ').filter(Boolean);
+    const content = tokens.filter(t => !SEARCH_STOPWORDS.has(t));
+    if (content.length) tokens = content;
+    return { phrase: tokens.join(' '), tokens: [...new Set(tokens)] };
+  }
+
+  // Score one query token against one entry. 0 = no match.
+  function scoreSearchToken(t, idx) {
+    let best = 0, fix = '';
+    // 1–2 letters (the first keystrokes): only the start of a real word in the
+    // name counts, otherwise "a" matches nearly every charge via "a"/"and".
+    const short = t.length <= 2;
+    for (const w of idx.nameWords) {
+      if (short && SEARCH_STOPWORDS.has(w)) continue;
+      if (w === t) return { score: 10, fix: '' };
+      if (w.startsWith(t)) best = Math.max(best, 8);
+    }
+    if (best) return { score: best, fix: '' };
+    if (short) return { score: 0, fix: '' };
+    if (idx.name.includes(t)) return { score: 6, fix: '' };
+    for (const w of idx.otherWords) if (w.startsWith(t)) return { score: 4, fix: '' };
+    if (t.length >= 3 && idx.other.includes(t)) return { score: 2, fix: '' };
+    // Autocorrect: typo-tolerant against name words, also against the start of a
+    // longer word so a half-typed misspelling ("asual") still finds "assault".
+    if (t.length >= 4) {
+      const max = t.length >= 7 ? 2 : 1;
+      let bestD = max + 1;
+      for (const w of idx.fuzzyWords) {
+        const d = Math.min(
+          editDistance(t, w, max),
+          w.length > t.length ? editDistance(t, w.slice(0, t.length), max) : max + 1,
+          w.length > t.length + 1 ? editDistance(t, w.slice(0, t.length + 1), max) : max + 1
+        );
+        if (d < bestD) { bestD = d; fix = w; }
+      }
+      if (bestD <= max) return { score: 1, fix };
+    }
+    return { score: 0, fix: '' };
+  }
+
+  // Returns { results, corrections, parsed } — results ranked best-first.
+  function searchEntries(list, rawQuery) {
+    const parsed = parseSearchQuery(rawQuery);
+    if (!parsed.tokens.length) return { results: list.slice(), corrections: [], parsed };
+    const exactHit = new Set();
+    const scored = [];
+    list.forEach((entry, order) => {
+      const idx = getEntrySearchIndex(entry);
+      let total = 0;
+      const fixes = {};
+      for (const t of parsed.tokens) {
+        const r = scoreSearchToken(t, idx);
+        if (!r.score) return;
+        total += r.score;
+        if (r.fix) fixes[t] = r.fix; else exactHit.add(t);
+      }
+      if (idx.name.startsWith(parsed.phrase)) total += 6;
+      else if (parsed.phrase.length >= 3 && idx.name.includes(parsed.phrase)) total += 3;
+      scored.push({ entry, total, order, fixes });
+    });
+    scored.sort((a, b) => b.total - a.total || a.order - b.order);
+    // Only call it a correction when nothing matched the token as typed.
+    const corrections = [];
+    parsed.tokens.forEach(t => {
+      if (exactHit.has(t)) return;
+      const top = scored.find(s => s.fixes[t]);
+      if (top) corrections.push({ from: t, to: top.fixes[t] });
+    });
+    return { results: scored.map(s => s.entry), corrections, parsed };
+  }
+
+  // "Did you mean" row above a charge/PIN list; clicking it applies the fix.
+  function renderSearchCorrectionHint(listEl, inputEl, corrections) {
+    if (!corrections.length || !listEl || !inputEl) return;
+    const fixed = corrections.reduce((q, c) => q.replace(new RegExp('\\b' + c.from + '\\b', 'gi'), c.to), normSearchText(inputEl.value));
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'search-autocorrect';
+    btn.innerHTML = 'Did you mean <strong>' + escapeHtml(fixed) + '</strong>? Showing those matches';
+    btn.addEventListener('click', () => {
+      inputEl.value = fixed;
+      inputEl.dispatchEvent(new Event('input', { bubbles: true }));
+      inputEl.focus();
+    });
+    listEl.appendChild(btn);
   }
 
   let selectedPinsSet = new Set();
@@ -933,18 +1083,19 @@ function enforceVicpolWarrantIdStatus(showToast = false) {
   function renderChargeList() {
     if (!el.chargeList) return;
     
-    const searchTerm = (el.chargeSearch?.value || '').toLowerCase();
     const category = el.chargeFilter?.value || 'all';
     
     let filtered = CHARGES;
     if (category !== 'all') filtered = filtered.filter(c => c.cat === category);
-    if (searchTerm) filtered = filtered.filter(c => getEntrySearchText(c).includes(searchTerm));
+    const search = searchEntries(filtered, el.chargeSearch?.value || '');
+    filtered = search.results;
     
     el.chargeList.innerHTML = "";
     if (filtered.length === 0) {
       el.chargeList.innerHTML = '<div class="muted" style="padding:8px">No matching charges</div>';
       return;
     }
+    renderSearchCorrectionHint(el.chargeList, el.chargeSearch, search.corrections);
     
     filtered.forEach(charge => {
       const item = document.createElement('div');
@@ -978,18 +1129,19 @@ function enforceVicpolWarrantIdStatus(showToast = false) {
   function renderPinList() {
     if (!el.pinList) return;
     
-    const searchTerm = (el.pinSearch?.value || '').toLowerCase();
     const category = el.pinFilter?.value || 'all';
     
     let filtered = PINS;
     if (category !== 'all') filtered = filtered.filter(p => p.cat === category);
-    if (searchTerm) filtered = filtered.filter(p => getEntrySearchText(p).includes(searchTerm));
+    const search = searchEntries(filtered, el.pinSearch?.value || '');
+    filtered = search.results;
     
     el.pinList.innerHTML = "";
     if (filtered.length === 0) {
       el.pinList.innerHTML = '<div class="muted" style="padding:8px">No matching PINs</div>';
       return;
     }
+    renderSearchCorrectionHint(el.pinList, el.pinSearch, search.corrections);
     
     filtered.forEach(pin => {
       const item = document.createElement('div');
@@ -1022,6 +1174,7 @@ function enforceVicpolWarrantIdStatus(showToast = false) {
 
   window.toggleCharge = toggleCharge;
   window.togglePin = togglePin;
+  window.searchEntries = searchEntries;
 
   // State
   const INITIAL_STATE = {
