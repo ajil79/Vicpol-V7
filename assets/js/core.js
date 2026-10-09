@@ -408,6 +408,9 @@ function enforceVicpolWarrantIdStatus(showToast = false) {
   const SEARCH_STOPWORDS = new Set(['and', 'or', 'of', 'the', 'a', 'an', 'to', 'in', 'on', 'for', 'with', 'by', 'at']);
   // Filler words never offered as an autocorrect target ("theif" must not become "their").
   const SEARCH_NO_FUZZY = new Set(['their', 'them', 'that', 'this', 'from', 'into', 'than', 'other', 'when', 'while', 'after', 'before', 'being']);
+  // Typos that are equally close to two words, resolved the way officers mean them.
+  // The other word's entries still show, just ranked below.
+  const SEARCH_PREFERRED_FIX = { dirve: 'driver' };
 
   // Optimal-string-alignment distance (handles swapped letters: "assualt"),
   // bailing out once it can no longer come in under `max`.
@@ -488,7 +491,10 @@ function enforceVicpolWarrantIdStatus(showToast = false) {
           w.length > t.length ? editDistance(t, w.slice(0, t.length), lim) + 0.5 : Infinity,
           w.length > t.length + 1 ? editDistance(t, w.slice(0, t.length + 1), lim) + 0.5 : Infinity
         );
-        if (Math.floor(d) <= lim && d < bestD) { bestD = d; fix = w; }
+        if (Math.floor(d) > lim) continue;
+        const pref = SEARCH_PREFERRED_FIX[t];
+        const dd = pref && w === pref ? Math.min(d, 0.75) : pref && w.startsWith(pref) ? Math.min(d, 0.8) : d;
+        if (dd < bestD) { bestD = dd; fix = w; }
       }
       // Closer typos rank higher: 1 edit → 1.0, a 2-edit start-of-word match → 0.25.
       if (fix) return { score: Math.max(0.25, 1.5 - 0.5 * bestD), fix, d: bestD };
