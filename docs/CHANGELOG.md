@@ -11,7 +11,9 @@ Newest first. Dates are the commit dates on `main`.
     stylesheet failed. Now matches ignoring the `?v=` query. Earlier offline tests passed only
     because Playwright's offline mode doesn't cover service-worker requests; verified this time by
     shutting the server down.
-  - **Search autocorrect:** the closest correction now wins ("srevice" → service; "theif" → theft, not "their"), closer typos rank higher, and the
+  - **Search autocorrect:** the closest correction now wins ("srevice" → service; "theif" →
+    theft, not "their"; "dirve" → driver, how officers mean it, with drive entries still listed
+    below), closer typos rank higher, and the
     "Did you mean" row no longer suggests the word you typed.
   - **Bail:** the total now updates as soon as you switch to Bail Conditions, "Use This Amount"
     won't write `$0`, and `$0` counts as a missing bail amount.
