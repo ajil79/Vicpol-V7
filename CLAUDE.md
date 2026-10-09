@@ -25,7 +25,7 @@ Or open `index.html` directly. Fully static — a `python3 -m http.server` also 
 | `recruit` | `recruitPage` | 🎓 Recruit Helper handbook reference |
 
 ## Report types
-Config lives in `assets/js/core.js`: `VICPOL_ALLOWED_REPORT_TYPES`, `REPORT_TYPE_LABEL`, and `REPORT_CARD_VISIBILITY` (which cards show per type). Generators are in `assets/js/reports.js` (`generateArrestReport`, `generateVicPolArrest`, `generateVicPolWarrant`, `generateTrafficWarrant`, `generateFieldContact`, `generateSearchSeizure`, `generateVehicleInspection`). `bail_conditions` is intentionally hidden (city has bail disabled).
+Config lives in `assets/js/core.js`: `VICPOL_ALLOWED_REPORT_TYPES`, `REPORT_TYPE_LABEL`, and `REPORT_CARD_VISIBILITY` (which cards show per type). Generators are in `assets/js/reports.js` (`generateArrestReport`, `generateVicPolArrest`, `generateVicPolWarrant`, `generateBailConditions`, `generateTrafficWarrant`, `generateFieldContact`, `generateSearchSeizure`, `generateVehicleInspection`). `bail_conditions` is enabled; its optional judge/sentence fields are for court-organised bail.
 
 ## Key globals / patterns
 - `debouncedRenderPreview()` — rebuilds the live preview; wired to every input.
@@ -37,7 +37,7 @@ Config lives in `assets/js/core.js`: `VICPOL_ALLOWED_REPORT_TYPES`, `REPORT_TYPE
 - Validation: `validateDraft()` in `assets/js/reports.js`, panel wiring in `assets/js/ui-data.js`.
 
 ## v7 additions
-- **Day-to-Day Guide**: data in `assets/data/guide.js` (`GUIDE_SCENARIOS`, `GUIDE_QUICKREF`, `GUIDE_GOLDEN_RULES`), renderer in `assets/js/guide.js` (mounts into `#guideRoot`, lazy-render + event delegation, mirrors `recruit-helper.js`). Scenario jump buttons use `data-guide-jump` (report type) and optional `data-id-status` to pre-fill the warrant ID status.
+- **Day-to-Day Guide**: data in `assets/data/guide.js` (`GUIDE_SCENARIOS`, `GUIDE_QUICKREF_HTML`, `GUIDE_GOLDEN_RULES`, `GUIDE_COPY`, `GUIDE_RADIO_HTML`), renderer in `assets/js/guide.js` (mounts into `#guideRoot`, lazy-render + event delegation, mirrors `recruit-helper.js`). Scenario jump buttons use `data-guide-jump="report"` + `data-report-type`, optional `data-id-status` to pre-fill the warrant ID status, or `data-guide-jump="<tool page>"` / `data-guide-topic`.
 - **Recruit Mode**: header button `#recruitModeBtn`, persisted in `localStorage` key `vicpol_recruit_mode`, toggles `body.recruit-mode`. Field hints are `.recruit-hint` elements (hidden unless recruit mode). Live checklist reuses the validation output. Wiring in `interactions.js` + `ui-data.js`.
 
 ## Data persistence

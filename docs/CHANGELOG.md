@@ -4,6 +4,27 @@ Newest first. Dates are the commit dates on `main`.
 
 ## Unreleased
 
+- **Sanity check: small fixes.**
+  - **Offline mode only worked from the second online visit.** The service worker precached
+    `core.js` but the page asks for `core.js?v=…`, and the cache lookup treated those as different
+    files. With the server down after one visit, the page shell loaded but every script and the
+    stylesheet failed. Now matches ignoring the `?v=` query. Earlier offline tests passed only
+    because Playwright's offline mode doesn't cover service-worker requests; verified this time by
+    shutting the server down.
+  - **Search autocorrect:** the closest correction now wins ("dirve" → drive, not driver;
+    "srevice" → service; "theif" → theft, not "their"), closer typos rank higher, and the
+    "Did you mean" row no longer suggests the word you typed.
+  - **Bail:** the total now updates as soon as you switch to Bail Conditions, "Use This Amount"
+    won't write `$0`, and `$0` counts as a missing bail amount.
+  - **Content:** fixed broken HTML in the caution topic, the Guide loadout now matches the
+    handbook (3x GSR test kits, medkits optional), and the non-serious injury charge no longer
+    describes "serious injury".
+  - **Light mode:** sentence-tier text, the "Form cleared" undo bar, chip remove buttons and the
+    "Did you mean" word were unreadable; all now use theme colours.
+  - **Labels and placeholders:** search boxes, filters, quantity fields and the OCR file pickers
+    have accessible labels, the item-search clear "×" is a real button, and the bail/traffic time
+    placeholders read "e.g. 1800 HRS" to match how times are normalised.
+  - **Docs:** CLAUDE.md no longer says bail is hidden, and README lists Bail Conditions.
 - **Charge and PIN search: smarter at every keystroke, with autocorrect.** It already filtered as
   you typed, but only as one exact substring, so a typo ("assualt", "robery"), words in a
   different order ("weapon deadly assault") or a single letter (matched ~100 of 113 charges via

@@ -170,7 +170,7 @@ const GUIDE_SCENARIOS = [
       '<h3>Getting on the road</h3>' +
       '<div class="muted" style="margin-bottom:6px">Do these every shift before you call up available.</div>' +
       '<ol class="guide-steps">' +
-        '<li><strong>Grab your loadout</strong> — Pistol + holster + 100 ammo, Taser, baton, flashlight, GSR test kit (x7), evidence bags, bandages, medkits (x2), fire extinguisher.</li>' +
+        '<li><strong>Grab your loadout</strong> — Pistol + holster + 100 ammo, Taser, baton, flashlight, 3x GSR test kits, evidence bag, access card and radio. Optional: bandages, medkits, a fire extinguisher.</li>' +
         '<li><strong>Sign on the MDT</strong> — MDT &rarr; <em>Login Auto GD Callsign</em> &rarr; <em>s/v</em> &rarr; <em>MEL/MTT</em>. (Caged unit = <strong>v</strong>, anything else = <strong>s</strong>; CBD = <strong>MEL</strong>, Mt Thomas/Bendigo = <strong>MTT</strong>.) On a 2-up with an FTO, log the <em>exact</em> callsign, not Auto GD.</li>' +
         '<li><strong>Set up your radio</strong> — Channel 2 [VP PRIMARY], press <strong>E</strong> to turn it on, test PTT and do a radio check.</li>' +
         '<li><strong>Run your on-duty commands</strong> — <span class="rh-pill">/location</span> (location + direction on screen), <span class="rh-pill">/policeregister</span> (registers your car on radar), <span class="rh-pill">/police_callsign</span> (shows your callsign). Keybind them so you never forget in a pursuit.</li>' +

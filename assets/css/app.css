@@ -714,6 +714,7 @@
     .search-autocorrect{display:block;width:100%;text-align:left;padding:8px 10px;margin-bottom:2px;border:1px dashed rgba(0,191,255,0.45);border-radius:8px;background:rgba(0,191,255,0.08);color:var(--text);font-size:12px;cursor:pointer;font-family:inherit}
     .search-autocorrect:hover,.search-autocorrect:focus-visible{background:rgba(0,191,255,0.16)}
     .search-autocorrect strong{color:var(--vp-cyan)}
+    body.light-mode .search-autocorrect strong{color:var(--accent)}
 
     /* ── v47: Storage quota warning ───────────────── */
     .storage-warn{font-size:10px;color:rgba(255,160,80,0.85);margin-top:4px}

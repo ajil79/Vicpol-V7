@@ -1185,7 +1185,8 @@
       // validate only what its form actually shows, not the arrest checklist.
       if (!norm(state.chargesList) && !norm(state.pinsList)) warnings.push("No charges or PINs selected.");
       if (!norm(state.offender.dob)) warnings.push("Missing offender DOB.");
-      if (!norm(state.bailConditions?.bailAmount)) warnings.push("Missing bail amount.");
+      const bailAmt = norm(state.bailConditions?.bailAmount).replace(/[$,\s]/g, "");
+      if (!bailAmt || /^0+(\.0+)?$/.test(bailAmt)) warnings.push("Missing bail amount.");
       if (!norm(state.bailConditions?.date) || !norm(state.bailConditions?.time)) warnings.push("Missing bail date/time.");
       if (!norm(state.sigName)) warnings.push("Missing signature name.");
     } else {

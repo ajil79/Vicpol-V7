@@ -406,6 +406,8 @@ function enforceVicpolWarrantIdStatus(showToast = false) {
     [/\brego\b/g, 'registered']
   ];
   const SEARCH_STOPWORDS = new Set(['and', 'or', 'of', 'the', 'a', 'an', 'to', 'in', 'on', 'for', 'with', 'by', 'at']);
+  // Filler words never offered as an autocorrect target ("theif" must not become "their").
+  const SEARCH_NO_FUZZY = new Set(['their', 'them', 'that', 'this', 'from', 'into', 'than', 'other', 'when', 'while', 'after', 'before', 'being']);
 
   // Optimal-string-alignment distance (handles swapped letters: "assualt"),
   // bailing out once it can no longer come in under `max`.
@@ -440,7 +442,7 @@ function enforceVicpolWarrantIdStatus(showToast = false) {
         other,
         nameWords: name.split(' ').filter(Boolean),
         otherWords: other.split(' ').filter(Boolean),
-        fuzzyWords: [...new Set(name.split(' ').concat(aliasWords).filter(w => w.length >= 3))]
+        fuzzyWords: [...new Set(name.split(' ').concat(aliasWords).filter(w => w.length >= 3 && !SEARCH_STOPWORDS.has(w) && !SEARCH_NO_FUZZY.has(w)))]
       };
       _searchIndexCache.set(entry, idx);
     }
@@ -475,17 +477,21 @@ function enforceVicpolWarrantIdStatus(showToast = false) {
     // Autocorrect: typo-tolerant against name words, also against the start of a
     // longer word so a half-typed misspelling ("asual") still finds "assault".
     if (t.length >= 4) {
-      const max = t.length >= 7 ? 2 : 1;
-      let bestD = max + 1;
+      const max = t.length >= 5 ? 2 : 1;
+      let bestD = Infinity;
       for (const w of idx.fuzzyWords) {
+        // Two edits only when the first letter is right; keeps it useful without noise.
+        const lim = t[0] === w[0] ? max : 1;
+        // Start-of-word matches carry +0.5 so a whole word wins a tie ("dirve" → drive, not driver).
         const d = Math.min(
-          editDistance(t, w, max),
-          w.length > t.length ? editDistance(t, w.slice(0, t.length), max) : max + 1,
-          w.length > t.length + 1 ? editDistance(t, w.slice(0, t.length + 1), max) : max + 1
+          editDistance(t, w, lim),
+          w.length > t.length ? editDistance(t, w.slice(0, t.length), lim) + 0.5 : Infinity,
+          w.length > t.length + 1 ? editDistance(t, w.slice(0, t.length + 1), lim) + 0.5 : Infinity
         );
-        if (d < bestD) { bestD = d; fix = w; }
+        if (Math.floor(d) <= lim && d < bestD) { bestD = d; fix = w; }
       }
-      if (bestD <= max) return { score: 1, fix };
+      // Closer typos rank higher: 1 edit → 1.0, a 2-edit start-of-word match → 0.25.
+      if (fix) return { score: Math.max(0.25, 1.5 - 0.5 * bestD), fix, d: bestD };
     }
     return { score: 0, fix: '' };
   }
@@ -504,19 +510,26 @@ function enforceVicpolWarrantIdStatus(showToast = false) {
         const r = scoreSearchToken(t, idx);
         if (!r.score) return;
         total += r.score;
-        if (r.fix) fixes[t] = r.fix; else exactHit.add(t);
+        if (r.fix) fixes[t] = { to: r.fix, d: r.d }; else exactHit.add(t);
       }
       if (idx.name.startsWith(parsed.phrase)) total += 6;
       else if (parsed.phrase.length >= 3 && idx.name.includes(parsed.phrase)) total += 3;
       scored.push({ entry, total, order, fixes });
     });
     scored.sort((a, b) => b.total - a.total || a.order - b.order);
-    // Only call it a correction when nothing matched the token as typed.
+    // Only call it a correction when nothing matched the token as typed, and only
+    // for words the officer actually typed (not ones produced by shorthand expansion).
+    const typed = new Set(normSearchText(rawQuery).split(' '));
     const corrections = [];
     parsed.tokens.forEach(t => {
-      if (exactHit.has(t)) return;
-      const top = scored.find(s => s.fixes[t]);
-      if (top) corrections.push({ from: t, to: top.fixes[t] });
+      if (exactHit.has(t) || !typed.has(t)) return;
+      // Suggest the closest correction found anywhere, not just the top entry's.
+      let best = null;
+      for (const s of scored) {
+        const f = s.fixes[t];
+        if (f && (!best || f.d < best.d)) best = f;
+      }
+      if (best && best.to !== t) corrections.push({ from: t, to: best.to });
     });
     return { results: scored.map(s => s.entry), corrections, parsed };
   }
@@ -607,7 +620,7 @@ function enforceVicpolWarrantIdStatus(showToast = false) {
       btn.textContent = '×';
       btn.setAttribute('aria-label', 'Remove charge');
       btn.dataset.charge = chargeName;
-      btn.style.cssText = "border:none; background:transparent; color:rgba(255,255,255,0.85); cursor:pointer; font-weight:900; padding:0 2px; line-height:1";
+      btn.style.cssText = "border:none; background:transparent; color:inherit; cursor:pointer; font-weight:900; padding:0 2px; line-height:1";
 
       tag.appendChild(label);
       tag.appendChild(btn);
@@ -696,7 +709,7 @@ function enforceVicpolWarrantIdStatus(showToast = false) {
       btn.textContent = '×';
       btn.setAttribute('aria-label', 'Remove PIN');
       btn.dataset.pin = pinName;
-      btn.style.cssText = "border:none; background:transparent; color:rgba(255,255,255,0.85); cursor:pointer; font-weight:900; padding:0 2px; line-height:1";
+      btn.style.cssText = "border:none; background:transparent; color:inherit; cursor:pointer; font-weight:900; padding:0 2px; line-height:1";
 
       tag.appendChild(label);
       tag.appendChild(btn);
@@ -786,6 +799,10 @@ function enforceVicpolWarrantIdStatus(showToast = false) {
   function useBailAmount() {
     const total = calculateBailAmount();
     const bcBailAmount = document.getElementById('bcBailAmount');
+    if (!total) {
+      toast("Nothing to use yet: select charges or paste LEAP history first.", "warn");
+      return;
+    }
     if (bcBailAmount) {
       bcBailAmount.value = '$' + total.toLocaleString();
       state.bailConditions.bailAmount = bcBailAmount.value;
@@ -878,7 +895,7 @@ function enforceVicpolWarrantIdStatus(showToast = false) {
   function _tierRow(label, value, color) {
     return '<div style="display:flex;align-items:baseline;gap:8px;padding:3px 6px;background:rgba(255,255,255,0.03);border-radius:4px">'
       + '<span style="font-size:11px;font-weight:900;color:' + color + ';min-width:120px;flex-shrink:0">' + label + '</span>'
-      + '<span style="font-size:11px;color:rgba(255,255,255,0.7)">' + value + '</span>'
+      + '<span style="font-size:11px;color:var(--text);opacity:0.8">' + value + '</span>'
       + '</div>';
   }
 
@@ -2220,6 +2237,8 @@ function updateReportTypeUI() {
   if (typeof reconcileSharedLinks === "function") {
     try { reconcileSharedLinks(); } catch (e) {}
   }
+  // Charges picked under another report type should show in the bail total straight away.
+  calculateBailAmount();
 }
 
 // Preview Generation (DEBOUNCED)

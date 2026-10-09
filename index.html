@@ -9,7 +9,7 @@
 <title>VicPol Tool v7</title>
 <link href="assets/icon.svg?v=20260921" rel="icon" type="image/svg+xml"/>
 <link href="manifest.webmanifest?v=20260921" rel="manifest"/>
-<link href="assets/css/app.css?v=20261001" rel="stylesheet"/>
+<link href="assets/css/app.css?v=20261009" rel="stylesheet"/>
 </head>
 <body>
 <noscript>
@@ -137,8 +137,8 @@
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><h2 style="margin:0">Charges <span id="chargeCount" style="font-weight:400;font-size:12px;color:var(--muted)"></span></h2><button aria-expanded="true" aria-label="Toggle section visibility" class="section-toggle-btn" title="Toggle section in/out of report" type="button">👁</button></div>
 <div class="recruit-hint"><strong>Charges are criminal offences</strong> (they carry prison time / a sentence). Fines-only matters go under <strong>PINs</strong> below. If you're charging any <em>traffic</em> offence, you must have run an RBT &amp; RDT first.</div>
 <div style="display:grid; grid-template-columns:1fr 1fr auto; gap:10px; margin-bottom:10px">
-<input id="chargeSearch" placeholder="Search charges" style="margin:0"/>
-<select id="chargeFilter" style="margin:0">
+<input aria-label="Search charges" id="chargeSearch" placeholder="Search charges" style="margin:0"/>
+<select aria-label="Charge category" id="chargeFilter" style="margin:0">
 <option value="all">All categories</option>
 </select>
 <button class="btn" id="clearChargesBtn">Clear All</button>
@@ -156,8 +156,8 @@
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><h2 style="margin:0">PINs (Penalty Infringement Notices) <span id="pinCount" style="font-weight:400;font-size:12px;color:var(--muted)"></span></h2><button aria-expanded="true" aria-label="Toggle section visibility" class="section-toggle-btn" title="Toggle section in/out of report" type="button">👁</button></div>
 <div class="recruit-hint"><strong>PINs are fines only</strong> — no prison time. Watch the demerit points: <strong>12+ in 7 days</strong> is a mandatory suspension. If the offence is serious enough to jail someone, it belongs in <strong>Charges</strong>, not here.</div>
 <div style="display:grid; grid-template-columns:1fr 1fr auto; gap:10px; margin-bottom:10px">
-<input id="pinSearch" placeholder="Search PINs" style="margin:0"/>
-<select id="pinFilter" style="margin:0">
+<input aria-label="Search PINs" id="pinSearch" placeholder="Search PINs" style="margin:0"/>
+<select aria-label="PIN category" id="pinFilter" style="margin:0">
 <option value="all">All categories</option>
 </select>
 <button class="btn" id="clearPinsBtn">Clear All</button>
@@ -200,7 +200,7 @@
 <label><div class="lbl">Registered Owner</div><input id="twOwner"/></label>
 <label><div class="lbl">Location Observed</div><input id="twLocation"/></label>
 <div class="grid3">
-<label><div class="lbl">Time</div><input id="twTime" placeholder="20:04 HOURS"/></label>
+<label><div class="lbl">Time</div><input id="twTime" placeholder="e.g. 2004 HRS"/></label>
 <label><div class="lbl">Date</div><input id="twDate" placeholder="23/01/2026"/></label>
 <label><div class="lbl">Speed</div><input id="twSpeed" placeholder="261km/h in 80 zone"/></label>
 </div>
@@ -330,7 +330,7 @@ Date        P?    Amount        Offence
 <label><div class="lbl">Bail Amount (Final)</div><input id="bcBailAmount" placeholder="$34,550"/></label>
 <div class="grid2">
 <label><div class="lbl">Date</div><input id="bcDate" placeholder="e.g. 15/03/2026 or 09/03/26"/></label>
-<label><div class="lbl">Time</div><input id="bcTime" placeholder="18:00 PM"/></label>
+<label><div class="lbl">Time</div><input id="bcTime" placeholder="e.g. 1800 HRS"/></label>
 </div>
 <div class="hint" style="margin:14px 0 4px"><span>🏛️</span><span>Court-organised bail only — leave blank for a standard officer-granted bail</span></div>
 <div class="grid2">
@@ -392,7 +392,7 @@ Date        P?    Amount        Offence
 <div id="defectsPanel" style="display:none;margin-top:10px">
 <div class="hint" style="margin-bottom:8px"><span>💡</span><span>Click any defect to add it to your report as a separate <strong>Vehicle Defects</strong> section. On <strong>Traffic Warrants</strong> it also fills Reason &amp; Legislation Notes.</span></div>
 <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;margin-bottom:8px">
-<input id="defectSearch" placeholder="Search defects..." style="margin:0;font-size:12px;padding:8px 10px"/>
+<input aria-label="Search defects" id="defectSearch" placeholder="Search defects..." style="margin:0;font-size:12px;padding:8px 10px"/>
 <button class="btn" id="defectClearLast" style="font-size:11px;padding:6px 10px">Undo Last</button>
 <button class="btn danger" id="defectClearAll" style="font-size:11px;padding:6px 10px">Clear All</button>
 </div>
@@ -407,10 +407,10 @@ Date        P?    Amount        Offence
 <div style="padding:10px; background:rgba(0,0,0,0.15); border:1px solid var(--border); border-radius:10px; margin-bottom:10px">
 <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:8px">
 <div style="position:relative; flex:1">
-<input autocomplete="off" id="itemSearchInput" placeholder="Search items... (e.g. pistol, meth, vest)" style="width:100%; margin:0; padding-right:28px" type="text"/>
-<span id="itemSearchClear" style="position:absolute; right:8px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:14px; color:var(--muted); display:none">×</span>
+<input aria-label="Search items" autocomplete="off" id="itemSearchInput" placeholder="Search items... (e.g. pistol, meth, vest)" style="width:100%; margin:0; padding-right:28px" type="text"/>
+<button aria-label="Clear search" id="itemSearchClear" style="position:absolute; right:4px; top:50%; transform:translateY(-50%); cursor:pointer; font-size:14px; color:var(--muted); display:none; background:none; border:none; padding:4px 6px; width:auto; min-height:0" type="button">×</button>
 </div>
-<select id="itemCategoryFilter" style="width:140px; margin:0; font-size:12px; flex-shrink:0">
+<select aria-label="Item category" id="itemCategoryFilter" style="width:140px; margin:0; font-size:12px; flex-shrink:0">
 <option value="all">All Categories</option>
 <option value="firearms">Firearms</option>
 <option value="melee">Melee &amp; Explosives</option>
@@ -425,7 +425,7 @@ Date        P?    Amount        Offence
 </div>
 <!-- Add row: qty + serial + add -->
 <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:6px">
-<input id="itemQtyInput" inputmode="numeric" min="1" placeholder="Qty" style="width:60px; margin:0; flex-shrink:0" type="number" value="1"/>
+<input aria-label="Item quantity" id="itemQtyInput" inputmode="numeric" min="1" placeholder="Qty" style="width:60px; margin:0; flex-shrink:0" type="number" value="1"/>
 <input id="itemText" placeholder="Item name (auto-filled or type custom)" style="flex:1; min-width:150px; margin:0"/>
 <input id="itemSerialInput" placeholder="Serial # (if applicable)" style="width:160px; min-width:120px; margin:0; flex-shrink:0"/>
 <button class="btn" id="addItemBtn" style="flex-shrink:0">Add</button>
@@ -626,7 +626,7 @@ or: At approximately [TIME] HRS on [DATE], [CALLSIGN] ([NAME]) was on patrol whe
 <span>Common: BWC on request, Photo of ID, Fingerprints taken, Mental image of pockets, Positive GSR, MDT / MELROADS profile, Plate reader, Officer statement, Fixed Vehicle Mounted Radar, Bodycam on request</span>
 </div>
 <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px">
-<input id="evidenceQty" inputmode="numeric" max="50000" min="1" placeholder="Qty" style="width:80px; flex-shrink:0" type="number" value="1"/>
+<input aria-label="Evidence quantity" id="evidenceQty" inputmode="numeric" max="50000" min="1" placeholder="Qty" style="width:80px; flex-shrink:0" type="number" value="1"/>
 <input id="evidenceItem" placeholder="e.g. BWC on request, Mental image of pockets, Positive GSR, MDT profile, Plate reader" style="flex:1; min-width:150px" type="text"/>
 <button class="btn" id="addEvidenceBtn" style="flex-shrink:0">Add Item</button>
 </div>
@@ -816,8 +816,8 @@ Paramedic David Ace" rows="3"></textarea></label>
 </div>
 <!-- File inputs row -->
 <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;align-items:center">
-<input accept="image/*" capture="environment" id="imgFile" style="flex:1;min-width:0;font-size:12px" type="file"/>
-<input accept="image/*" id="ocrLabFile" style="flex:1;min-width:0;font-size:12px" type="file"/>
+<input accept="image/*" aria-label="Quick scan: camera or image file" capture="environment" id="imgFile" style="flex:1;min-width:0;font-size:12px" type="file"/>
+<input accept="image/*" aria-label="Advanced OCR image file" id="ocrLabFile" style="flex:1;min-width:0;font-size:12px" type="file"/>
 <button class="btn" id="clearOcrBtn" style="flex-shrink:0">Clear All</button>
 </div>
 <div style="display:flex;gap:6px;margin-top:4px">
@@ -1003,16 +1003,16 @@ Paramedic David Ace" rows="3"></textarea></label>
 </div>
 <!-- ?v= cache-busting: bump the value whenever any css/js asset changes so
      browsers holding stale copies (especially mobile) fetch fresh files. -->
-<script src="assets/data/charges.js?v=20260925"></script>
+<script src="assets/data/charges.js?v=20261009"></script>
 <script src="assets/data/pins.js?v=20260921"></script>
-<script src="assets/js/core.js?v=20261001"></script>
-<script src="assets/js/reports.js?v=20260929"></script>
+<script src="assets/js/core.js?v=20261009"></script>
+<script src="assets/js/reports.js?v=20261009"></script>
 <script src="assets/data/items.js?v=20260925"></script>
 <script src="assets/js/ocr.js?v=20260922"></script>
-<script src="assets/js/ui-data.js?v=20260930"></script>
-<script src="assets/data/recruit.js?v=20260927"></script>
+<script src="assets/js/ui-data.js?v=20261009"></script>
+<script src="assets/data/recruit.js?v=20261009"></script>
 <script src="assets/js/recruit-helper.js?v=20260921"></script>
-<script src="assets/data/guide.js?v=20260926"></script>
+<script src="assets/data/guide.js?v=20261009"></script>
 <script src="assets/js/guide.js?v=20260921"></script>
-<script src="assets/js/interactions.js?v=20260921"></script></body>
+<script src="assets/js/interactions.js?v=20261009"></script></body>
 </html>

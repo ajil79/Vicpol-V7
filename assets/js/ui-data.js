@@ -388,7 +388,7 @@
       _defectHistory.map((d, i) =>
         '<span style="display:inline-flex;align-items:center;gap:4px;padding:4px 8px;background:rgba(255,100,100,0.1);border:1px solid rgba(255,100,100,0.25);border-radius:8px;font-size:11px;font-weight:700;color:rgba(255,180,180,0.9)">' +
         escapeHtml(d.name) +
-        '<button data-remove-defect="' + i + '" style="background:none;border:none;color:rgba(255,100,100,0.7);cursor:pointer;padding:0;margin:0;font-size:12px;font-family:inherit">✕</button></span>'
+        '<button aria-label="Remove defect" data-remove-defect="' + i + '" style="background:none;border:none;color:rgba(255,100,100,0.7);cursor:pointer;padding:0;margin:0;font-size:12px;font-family:inherit">✕</button></span>'
       ).join("");
   }
   // Delegated click for defect chip removal
@@ -992,11 +992,11 @@
       }
 
       undoBar.innerHTML = "";
-      undoBar.style.cssText = "position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.92);border:1px solid rgba(108,138,255,0.4);padding:10px 16px;border-radius:12px;z-index:1000;display:flex;gap:12px;align-items:center;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,0.5);animation:cardIn 0.2s ease both";
+      undoBar.style.cssText = "position:fixed;bottom:60px;left:50%;transform:translateX(-50%);background:var(--vp-navy);border:1px solid var(--border);padding:10px 16px;border-radius:12px;z-index:1000;display:flex;gap:12px;align-items:center;font-size:13px;box-shadow:0 8px 24px rgba(0,0,0,0.5);animation:cardIn 0.2s ease both";
 
       const label = document.createElement("span");
       label.textContent = "Form cleared";
-      label.style.color = "var(--muted)";
+      label.style.color = "var(--text)";
 
       const btn = document.createElement("button");
       btn.className = "btn";
@@ -1049,7 +1049,7 @@
         const hasQuality = qualityHints.length > 0;
         
         if (totalIssues === 0 && !hasQuality) {
-          panel.innerHTML = '<div class="validation-panel ok">✓ Looks good — no issues found. Ready to submit. <button class="validation-close-btn" type="button" style="float:right;background:none;border:none;color:inherit;cursor:pointer;font-size:14px;line-height:1;opacity:0.7">✕</button></div>';
+          panel.innerHTML = '<div class="validation-panel ok">✓ Looks good — no issues found. Ready to submit. <button aria-label="Close" class="validation-close-btn" type="button" style="float:right;background:none;border:none;color:inherit;cursor:pointer;font-size:14px;line-height:1;opacity:0.7">✕</button></div>';
           toast("✓ Validation passed", "ok");
         } else {
           let html = '<div class="validation-panel ' + (totalIssues > 0 ? 'issues' : 'ok') + '">';
@@ -1060,7 +1060,7 @@
           } else {
             html += '✓ No missing fields — ' + qualityHints.length + ' suggestion' + (qualityHints.length > 1 ? 's' : '') + ' to improve quality';
           }
-          html += '</span><button class="validation-close-btn" type="button" style="background:none;border:none;color:inherit;cursor:pointer;font-size:14px;line-height:1;opacity:0.7;flex-shrink:0">✕</button></div>';
+          html += '</span><button aria-label="Close" class="validation-close-btn" type="button" style="background:none;border:none;color:inherit;cursor:pointer;font-size:14px;line-height:1;opacity:0.7;flex-shrink:0">✕</button></div>';
           // Required field warnings
           html += warnings.map(w => '<div class="vi"><span>' + escapeHtml(w) + '</span></div>').join("");
           // Quality hints (amber, different icon) — each may carry a 📖 guide chip
@@ -3161,7 +3161,8 @@
       const btn = document.createElement("button");
       btn.type = "button";
       btn.textContent = "×";
-      btn.style.cssText = "border:none; background:transparent; color:rgba(255,255,255,0.7); cursor:pointer; font-weight:900; padding:0 2px; line-height:1; font-size:14px; flex-shrink:0";
+      btn.setAttribute("aria-label", "Remove officer");
+      btn.style.cssText = "border:none; background:transparent; color:inherit; opacity:0.75; cursor:pointer; font-weight:900; padding:0 2px; line-height:1; font-size:14px; flex-shrink:0";
       btn.addEventListener("click", () => {
         const allLines = ensureLines(state.officersList).split("\n").map(l => l.trim()).filter(Boolean);
         // Clean up callsign assignment for this officer

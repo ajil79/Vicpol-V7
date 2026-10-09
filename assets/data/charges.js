@@ -35,7 +35,7 @@ window.CHARGES = [
     "cat": "Assault",
     "name": "Recklessly Or Intentionally Causing Injury",
     "cost": "3,000 - 10,000",
-    "notes": "Causing or attempting to cause serious injury to another person through reckless or intentional actions.",
+    "notes": "Causing or attempting to cause injury to another person through reckless or intentional actions.",
     "sentenceType": "Com Serv",
     "liability": "MR"
   },

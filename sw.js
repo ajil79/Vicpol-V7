@@ -4,12 +4,12 @@
    string as the ?v= cache-bust query in index.html — bump both together when
    any precached asset changes (see CLAUDE.md "Editing tips").
 
-   Heavy OCR-only assets (Tesseract engine + language data, ~6.6 MB) are
+   Heavy OCR-only assets (Tesseract engine + "best" language data, ~18 MB) are
    intentionally NOT precached — they're fetched normally the first time OCR
    is used, but ARE cached at that point via the runtime fallback below, so
    OCR keeps working offline on every visit after the first.
 */
-const CACHE_VERSION = "20261001";
+const CACHE_VERSION = "20261009";
 const CACHE_NAME = "vicpol-v7-" + CACHE_VERSION;
 
 const PRECACHE_URLS = [
@@ -69,7 +69,10 @@ self.addEventListener("fetch", (event) => {
   if (req.method !== "GET" || new URL(req.url).origin !== self.location.origin) return;
 
   event.respondWith(
-    caches.match(req).then((cached) => {
+    // ignoreSearch: the page asks for core.js?v=… but the precache stores core.js.
+    // Each CACHE_VERSION rebuilds the precache and deletes the old one, so the
+    // unversioned copy is always the current deploy's file.
+    caches.match(req, { ignoreSearch: true }).then((cached) => {
       if (cached) return cached;
       return fetch(req).then((res) => {
         // Cache a copy of anything successfully fetched (this is how the
